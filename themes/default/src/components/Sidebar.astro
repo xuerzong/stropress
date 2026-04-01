@@ -37,12 +37,7 @@ const pathname = Astro.url.pathname;
     position: sticky;
     top: 5.5rem;
     align-self: start;
-    padding: 1.25rem;
-    background: var(--secondary-color);
-    border: 1px solid
-      color-mix(in srgb, var(--foreground-color) 12%, transparent);
-    border-radius: 24px;
-    box-shadow: 0 20px 60px rgb(from var(--foreground-color) r g b / 0.08);
+    padding: 0 1.5rem 0 0;
   }
 
   h2 {
@@ -63,7 +58,10 @@ const pathname = Astro.url.pathname;
   }
 
   section + section {
-    margin-top: 1.25rem;
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid
+      color-mix(in srgb, var(--foreground-color) 10%, transparent);
   }
 
   li + li {
@@ -75,8 +73,7 @@ const pathname = Astro.url.pathname;
     align-items: center;
     gap: 0.55rem;
     display: block;
-    padding: 0.55rem 0.75rem;
-    border-radius: 12px;
+    padding: 0.45rem 0;
     color: var(--muted-color);
   }
 
@@ -98,12 +95,15 @@ const pathname = Astro.url.pathname;
   a.active,
   a:hover {
     color: var(--foreground-color);
-    background: var(--accent-color);
+    background: transparent;
   }
 
   @media (max-width: 900px) {
     .sidebar {
       position: static;
+      padding: 0 0 1.5rem;
+      border-bottom: 1px solid
+        color-mix(in srgb, var(--foreground-color) 12%, transparent);
     }
   }
 </style>

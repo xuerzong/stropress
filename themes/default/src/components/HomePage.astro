@@ -58,20 +58,22 @@ function getActionClass(action: HomeAction) {
 
 <style>
   .hero {
-    padding: clamp(1rem, 2vw, 2rem) 0 1rem;
+    padding: 1.5rem;
   }
 
   .eyebrow {
     display: inline-flex;
     margin: 0 0 1rem;
-    padding: 0.4rem 0.75rem;
-    border-radius: 999px;
-    background: var(--accent-color);
+    padding: 0.15rem 0;
+    border-radius: 0;
+    background: transparent;
     color: var(--foreground-color);
     font-size: 0.82rem;
     font-weight: 700;
     letter-spacing: 0.08em;
     text-transform: uppercase;
+    border-bottom: 1px solid
+      color-mix(in srgb, var(--foreground-color) 18%, transparent);
   }
 
   h1 {
@@ -111,11 +113,10 @@ function getActionClass(action: HomeAction) {
     justify-content: center;
     min-width: 148px;
     padding: 0.9rem 1.2rem;
-    border-radius: 14px;
+    border-radius: 0;
     font-weight: 700;
     transition:
       transform 140ms ease,
-      box-shadow 140ms ease,
       background 140ms ease;
   }
 
@@ -126,7 +127,6 @@ function getActionClass(action: HomeAction) {
   .action.brand {
     background: var(--primary-color);
     color: var(--primary-foreground-color);
-    box-shadow: 0 12px 30px rgb(from var(--primary-color) r g b / 0.22);
   }
 
   .action.alt {
@@ -139,20 +139,21 @@ function getActionClass(action: HomeAction) {
   .features {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 1rem;
+    gap: 0;
     margin-top: 3rem;
+    border-top: 1px solid
+      color-mix(in srgb, var(--foreground-color) 12%, transparent);
   }
 
   .feature-card {
-    padding: 1.4rem;
-    border: 1px solid
+    padding: 1.5rem;
+    border-right: 1px solid
       color-mix(in srgb, var(--foreground-color) 12%, transparent);
-    border-radius: 22px;
-    background: color-mix(
-      in srgb,
-      var(--secondary-color) 88%,
-      var(--background-color)
-    );
+    background: transparent;
+  }
+
+  .feature-card:last-child {
+    border-right: 0;
   }
 
   .feature-icon {
@@ -162,9 +163,9 @@ function getActionClass(action: HomeAction) {
     width: 2.4rem;
     height: 2.4rem;
     margin-bottom: 1rem;
-    padding: 0.6rem;
-    border-radius: 14px;
-    background: var(--accent-color);
+    padding: 0;
+    border-radius: 0;
+    background: transparent;
     color: var(--foreground-color);
   }
 
@@ -182,6 +183,17 @@ function getActionClass(action: HomeAction) {
   @media (max-width: 900px) {
     .features {
       grid-template-columns: 1fr;
+    }
+
+    .feature-card {
+      padding-right: 0;
+      border-right: 0;
+      border-bottom: 1px solid
+        color-mix(in srgb, var(--foreground-color) 12%, transparent);
+    }
+
+    .feature-card:last-child {
+      border-bottom: 0;
     }
   }
 </style>
