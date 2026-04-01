@@ -1,5 +1,7 @@
 ---
 import DocsLayout from "../layouts/DocsLayout.astro";
+import HomePage from "../components/HomePage.astro";
+import { homeConfig } from "../lib/config";
 import { getCollection } from "astro:content";
 
 const pages = await getCollection("docs");
@@ -10,8 +12,18 @@ if (!homeDoc) {
 }
 
 const { Content } = await homeDoc.render();
+const hasHomeContent =
+  Boolean(homeConfig.title) ||
+  Boolean(homeConfig.tagline) ||
+  Boolean(homeConfig.description) ||
+  (homeConfig.actions?.length || 0) > 0 ||
+  (homeConfig.features?.length || 0) > 0;
 ---
 
-<DocsLayout title={homeDoc.data.title} description={homeDoc.data.description}>
-  <Content />
+<DocsLayout
+  title={homeDoc.data.title}
+  description={homeDoc.data.description}
+  sidebar={!hasHomeContent}
+>
+  {hasHomeContent ? <HomePage /> : <Content />}
 </DocsLayout>

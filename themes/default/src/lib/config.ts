@@ -3,6 +3,26 @@ export interface NavItem {
   link: string;
 }
 
+export interface HomeAction {
+  text: string;
+  link: string;
+  theme?: "brand" | "alt";
+}
+
+export interface HomeFeature {
+  title: string;
+  details: string;
+  icon?: string;
+}
+
+export interface HomeConfig {
+  title?: string;
+  tagline?: string;
+  description?: string;
+  actions?: HomeAction[];
+  features?: HomeFeature[];
+}
+
 export interface SidebarGroup {
   label: string;
   items: NavItem[];
@@ -13,6 +33,7 @@ export interface SiteConfig {
     title?: string;
     description?: string;
   };
+  home?: HomeConfig;
   navbar?: NavItem[];
   sidebar?: SidebarGroup[];
 }
@@ -24,3 +45,4 @@ export const siteConfig: SiteConfig =
 export const siteTitle = siteConfig.site?.title || "Stropress Docs";
 export const siteDescription =
   siteConfig.site?.description || "Documentation site";
+export const homeConfig = siteConfig.home || {};

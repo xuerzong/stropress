@@ -1,0 +1,149 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "./schema.json",
+  "title": "Stropress Config",
+  "description": "Configuration schema for Stropress docs config.json files.",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "description": "Optional JSON Schema reference used by editors for validation and autocompletion."
+    },
+    "site": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "title": {
+          "type": "string",
+          "description": "Site title shown in the navbar and page titles."
+        },
+        "description": {
+          "type": "string",
+          "description": "Default site description used in metadata and homepage fallbacks."
+        }
+      }
+    },
+    "home": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "title": {
+          "type": "string",
+          "description": "Homepage hero title."
+        },
+        "tagline": {
+          "type": "string",
+          "description": "Homepage hero subtitle."
+        },
+        "description": {
+          "type": "string",
+          "description": "Homepage hero description text."
+        },
+        "actions": {
+          "type": "array",
+          "description": "Homepage CTA buttons.",
+          "items": {
+            "$ref": "#/$defs/homeAction"
+          }
+        },
+        "features": {
+          "type": "array",
+          "description": "Homepage feature cards.",
+          "items": {
+            "$ref": "#/$defs/homeFeature"
+          }
+        }
+      }
+    },
+    "navbar": {
+      "type": "array",
+      "description": "Top navigation links.",
+      "items": {
+        "$ref": "#/$defs/navItem"
+      }
+    },
+    "sidebar": {
+      "type": "array",
+      "description": "Sidebar groups and links.",
+      "items": {
+        "$ref": "#/$defs/sidebarGroup"
+      }
+    }
+  },
+  "$defs": {
+    "navItem": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["label", "link"],
+      "properties": {
+        "label": {
+          "type": "string",
+          "description": "Visible link text."
+        },
+        "link": {
+          "type": "string",
+          "description": "Absolute site path or external URL.",
+          "minLength": 1
+        }
+      }
+    },
+    "sidebarGroup": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["label", "items"],
+      "properties": {
+        "label": {
+          "type": "string",
+          "description": "Sidebar group title."
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/navItem"
+          }
+        }
+      }
+    },
+    "homeAction": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["text", "link"],
+      "properties": {
+        "text": {
+          "type": "string",
+          "description": "CTA button text."
+        },
+        "link": {
+          "type": "string",
+          "description": "CTA target path or URL.",
+          "minLength": 1
+        },
+        "theme": {
+          "type": "string",
+          "enum": ["brand", "alt"],
+          "description": "Visual style for the CTA button."
+        }
+      }
+    },
+    "homeFeature": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["title", "details"],
+      "properties": {
+        "icon": {
+          "type": "string",
+          "description": "Optional short icon or marker shown above the feature title."
+        },
+        "title": {
+          "type": "string",
+          "description": "Feature title."
+        },
+        "details": {
+          "type": "string",
+          "description": "Feature description."
+        }
+      }
+    }
+  }
+}

@@ -48,6 +48,30 @@ If omitted, it defaults to `docs` under the current working directory.
     "title": "Stropress Docs",
     "description": "Documentation site powered by stropress"
   },
+  "home": {
+    "title": "Build documentation that feels like a product",
+    "tagline": "A fast Astro-powered docs theme and CLI with a VitePress-style landing page.",
+    "description": "Point Stropress at any docs directory, define your navbar and sidebar in config.json, and generate a polished static documentation site with one command.",
+    "actions": [
+      {
+        "text": "Get Started",
+        "link": "/guide/getting-started",
+        "theme": "brand"
+      },
+      {
+        "text": "Configuration",
+        "link": "/guide/configuration",
+        "theme": "alt"
+      }
+    ],
+    "features": [
+      {
+        "icon": "A",
+        "title": "Astro Native",
+        "details": "Use Astro and MDX to render a fast static docs site without building a custom markdown pipeline."
+      }
+    ]
+  },
   "navbar": [
     {
       "label": "Guide",
