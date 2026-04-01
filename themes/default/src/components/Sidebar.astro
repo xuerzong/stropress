@@ -1,0 +1,82 @@
+---
+import { siteConfig } from "../lib/config";
+
+const groups = siteConfig.sidebar || [];
+const pathname = Astro.url.pathname;
+---
+
+<aside class="sidebar">
+  {
+    groups.map((group) => (
+      <section>
+        <h2>{group.label}</h2>
+        <ul>
+          {group.items.map((item) => (
+            <li>
+              <a
+                href={item.link}
+                class={pathname === item.link ? "active" : undefined}
+              >
+                {item.label}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </section>
+    ))
+  }
+</aside>
+
+<style>
+  .sidebar {
+    position: sticky;
+    top: 5.5rem;
+    align-self: start;
+    padding: 1.25rem;
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 24px;
+    box-shadow: var(--shadow);
+  }
+
+  h2 {
+    margin: 0 0 0.75rem;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--muted);
+  }
+
+  ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  section + section {
+    margin-top: 1.25rem;
+  }
+
+  li + li {
+    margin-top: 0.35rem;
+  }
+
+  a {
+    display: block;
+    padding: 0.55rem 0.75rem;
+    border-radius: 12px;
+    color: var(--muted);
+  }
+
+  a.active,
+  a:hover {
+    color: var(--accent);
+    background: var(--accent-soft);
+  }
+
+  @media (max-width: 900px) {
+    .sidebar {
+      position: static;
+    }
+  }
+</style>

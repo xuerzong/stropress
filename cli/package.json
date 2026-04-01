@@ -1,0 +1,24 @@
+{
+  "name": "stropress",
+  "version": "0.1.0",
+  "type": "module",
+  "bin": {
+    "stropress": "dist/index.js"
+  },
+  "scripts": {
+    "build": "tsup src/index.ts --format esm --dts --clean && bun run scripts/copy-theme.mjs",
+    "dev": "bun src/index.ts dev"
+  },
+  "dependencies": {
+    "@astrojs/mdx": "^4.3.0",
+    "astro": "^5.7.0",
+    "commander": "^14.0.0",
+    "fs-extra": "^11.3.0"
+  },
+  "devDependencies": {
+    "@types/fs-extra": "^11.0.4",
+    "@types/node": "^24.5.2",
+    "tsup": "^8.5.0",
+    "typescript": "^5.8.3"
+  }
+}

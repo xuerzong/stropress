@@ -1,0 +1,73 @@
+---
+import { siteConfig, siteTitle } from "../lib/config";
+
+const items = siteConfig.navbar || [];
+---
+
+<header class="topbar">
+  <div class="brand">
+    <a href="/">{siteTitle}</a>
+  </div>
+  <nav>
+    <ul>
+      {
+        items.map((item) => (
+          <li>
+            <a href={item.link}>{item.label}</a>
+          </li>
+        ))
+      }
+    </ul>
+  </nav>
+</header>
+
+<style>
+  .topbar {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 1.5rem;
+    backdrop-filter: blur(16px);
+    background: rgba(252, 251, 247, 0.78);
+    border-bottom: 1px solid var(--line);
+  }
+
+  .brand a {
+    font-family: "Space Grotesk", "IBM Plex Sans", sans-serif;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+  }
+
+  ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    gap: 1rem;
+  }
+
+  a:hover {
+    color: var(--accent);
+    background: var(--accent-soft);
+  }
+
+  nav a {
+    border-radius: 12px;
+    padding: 0.35rem 0.55rem;
+  }
+
+  @media (max-width: 900px) {
+    .topbar {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.75rem;
+    }
+
+    ul {
+      flex-wrap: wrap;
+    }
+  }
+</style>

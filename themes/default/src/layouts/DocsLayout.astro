@@ -1,0 +1,96 @@
+---
+import NavBar from "../components/NavBar.astro";
+import Sidebar from "../components/Sidebar.astro";
+import { siteDescription, siteTitle } from "../lib/config";
+import "../styles/global.css";
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const { title, description } = Astro.props;
+const pageTitle = title ? `${title} | ${siteTitle}` : siteTitle;
+const pageDescription = description || siteDescription;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content={pageDescription} />
+    <title>{pageTitle}</title>
+  </head>
+  <body>
+    <div class="shell">
+      <NavBar />
+      <div class="content-shell">
+        <Sidebar />
+        <main class="content">
+          <slot />
+        </main>
+      </div>
+    </div>
+  </body>
+</html>
+
+<style>
+  .shell {
+    min-height: 100vh;
+  }
+
+  .content-shell {
+    display: grid;
+    grid-template-columns: 280px minmax(0, 1fr);
+    gap: 1.5rem;
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 1.5rem;
+  }
+
+  .content {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 24px;
+    box-shadow: var(--shadow);
+    padding: 2rem clamp(1.25rem, 3vw, 3rem);
+  }
+
+  .content :global(h1),
+  .content :global(h2),
+  .content :global(h3) {
+    font-family: "Space Grotesk", "IBM Plex Sans", sans-serif;
+    line-height: 1.05;
+  }
+
+  .content :global(h1) {
+    font-size: clamp(2.4rem, 6vw, 4.5rem);
+    margin-top: 0;
+  }
+
+  .content :global(p),
+  .content :global(li) {
+    line-height: 1.75;
+    color: var(--muted);
+  }
+
+  .content :global(code),
+  .content :global(pre) {
+    font-family: "IBM Plex Mono", monospace;
+  }
+
+  .content :global(pre) {
+    padding: 1rem;
+    background: #1c1917;
+    color: #f5f5f4;
+    border-radius: 18px;
+    overflow: auto;
+  }
+
+  @media (max-width: 900px) {
+    .content-shell {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

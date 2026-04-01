@@ -1,0 +1,12 @@
+{
+  "name": "stropress-workspace",
+  "private": true,
+  "workspaces": [
+    "cli",
+    "themes/default"
+  ],
+  "scripts": {
+    "build": "bun cli/src/index.ts build",
+    "dev": "bun cli/src/index.ts dev"
+  }
+}

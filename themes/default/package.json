@@ -1,0 +1,10 @@
+{
+  "name": "@stropress/theme-default",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "@astrojs/mdx": "^4.3.0",
+    "astro": "^5.7.0"
+  }
+}

@@ -1,0 +1,17 @@
+---
+import DocsLayout from "../layouts/DocsLayout.astro";
+import { getCollection } from "astro:content";
+
+const pages = await getCollection("docs");
+const homeDoc = pages.find((entry) => entry.id === "index.md");
+
+if (!homeDoc) {
+  throw new Error("docs/index.md is required");
+}
+
+const { Content } = await homeDoc.render();
+---
+
+<DocsLayout title={homeDoc.data.title} description={homeDoc.data.description}>
+  <Content />
+</DocsLayout>
