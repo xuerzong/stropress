@@ -66,7 +66,7 @@ If omitted, it defaults to `docs` under the current working directory.
     ],
     "features": [
       {
-        "icon": "A",
+        "icon": "Rocket",
         "title": "Astro Native",
         "details": "Use Astro and MDX to render a fast static docs site without building a custom markdown pipeline."
       }
@@ -74,15 +74,18 @@ If omitted, it defaults to `docs` under the current working directory.
   },
   "navbar": [
     {
+      "icon": "BookOpen",
       "label": "Guide",
       "link": "/guide/getting-started"
     }
   ],
   "sidebar": [
     {
+      "icon": "PanelsTopLeft",
       "label": "Guide",
       "items": [
         {
+          "icon": "PlayCircle",
           "label": "Getting Started",
           "link": "/guide/getting-started"
         }
@@ -91,6 +94,8 @@ If omitted, it defaults to `docs` under the current working directory.
   ]
 }
 ```
+
+`home.features[].icon`, `navbar[].icon`, `sidebar[].icon`, and `sidebar[].items[].icon` all use Lucide icon names such as `Rocket`, `BookOpen`, or `PanelsTopLeft`.
 
 ## Local Development
 

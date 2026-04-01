@@ -22,17 +22,17 @@
     ],
     "features": [
       {
-        "icon": "A",
+        "icon": "Rocket",
         "title": "Astro Native",
         "details": "Use Astro and MDX to render a fast static docs site without building a custom markdown pipeline."
       },
       {
-        "icon": "C",
+        "icon": "Terminal",
         "title": "CLI Driven",
         "details": "Run stropress dev or stropress build against any docs directory by passing --dir."
       },
       {
-        "icon": "N",
+        "icon": "SlidersHorizontal",
         "title": "Config First",
         "details": "Navbar, sidebar, homepage hero, CTA buttons, and features are all defined in config.json."
       }
@@ -40,23 +40,28 @@
   },
   "navbar": [
     {
+      "icon": "BookOpen",
       "label": "Guide",
       "link": "/guide/getting-started"
     },
     {
+      "icon": "Github",
       "label": "GitHub",
       "link": "https://github.com"
     }
   ],
   "sidebar": [
     {
+      "icon": "PanelsTopLeft",
       "label": "Guide",
       "items": [
         {
+          "icon": "PlayCircle",
           "label": "Getting Started",
           "link": "/guide/getting-started"
         },
         {
+          "icon": "SlidersHorizontal",
           "label": "Configuration",
           "link": "/guide/configuration"
         }

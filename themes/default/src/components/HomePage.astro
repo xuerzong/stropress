@@ -1,4 +1,5 @@
 ---
+import Icon from "./Icon.astro";
 import {
   homeConfig,
   siteDescription,
@@ -41,7 +42,12 @@ function getActionClass(action: HomeAction) {
     <section class="features">
       {features.map((feature) => (
         <article class="feature-card">
-          {feature.icon && <span class="feature-icon">{feature.icon}</span>}
+          <Icon
+            name={feature.icon}
+            class="feature-icon"
+            aria-hidden="true"
+            stroke-width={1.8}
+          />
           <h2>{feature.title}</h2>
           <p>{feature.details}</p>
         </article>
@@ -156,9 +162,10 @@ function getActionClass(action: HomeAction) {
     width: 2.4rem;
     height: 2.4rem;
     margin-bottom: 1rem;
+    padding: 0.6rem;
     border-radius: 14px;
     background: var(--accent-soft);
-    font-size: 1.2rem;
+    color: var(--accent);
   }
 
   .feature-card h2 {

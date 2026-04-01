@@ -1,4 +1,5 @@
 ---
+import Icon from "./Icon.astro";
 import { siteConfig, siteTitle } from "../lib/config";
 
 const items = siteConfig.navbar || [];
@@ -13,7 +14,10 @@ const items = siteConfig.navbar || [];
       {
         items.map((item) => (
           <li>
-            <a href={item.link}>{item.label}</a>
+            <a href={item.link}>
+              <Icon name={item.icon} class="nav-icon" aria-hidden="true" />
+              <span>{item.label}</span>
+            </a>
           </li>
         ))
       }
@@ -55,8 +59,17 @@ const items = siteConfig.navbar || [];
   }
 
   nav a {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
     border-radius: 12px;
     padding: 0.35rem 0.55rem;
+  }
+
+  .nav-icon {
+    width: 0.95rem;
+    height: 0.95rem;
+    flex: none;
   }
 
   @media (max-width: 900px) {

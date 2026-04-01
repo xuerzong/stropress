@@ -1,6 +1,7 @@
 export interface NavItem {
   label: string;
   link: string;
+  icon?: string;
 }
 
 export interface HomeAction {
@@ -25,6 +26,7 @@ export interface HomeConfig {
 
 export interface SidebarGroup {
   label: string;
+  icon?: string;
   items: NavItem[];
 }
 

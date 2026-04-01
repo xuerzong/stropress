@@ -1,0 +1,58 @@
+---
+import { icons as lucideIcons, type LucideIconComponent } from "@lucide/astro";
+
+interface Props {
+  name?: string;
+  class?: string;
+  color?: string;
+  size?: number | string;
+  title?: string;
+  "stroke-width"?: number | string;
+  "aria-hidden"?: "true" | "false";
+}
+
+const {
+  name,
+  class: className,
+  color,
+  size,
+  title,
+  "stroke-width": strokeWidth,
+  "aria-hidden": ariaHidden,
+} = Astro.props;
+
+function normalizeIconName(iconName: string) {
+  return iconName
+    .trim()
+    .replace(/(^[a-z])|[-_\s]+([a-zA-Z0-9])/g, (_, first, next) =>
+      (first || next).toUpperCase(),
+    )
+    .replace(/[^a-zA-Z0-9]/g, "");
+}
+
+function resolveIconComponent(iconName?: string) {
+  if (!iconName) {
+    return undefined;
+  }
+
+  const normalized = normalizeIconName(iconName);
+  const icon = lucideIcons[normalized] || lucideIcons[iconName];
+
+  return typeof icon === "function" ? (icon as LucideIconComponent) : undefined;
+}
+
+const LucideIcon = resolveIconComponent(name);
+---
+
+{
+  LucideIcon && (
+    <LucideIcon
+      class={className}
+      color={color}
+      size={size}
+      title={title}
+      stroke-width={strokeWidth}
+      aria-hidden={ariaHidden}
+    />
+  )
+}

@@ -77,6 +77,10 @@
       "additionalProperties": false,
       "required": ["label", "link"],
       "properties": {
+        "icon": {
+          "type": "string",
+          "description": "Optional Lucide icon name shown before the link label."
+        },
         "label": {
           "type": "string",
           "description": "Visible link text."
@@ -93,6 +97,10 @@
       "additionalProperties": false,
       "required": ["label", "items"],
       "properties": {
+        "icon": {
+          "type": "string",
+          "description": "Optional Lucide icon name shown before the group label."
+        },
         "label": {
           "type": "string",
           "description": "Sidebar group title."
@@ -133,7 +141,7 @@
       "properties": {
         "icon": {
           "type": "string",
-          "description": "Optional short icon or marker shown above the feature title."
+          "description": "Optional Lucide icon name shown above the feature title, for example Rocket or Terminal."
         },
         "title": {
           "type": "string",
