@@ -66,8 +66,8 @@ function getActionClass(action: HomeAction) {
     margin: 0 0 1rem;
     padding: 0.4rem 0.75rem;
     border-radius: 999px;
-    background: rgba(15, 118, 110, 0.1);
-    color: var(--accent);
+    background: var(--accent-color);
+    color: var(--foreground-color);
     font-size: 0.82rem;
     font-weight: 700;
     letter-spacing: 0.08em;
@@ -87,7 +87,7 @@ function getActionClass(action: HomeAction) {
     margin: 1.25rem 0 0;
     max-width: 24ch;
     font-size: clamp(1.35rem, 3vw, 2rem);
-    color: var(--text);
+    color: var(--foreground-color);
   }
 
   .description {
@@ -95,7 +95,7 @@ function getActionClass(action: HomeAction) {
     max-width: 60ch;
     font-size: 1.05rem;
     line-height: 1.8;
-    color: var(--muted);
+    color: var(--muted-color);
   }
 
   .actions {
@@ -124,15 +124,16 @@ function getActionClass(action: HomeAction) {
   }
 
   .action.brand {
-    background: var(--accent);
-    color: #f0fdfa;
-    box-shadow: 0 12px 30px rgba(15, 118, 110, 0.22);
+    background: var(--primary-color);
+    color: var(--primary-foreground-color);
+    box-shadow: 0 12px 30px rgb(from var(--primary-color) r g b / 0.22);
   }
 
   .action.alt {
-    background: rgba(255, 255, 255, 0.7);
-    border: 1px solid var(--line);
-    color: var(--text);
+    background: var(--secondary-color);
+    border: 1px solid
+      color-mix(in srgb, var(--foreground-color) 14%, transparent);
+    color: var(--foreground-color);
   }
 
   .features {
@@ -144,15 +145,14 @@ function getActionClass(action: HomeAction) {
 
   .feature-card {
     padding: 1.4rem;
-    border: 1px solid var(--line);
+    border: 1px solid
+      color-mix(in srgb, var(--foreground-color) 12%, transparent);
     border-radius: 22px;
-    background:
-      linear-gradient(
-        180deg,
-        rgba(255, 255, 255, 0.72),
-        rgba(255, 255, 255, 0.4)
-      ),
-      rgba(255, 251, 245, 0.65);
+    background: color-mix(
+      in srgb,
+      var(--secondary-color) 88%,
+      var(--background-color)
+    );
   }
 
   .feature-icon {
@@ -164,8 +164,8 @@ function getActionClass(action: HomeAction) {
     margin-bottom: 1rem;
     padding: 0.6rem;
     border-radius: 14px;
-    background: var(--accent-soft);
-    color: var(--accent);
+    background: var(--accent-color);
+    color: var(--foreground-color);
   }
 
   .feature-card h2 {
@@ -175,7 +175,7 @@ function getActionClass(action: HomeAction) {
 
   .feature-card p {
     margin: 0.75rem 0 0;
-    color: var(--muted);
+    color: var(--muted-color);
     line-height: 1.7;
   }
 

@@ -38,10 +38,11 @@ const pathname = Astro.url.pathname;
     top: 5.5rem;
     align-self: start;
     padding: 1.25rem;
-    background: var(--panel);
-    border: 1px solid var(--line);
+    background: var(--secondary-color);
+    border: 1px solid
+      color-mix(in srgb, var(--foreground-color) 12%, transparent);
     border-radius: 24px;
-    box-shadow: var(--shadow);
+    box-shadow: 0 20px 60px rgb(from var(--foreground-color) r g b / 0.08);
   }
 
   h2 {
@@ -52,7 +53,7 @@ const pathname = Astro.url.pathname;
     font-size: 0.9rem;
     text-transform: uppercase;
     letter-spacing: 0.08em;
-    color: var(--muted);
+    color: var(--muted-color);
   }
 
   ul {
@@ -76,7 +77,7 @@ const pathname = Astro.url.pathname;
     display: block;
     padding: 0.55rem 0.75rem;
     border-radius: 12px;
-    color: var(--muted);
+    color: var(--muted-color);
   }
 
   .group-icon,
@@ -96,8 +97,8 @@ const pathname = Astro.url.pathname;
 
   a.active,
   a:hover {
-    color: var(--accent);
-    background: var(--accent-soft);
+    color: var(--foreground-color);
+    background: var(--accent-color);
   }
 
   @media (max-width: 900px) {

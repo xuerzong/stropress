@@ -35,8 +35,9 @@ const items = siteConfig.navbar || [];
     justify-content: space-between;
     padding: 1rem 1.5rem;
     backdrop-filter: blur(16px);
-    background: rgba(252, 251, 247, 0.78);
-    border-bottom: 1px solid var(--line);
+    background: color-mix(in srgb, var(--secondary-color) 88%, transparent);
+    border-bottom: 1px solid
+      color-mix(in srgb, var(--foreground-color) 14%, transparent);
   }
 
   .brand a {
@@ -54,8 +55,8 @@ const items = siteConfig.navbar || [];
   }
 
   a:hover {
-    color: var(--accent);
-    background: var(--accent-soft);
+    color: var(--foreground-color);
+    background: var(--accent-color);
   }
 
   nav a {

@@ -1,29 +1,49 @@
 :root {
-  --bg: #f6f1e8;
-  --panel: rgba(255, 251, 245, 0.86);
-  --line: rgba(41, 37, 36, 0.14);
-  --text: #1c1917;
-  --muted: #57534e;
-  --accent: #0f766e;
-  --accent-soft: #ccfbf1;
-  --shadow: 0 20px 60px rgba(28, 25, 23, 0.08);
+  color-scheme: light;
+  --background-color: #ffffff;
+  --foreground-color: #111111;
+  --primary-color: #111111;
+  --primary-foreground-color: #ffffff;
+  --secondary-color: rgba(255, 255, 255, 0.9);
+  --muted-color: #666666;
+  --accent-color: #f2f2f2;
+
+  --font-sans:
+    ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+    Roboto, Helvetica, Arial, sans-serif;
+  --font-mono:
+    ui-monospace, SF Mono, SF Mono-Regular, Consolas, "Liberation Mono", Menlo,
+    Courier, monospace;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    color-scheme: dark;
+    --background-color: #0a0a0a;
+    --foreground-color: #f5f5f5;
+    --primary-color: #f5f5f5;
+    --primary-foreground-color: #111111;
+    --secondary-color: rgba(18, 18, 18, 0.92);
+    --muted-color: #a3a3a3;
+    --accent-color: #1c1c1c;
+  }
 }
 
 * {
   box-sizing: border-box;
 }
 
+html,
+body {
+  overscroll-behavior: none;
+}
+
 body {
   margin: 0;
-  color: var(--text);
-  background:
-    radial-gradient(
-      circle at top left,
-      rgba(15, 118, 110, 0.18),
-      transparent 28%
-    ),
-    linear-gradient(180deg, #fcfbf7 0%, var(--bg) 100%);
-  font-family: "IBM Plex Sans", "Helvetica Neue", sans-serif;
+  min-height: 100vh;
+  color: var(--foreground-color);
+  background-color: var(--background-color);
+  font-family: var(--font-sans);
 }
 
 a {
