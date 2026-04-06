@@ -2,16 +2,16 @@
 import DocsLayout from "../layouts/DocsLayout.astro";
 import HomePage from "../components/HomePage.astro";
 import { homeConfig } from "../lib/config";
-import { getCollection } from "astro:content";
+import { getCollection, render } from "astro:content";
 
 const pages = await getCollection("docs");
-const homeDoc = pages.find((entry) => entry.id === "index.md");
+const homeDoc = pages.find((entry) => entry.id === "index");
 
 if (!homeDoc) {
   throw new Error("docs/index.md is required");
 }
 
-const { Content } = await homeDoc.render();
+const { Content } = await render(homeDoc);
 const hasHomeContent =
   Boolean(homeConfig.title) ||
   Boolean(homeConfig.tagline) ||
