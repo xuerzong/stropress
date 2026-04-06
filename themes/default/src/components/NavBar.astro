@@ -5,28 +5,25 @@ import { siteConfig, siteTitle } from "../lib/config";
 const items = siteConfig.navbar || [];
 ---
 
-<header class="topbar">
-  <div class="brand">
+<header class="header">
+  <div class="logo">
     <a href="/">{siteTitle}</a>
   </div>
-  <nav>
-    <ul>
-      {
-        items.map((item) => (
-          <li>
-            <a href={item.link}>
-              <Icon name={item.icon} class="nav-icon" aria-hidden="true" />
-              <span>{item.label}</span>
-            </a>
-          </li>
-        ))
-      }
-    </ul>
-  </nav>
+  <ul class="social-links-list">
+    {
+      items.map((item) => (
+        <li>
+          <a href={item.link} class="nav-link">
+            <Icon name={item.icon} class="nav-icon" aria-hidden="true" />
+          </a>
+        </li>
+      ))
+    }
+  </ul>
 </header>
 
-<style>
-  .topbar {
+<style is:global>
+  .header {
     position: sticky;
     top: 0;
     z-index: 10;
@@ -35,18 +32,15 @@ const items = siteConfig.navbar || [];
     justify-content: space-between;
     padding: 1rem 1.5rem;
     backdrop-filter: blur(8px);
-    background: color-mix(in srgb, var(--background-color) 92%, transparent);
-    border-bottom: 1px solid
-      color-mix(in srgb, var(--foreground-color) 14%, transparent);
+    background: rgba(var(--background-color) / 0.85);
+    border-bottom: 1px solid rgba(var(--border-color) / 1);
   }
 
-  .brand a {
-    font-family: "Space Grotesk", "IBM Plex Sans", sans-serif;
+  .logo a {
     font-weight: 700;
-    letter-spacing: 0.04em;
   }
 
-  ul {
+  .social-links-list {
     list-style: none;
     padding: 0;
     margin: 0;
@@ -54,32 +48,28 @@ const items = siteConfig.navbar || [];
     gap: 1rem;
   }
 
-  a:hover {
-    color: var(--foreground-color);
-    background: var(--accent-color);
-  }
-
-  nav a {
+  .nav-link {
     display: inline-flex;
     align-items: center;
     gap: 0.45rem;
     padding: 0.35rem 0;
+    font-size: 0.875rem;
   }
 
   .nav-icon {
-    width: 0.95rem;
-    height: 0.95rem;
+    width: 1rem;
+    height: 1rem;
     flex: none;
   }
 
   @media (max-width: 900px) {
-    .topbar {
+    .header {
       flex-direction: column;
       align-items: flex-start;
       gap: 0.75rem;
     }
 
-    ul {
+    .social-links-list {
       flex-wrap: wrap;
     }
   }

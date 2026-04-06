@@ -25,6 +25,16 @@ const { entry } = Astro.props;
 const { Content } = await render(entry);
 ---
 
-<DocsLayout title={entry.data.title} description={entry.data.description}>
+<DocsLayout
+  title={entry.data.title}
+  description={entry.data.description}
+  contentClass="docs-content markdown-content"
+>
   <Content />
 </DocsLayout>
+
+<style is:global>
+  .docs-content {
+    padding: 1rem;
+  }
+</style>

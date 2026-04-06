@@ -67,13 +67,13 @@ function getActionClass(action: HomeAction) {
     padding: 0.15rem 0;
     border-radius: 0;
     background: transparent;
-    color: var(--foreground-color);
+    color: rgba(var(--foreground-color) / 1);
     font-size: 0.82rem;
     font-weight: 700;
     letter-spacing: 0.08em;
     text-transform: uppercase;
     border-bottom: 1px solid
-      color-mix(in srgb, var(--foreground-color) 18%, transparent);
+      color-mix(in srgb, rgba(var(--foreground-color) / 1) 18%, transparent);
   }
 
   h1 {
@@ -89,7 +89,7 @@ function getActionClass(action: HomeAction) {
     margin: 1.25rem 0 0;
     max-width: 24ch;
     font-size: clamp(1.35rem, 3vw, 2rem);
-    color: var(--foreground-color);
+    color: rgba(var(--foreground-color) / 1);
   }
 
   .description {
@@ -97,7 +97,7 @@ function getActionClass(action: HomeAction) {
     max-width: 60ch;
     font-size: 1.05rem;
     line-height: 1.8;
-    color: var(--muted-color);
+    color: rgba(var(--muted-color) / 1);
   }
 
   .actions {
@@ -125,15 +125,15 @@ function getActionClass(action: HomeAction) {
   }
 
   .action.brand {
-    background: var(--primary-color);
-    color: var(--primary-foreground-color);
+    background: rgba(var(--primary-color) / 1);
+    color: rgba(var(--primary-foreground-color) / 1);
   }
 
   .action.alt {
-    background: var(--secondary-color);
+    background: rgba(var(--secondary-color) / 1);
     border: 1px solid
-      color-mix(in srgb, var(--foreground-color) 14%, transparent);
-    color: var(--foreground-color);
+      color-mix(in srgb, rgba(var(--foreground-color) / 1) 14%, transparent);
+    color: rgba(var(--foreground-color) / 1);
   }
 
   .features {
@@ -142,13 +142,13 @@ function getActionClass(action: HomeAction) {
     gap: 0;
     margin-top: 3rem;
     border-top: 1px solid
-      color-mix(in srgb, var(--foreground-color) 12%, transparent);
+      color-mix(in srgb, rgba(var(--foreground-color) / 1) 12%, transparent);
   }
 
   .feature-card {
     padding: 1.5rem;
     border-right: 1px solid
-      color-mix(in srgb, var(--foreground-color) 12%, transparent);
+      color-mix(in srgb, rgba(var(--foreground-color) / 1) 12%, transparent);
     background: transparent;
   }
 
@@ -166,7 +166,7 @@ function getActionClass(action: HomeAction) {
     padding: 0;
     border-radius: 0;
     background: transparent;
-    color: var(--foreground-color);
+    color: rgba(var(--foreground-color) / 1);
   }
 
   .feature-card h2 {
@@ -176,7 +176,7 @@ function getActionClass(action: HomeAction) {
 
   .feature-card p {
     margin: 0.75rem 0 0;
-    color: var(--muted-color);
+    color: rgba(var(--muted-color) / 1);
     line-height: 1.7;
   }
 
@@ -189,7 +189,7 @@ function getActionClass(action: HomeAction) {
       padding-right: 0;
       border-right: 0;
       border-bottom: 1px solid
-        color-mix(in srgb, var(--foreground-color) 12%, transparent);
+        color-mix(in srgb, rgba(var(--foreground-color) / 1) 12%, transparent);
     }
 
     .feature-card:last-child {

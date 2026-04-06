@@ -47,21 +47,18 @@
     {
       "icon": "Github",
       "label": "GitHub",
-      "link": "https://github.com"
+      "link": "https://github.com/xuerzong/stropress"
     }
   ],
   "sidebar": [
     {
-      "icon": "PanelsTopLeft",
       "label": "Guide",
       "items": [
         {
-          "icon": "PlayCircle",
           "label": "Getting Started",
           "link": "/guide/getting-started"
         },
         {
-          "icon": "SlidersHorizontal",
           "label": "Configuration",
           "link": "/guide/configuration"
         }

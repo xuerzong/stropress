@@ -6,22 +6,19 @@ const groups = siteConfig.sidebar || [];
 const pathname = Astro.url.pathname;
 ---
 
-<aside class="sidebar">
+<div class="sidebar">
   {
     groups.map((group) => (
-      <section>
-        <h2>
-          <Icon name={group.icon} class="group-icon" aria-hidden="true" />
-          <span>{group.label}</span>
-        </h2>
-        <ul>
+      <section class="sidebar-link-group">
+        <label class="sidebar-link-group-label">{group.label}</label>
+        <ul class="sidebar-link-list">
           {group.items.map((item) => (
-            <li>
+            <li class="sidebar-link-item">
               <a
                 href={item.link}
-                class={pathname === item.link ? "active" : undefined}
+                class="sidebar-link"
+                data-state={pathname === item.link ? "active" : "inactive"}
               >
-                <Icon name={item.icon} class="item-icon" aria-hidden="true" />
                 <span>{item.label}</span>
               </a>
             </li>
@@ -30,72 +27,53 @@ const pathname = Astro.url.pathname;
       </section>
     ))
   }
-</aside>
+</div>
 
-<style>
+<style is:global>
   .sidebar {
     position: sticky;
     top: 5.5rem;
-    align-self: start;
-    padding: 0 1.5rem 0 0;
   }
 
-  h2 {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    margin: 0 0 0.75rem;
-    font-size: 0.9rem;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    color: var(--muted-color);
+  .sidebar-link-group {
+    font-size: 0.875rem;
+
+    .sidebar-link-group-icon {
+      width: 1.1rem;
+      height: 1.1rem;
+    }
+
+    .sidebar-link-group-label {
+      padding: 0.5rem;
+      font-weight: 700;
+    }
   }
 
-  ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-  }
-
-  section + section {
-    margin-top: 1.5rem;
-    padding-top: 1.5rem;
-    border-top: 1px solid
-      color-mix(in srgb, var(--foreground-color) 10%, transparent);
-  }
-
-  li + li {
-    margin-top: 0.35rem;
-  }
-
-  a {
-    display: flex;
-    align-items: center;
-    gap: 0.55rem;
-    display: block;
-    padding: 0.45rem 0;
-    color: var(--muted-color);
-  }
-
-  .group-icon,
-  .item-icon {
-    flex: none;
-  }
-
-  .group-icon {
-    width: 0.95rem;
-    height: 0.95rem;
-  }
-
-  .item-icon {
+  .sidebar-icon {
     width: 0.9rem;
     height: 0.9rem;
   }
 
-  a.active,
-  a:hover {
-    color: var(--foreground-color);
-    background: transparent;
+  .sidebar-link-list {
+    list-style: none;
+    padding: 0.5rem;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .sidebar-link {
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+    border-radius: 0.25rem;
+    padding: 0.45rem 0.75rem;
+
+    &[data-state="active"],
+    &:hover {
+      background: rgba(var(--accent-color) / 1);
+      color: rgba(var(--foreground-color) / 1);
+    }
   }
 
   @media (max-width: 900px) {
@@ -103,7 +81,7 @@ const pathname = Astro.url.pathname;
       position: static;
       padding: 0 0 1.5rem;
       border-bottom: 1px solid
-        color-mix(in srgb, var(--foreground-color) 12%, transparent);
+        color-mix(in srgb, rgba(var(--foreground-color) / 1) 12%, transparent);
     }
   }
 </style>

@@ -2,6 +2,7 @@
   "extends": "astro/tsconfigs/strict",
   "compilerOptions": {
     "baseUrl": ".",
+    "esModuleInterop": true,
     "paths": {
       "@lucide/astro": ["./node_modules/@lucide/astro/src/lucide-astro.ts"]
     }

@@ -1,4 +1,5 @@
 ---
+import GithubIcon from "./GithubIcon.astro";
 import { icons as lucideIcons, type LucideIconComponent } from "@lucide/astro";
 
 interface Props {
@@ -41,18 +42,38 @@ function resolveIconComponent(iconName?: string) {
   return typeof icon === "function" ? (icon as LucideIconComponent) : undefined;
 }
 
+function isGithubIcon(iconName?: string) {
+  if (!iconName) {
+    return false;
+  }
+
+  const normalized = normalizeIconName(iconName);
+  return normalized.toLowerCase() === "github";
+}
+
 const LucideIcon = resolveIconComponent(name);
+const useGithubIcon = isGithubIcon(name);
 ---
 
 {
-  LucideIcon && (
-    <LucideIcon
+  useGithubIcon ? (
+    <GithubIcon
       class={className}
       color={color}
       size={size}
       title={title}
-      stroke-width={strokeWidth}
       aria-hidden={ariaHidden}
     />
+  ) : (
+    LucideIcon && (
+      <LucideIcon
+        class={className}
+        color={color}
+        size={size}
+        title={title}
+        stroke-width={strokeWidth}
+        aria-hidden={ariaHidden}
+      />
+    )
   )
 }

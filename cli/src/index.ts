@@ -169,10 +169,18 @@ async function writeAstroConfig(input: {
 
   const content = `import { defineConfig } from "astro/config";
 import mdx from "@astrojs/mdx";
+import remarkGithubAlerts from "remark-github-alerts";
 
 export default defineConfig({
   outDir: ${JSON.stringify(path.join(input.cwd, "dist"))},
-  integrations: [mdx()],
+  markdown: {
+    remarkPlugins: [remarkGithubAlerts]
+  },
+  integrations: [
+    mdx({
+      remarkPlugins: [remarkGithubAlerts]
+    })
+  ],
   site: "http://localhost:4321",
   vite: {
     define: {
