@@ -1,6 +1,7 @@
 ---
 import NavBar from "../components/NavBar.astro";
 import Sidebar from "../components/Sidebar.astro";
+import DocToc from "../components/DocToc.astro";
 import { siteDescription, siteTitle } from "../lib/config";
 import "../styles/global.css";
 import "../styles/markdown.css";
@@ -10,11 +11,25 @@ interface Props {
   description?: string;
   sidebar?: boolean;
   contentClass?: string;
+  tocHeadings?: Array<{
+    depth: number;
+    slug: string;
+    text: string;
+  }>;
 }
 
-const { title, description, sidebar = true, contentClass = "" } = Astro.props;
+const {
+  title,
+  description,
+  sidebar = true,
+  contentClass = "",
+  tocHeadings = [],
+} = Astro.props;
 const pageTitle = title ? `${title} | ${siteTitle}` : siteTitle;
 const pageDescription = description || siteDescription;
+const tocItems = tocHeadings.filter(
+  (heading) => heading.depth >= 2 && heading.depth <= 3,
+);
 ---
 
 <!doctype html>
@@ -42,7 +57,17 @@ const pageDescription = description || siteDescription;
         )
       }
       <main class:list={["content", contentClass]}>
-        <slot />
+        <div
+          class:list={[
+            "docs-main",
+            tocItems.length > 0 && "docs-main-with-toc",
+          ]}
+        >
+          <div class="docs-main-content">
+            <slot />
+          </div>
+          <DocToc items={tocItems} />
+        </div>
       </main>
     </div>
     <script>
@@ -80,9 +105,23 @@ const pageDescription = description || siteDescription;
     min-width: 0;
   }
 
+  .docs-main {
+    width: 100%;
+    min-width: 0;
+  }
+
   .wrapper-without-sidebar {
     max-width: unset;
     width: 100%;
+  }
+
+  @media (min-width: 1200px) {
+    .docs-main-with-toc {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 15rem;
+      gap: 2rem;
+      align-items: start;
+    }
   }
 
   @media (max-width: 900px) {

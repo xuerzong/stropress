@@ -1,0 +1,111 @@
+---
+interface TocItem {
+  depth: number;
+  slug: string;
+  text: string;
+}
+
+interface Props {
+  items?: TocItem[];
+}
+
+const { items = [] } = Astro.props;
+---
+
+{
+  items.length > 0 && (
+    <aside class="doc-toc" aria-label="Table of contents">
+      <p class="doc-toc-title">On this page</p>
+      <ul class="doc-toc-list">
+        {items.map((heading) => (
+          <li
+            class:list={["doc-toc-item", `depth-${heading.depth}`]}
+            data-target-id={heading.slug}
+            data-state="inactive"
+          >
+            <a href={`#${heading.slug}`} class="doc-toc-link">
+              {heading.text}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </aside>
+  )
+}
+
+<script>
+  import { setupDocToc } from "../scripts/doc-toc";
+
+  setupDocToc();
+</script>
+
+<style is:global>
+  .doc-toc {
+    display: none;
+  }
+
+  .doc-toc-title {
+    margin: 0 0 0.9rem;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: rgba(var(--muted-color) / 1);
+  }
+
+  .doc-toc-list {
+    position: relative;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.28rem;
+  }
+
+  .doc-toc-list::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 2px;
+    background: rgba(var(--border-color) / 0.4);
+  }
+
+  .doc-toc-item.depth-3 {
+    padding-left: 0.8rem;
+  }
+
+  .doc-toc-item {
+    border-left: 2px solid transparent;
+  }
+
+  .doc-toc-item:hover,
+  .doc-toc-item[data-state="active"] {
+    color: rgba(var(--foreground-color) / 1);
+    border-color: rgba(var(--foreground-color) / 1);
+  }
+
+  .doc-toc-link {
+    display: block;
+    padding: 0.2rem 0.65rem;
+    text-decoration: none;
+    line-height: 1.5;
+    color: rgba(var(--muted-color) / 1);
+    transition:
+      color 0.14s ease,
+      border-color 0.14s ease;
+  }
+
+  @media (min-width: 1200px) {
+    .doc-toc {
+      display: block;
+      position: sticky;
+      top: 5.7rem;
+      max-height: calc(100vh - 6.2rem);
+      overflow: auto;
+      padding: 0.3rem 0 0;
+    }
+  }
+</style>

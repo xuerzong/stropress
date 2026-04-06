@@ -79,6 +79,14 @@
     text-underline-offset: 2px;
   }
 
+  :is(h2, h3, h4) {
+    scroll-margin-top: 6.4rem;
+  }
+
+  .doc-toc-link {
+    text-decoration: none;
+  }
+
   code:not(pre code) {
     background-color: rgba(var(--accent-color) / 1);
     color: var(--color-primary);
