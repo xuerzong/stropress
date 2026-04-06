@@ -6,20 +6,22 @@ const items = siteConfig.navbar || [];
 ---
 
 <header class="header">
-  <div class="logo">
-    <a href="/">{siteTitle}</a>
+  <div class="header-wrapper">
+    <div class="logo">
+      <a href="/">{siteTitle}</a>
+    </div>
+    <ul class="social-links-list">
+      {
+        items.map((item) => (
+          <li>
+            <a href={item.link} class="nav-link">
+              <Icon name={item.icon} class="nav-icon" aria-hidden="true" />
+            </a>
+          </li>
+        ))
+      }
+    </ul>
   </div>
-  <ul class="social-links-list">
-    {
-      items.map((item) => (
-        <li>
-          <a href={item.link} class="nav-link">
-            <Icon name={item.icon} class="nav-icon" aria-hidden="true" />
-          </a>
-        </li>
-      ))
-    }
-  </ul>
 </header>
 
 <style is:global>
@@ -34,6 +36,15 @@ const items = siteConfig.navbar || [];
     backdrop-filter: blur(8px);
     background: rgba(var(--background-color) / 0.85);
     border-bottom: 1px solid rgba(var(--border-color) / 1);
+  }
+
+  .header-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    max-width: 80rem;
+    margin: 0 auto;
   }
 
   .logo a {
