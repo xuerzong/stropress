@@ -2,6 +2,7 @@
 import { build, dev } from "astro";
 import { program } from "commander";
 import fs from "fs-extra";
+import { watch } from "node:fs";
 import path from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 
@@ -69,6 +70,18 @@ async function run(mode: "dev" | "build", options: RunOptions) {
       site: astroConfig.site,
       devOutput: "static",
     });
+
+    const stopWatching = watchDocsForChanges({
+      sourceDir: docsDir,
+      targetDir: themeContentDir,
+    });
+
+    const shutdown = () => {
+      stopWatching();
+    };
+
+    process.once("SIGINT", shutdown);
+    process.once("SIGTERM", shutdown);
     return;
   }
 
@@ -129,6 +142,76 @@ async function readConfig(configPath: string): Promise<SiteConfig> {
 async function syncDocs(sourceDir: string, targetDir: string) {
   await fs.emptyDir(targetDir);
   await copyDocsRecursive(sourceDir, targetDir);
+}
+
+function watchDocsForChanges(input: { sourceDir: string; targetDir: string }) {
+  let timer: NodeJS.Timeout | undefined;
+  let syncing = false;
+  let pending = false;
+
+  const runSync = async () => {
+    if (syncing) {
+      pending = true;
+      return;
+    }
+
+    syncing = true;
+    try {
+      await syncDocs(input.sourceDir, input.targetDir);
+      console.log("[stropress] Synced docs changes.");
+    } catch (error) {
+      const message = error instanceof Error ? error.message : String(error);
+      console.error(`[stropress] Failed to sync docs changes: ${message}`);
+    } finally {
+      syncing = false;
+      if (pending) {
+        pending = false;
+        void runSync();
+      }
+    }
+  };
+
+  const queueSync = () => {
+    if (timer) {
+      clearTimeout(timer);
+    }
+
+    // Debounce fast consecutive writes from editors.
+    timer = setTimeout(() => {
+      void runSync();
+    }, 120);
+  };
+
+  const watcher = watch(
+    input.sourceDir,
+    { recursive: true },
+    (_eventType, filename) => {
+      const changedPath = typeof filename === "string" ? filename : "";
+
+      if (!changedPath) {
+        queueSync();
+        return;
+      }
+
+      if (changedPath === "config.json") {
+        return;
+      }
+
+      if (!/\.(md|mdx)$/i.test(changedPath)) {
+        return;
+      }
+
+      queueSync();
+    },
+  );
+
+  console.log(`[stropress] Watching docs changes: ${input.sourceDir}`);
+  return () => {
+    watcher.close();
+    if (timer) {
+      clearTimeout(timer);
+    }
+  };
 }
 
 async function copyDocsRecursive(sourceDir: string, targetDir: string) {
