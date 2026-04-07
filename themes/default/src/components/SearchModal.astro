@@ -1,0 +1,209 @@
+---
+import type { SearchDocument } from "../scripts/search";
+
+interface Props {
+  documents: SearchDocument[];
+}
+
+const { documents } = Astro.props;
+---
+
+<div
+  class="site-search-modal"
+  data-search-modal
+  data-search-documents={JSON.stringify(documents)}
+  data-state="closed"
+  aria-hidden="true"
+>
+  <button
+    class="site-search-modal-backdrop"
+    type="button"
+    aria-label="Close search"
+    data-search-close></button>
+  <section
+    class="site-search-panel"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="site-search-title"
+  >
+    <div class="site-search-panel-header">
+      <h2 id="site-search-title">Search Documentation</h2>
+      <button
+        class="site-search-close"
+        type="button"
+        aria-label="Close search"
+        data-search-close
+      >
+        Esc
+      </button>
+    </div>
+
+    <input
+      id="site-search-modal-input"
+      class="site-search-input"
+      type="search"
+      placeholder="Type to search..."
+      autocomplete="off"
+      spellcheck="false"
+      data-search-input
+    />
+
+    <p class="site-search-hint" data-search-hint>
+      Press ↑/↓ to navigate, Enter to open.
+    </p>
+
+    <ul class="site-search-results" data-search-results></ul>
+
+    <p class="site-search-empty" data-search-empty hidden>No results found.</p>
+  </section>
+</div>
+
+<script>
+  import { setupSearch } from "../scripts/search";
+
+  const modal = document.querySelector<HTMLElement>("[data-search-modal]");
+  const rawDocuments = modal?.dataset.searchDocuments || "[]";
+
+  try {
+    const documents = JSON.parse(rawDocuments);
+    if (Array.isArray(documents)) {
+      setupSearch(documents);
+    }
+  } catch {
+    setupSearch([]);
+  }
+</script>
+
+<style is:global>
+  .site-search-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 80;
+    display: none;
+    width: 100vw;
+    height: 100vh;
+  }
+
+  .site-search-modal[data-state="open"] {
+    display: grid;
+    place-items: start center;
+    padding: clamp(1rem, 5vh, 5rem) 1rem 1rem;
+  }
+
+  .site-search-modal-backdrop {
+    position: absolute;
+    inset: 0;
+    border: 0;
+    background: rgba(10 10 10 / 0.44);
+    backdrop-filter: blur(3px);
+    cursor: pointer;
+  }
+
+  .site-search-panel {
+    position: relative;
+    width: min(44rem, 100%);
+    border-radius: 1rem;
+    border: 1px solid rgba(var(--border-color) / 1);
+    background: rgba(var(--background-color) / 1);
+    box-shadow:
+      0 22px 60px rgba(0 0 0 / 0.24),
+      0 1px 0 rgba(255 255 255 / 0.08) inset;
+    overflow: hidden;
+  }
+
+  .site-search-panel-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 1rem 1rem 0.5rem;
+  }
+
+  .site-search-panel-header h2 {
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 650;
+  }
+
+  .site-search-close {
+    border: 1px solid rgba(var(--border-color) / 1);
+    background: transparent;
+    color: rgba(var(--muted-color) / 1);
+    border-radius: 0.5rem;
+    font-size: 0.75rem;
+    padding: 0.25rem 0.5rem;
+    cursor: pointer;
+  }
+
+  .site-search-input {
+    width: calc(100% - 2rem);
+    margin: 0.5rem 1rem 0;
+    border-radius: 0.75rem;
+    border: 1px solid rgba(var(--border-color) / 1);
+    padding: 0.75rem 0.875rem;
+    font-size: 0.95rem;
+    background: rgba(var(--background-color) / 1);
+    color: rgba(var(--foreground-color) / 1);
+  }
+
+  .site-search-input:focus-visible {
+    border-color: rgba(var(--foreground-color) / 0.38);
+    box-shadow: 0 0 0 4px rgba(var(--foreground-color) / 0.08);
+    outline: none;
+  }
+
+  .site-search-hint {
+    margin: 0;
+    padding: 0.55rem 1rem 0.85rem;
+    font-size: 0.78rem;
+    color: rgba(var(--muted-color) / 1);
+  }
+
+  .site-search-results {
+    list-style: none;
+    margin: 0;
+    padding: 0.25rem;
+    max-height: min(26rem, 60vh);
+    overflow-y: auto;
+    border-top: 1px solid rgba(var(--border-color) / 1);
+  }
+
+  .site-search-result-item {
+    margin: 0;
+    border-radius: 0.75rem;
+  }
+
+  .site-search-result-link {
+    display: grid;
+    gap: 0.2rem;
+    padding: 0.7rem 0.8rem;
+    border-radius: 0.75rem;
+    transition: background 120ms ease;
+  }
+
+  .site-search-result-link:hover,
+  .site-search-result-link:focus-visible,
+  .site-search-result-item[data-state="active"] .site-search-result-link {
+    background: rgba(var(--accent-color) / 1);
+    outline: none;
+  }
+
+  .site-search-result-title {
+    font-size: 0.92rem;
+    font-weight: 630;
+  }
+
+  .site-search-result-desc {
+    font-size: 0.82rem;
+    line-height: 1.45;
+    color: rgba(var(--muted-color) / 1);
+  }
+
+  .site-search-empty {
+    margin: 0;
+    padding: 1rem;
+    font-size: 0.88rem;
+    color: rgba(var(--muted-color) / 1);
+    border-top: 1px solid rgba(var(--border-color) / 1);
+  }
+</style>

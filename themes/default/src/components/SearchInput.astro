@@ -1,0 +1,84 @@
+<div class="site-search-trigger" data-search-open>
+  <button
+    id="site-search-trigger-button"
+    class="site-search-trigger-button"
+    type="button"
+    aria-label="Open search"
+    aria-haspopup="dialog"
+    data-search-trigger
+  >
+    <span class="site-search-trigger-text">Search...</span>
+  </button>
+  <span class="site-search-shortcut" aria-hidden="true">⌘K</span>
+</div>
+
+<style is:global>
+  .site-search-trigger {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: min(10rem, 20vw);
+  }
+
+  .site-search-trigger-button {
+    width: 100%;
+    border: 1px solid rgba(var(--border-color) / 1);
+    border-radius: var(--border-radius);
+    background: rgba(var(--background-color) / 0.92);
+    color: rgba(var(--foreground-color) / 1);
+    text-align: left;
+    font-size: 0.875rem;
+    line-height: 1;
+    padding: 0.7rem 4.25rem 0.7rem 1rem;
+    cursor: pointer;
+    transition:
+      border-color 160ms ease,
+      box-shadow 160ms ease;
+  }
+
+  .site-search-trigger-text {
+    color: rgba(var(--muted-color) / 1);
+  }
+
+  .site-search-trigger-button:hover,
+  .site-search-trigger-button:focus-visible {
+    border-color: rgba(var(--foreground-color) / 0.35);
+    box-shadow: 0 0 0 4px rgba(var(--foreground-color) / 0.06);
+    outline: none;
+  }
+
+  .site-search-shortcut {
+    position: absolute;
+    right: 0.55rem;
+    top: 50%;
+    transform: translateY(-50%);
+    border-radius: 999px;
+    border: 1px solid rgba(var(--border-color) / 1);
+    padding: 0.2rem 0.5rem;
+    font-size: 0.72rem;
+    color: rgba(var(--muted-color) / 1);
+    background: rgba(var(--background-color) / 0.95);
+    pointer-events: none;
+  }
+
+  .site-search-sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    border: 0;
+    padding: 0;
+    white-space: nowrap;
+    clip-path: inset(100%);
+    clip: rect(0 0 0 0);
+    overflow: hidden;
+  }
+
+  @media (max-width: 900px) {
+    .site-search-trigger {
+      width: 100%;
+      max-width: 100%;
+      order: 3;
+    }
+  }
+</style>
