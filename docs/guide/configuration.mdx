@@ -10,6 +10,7 @@ Use `docs/config.json` to define the navigation structure.
 - `navbar`: top navigation items
 - `sidebar`: side navigation groups
 - `search`: local search options
+- `markdown`: markdown rendering options
 
 ## Search
 
@@ -24,6 +25,61 @@ You can keep the default behavior or set it explicitly in `docs/config.json`:
   }
 }
 ```
+
+## Code Block Theme
+
+Configure code block highlighting theme via `markdown.codeTheme` in `docs/config.json`.
+
+Use a single theme:
+
+```json
+{
+  "markdown": {
+    "codeTheme": "github-dark"
+  }
+}
+```
+
+Or define separate light/dark themes:
+
+```json
+{
+  "markdown": {
+    "codeTheme": {
+      "light": "github-light",
+      "dark": "github-dark"
+    }
+  }
+}
+```
+
+Common theme names (supported by Astro via Shiki, depending on your Astro/Shiki version):
+
+- `github-light`
+- `github-dark`
+- `one-dark-pro`
+- `dracula`
+- `nord`
+- `material-theme-darker`
+- `catppuccin-latte`
+- `catppuccin-frappe`
+- `catppuccin-macchiato`
+- `catppuccin-mocha`
+
+Example with One Dark + Catppuccin:
+
+```json
+{
+  "markdown": {
+    "codeTheme": {
+      "light": "catppuccin-latte",
+      "dark": "one-dark-pro"
+    }
+  }
+}
+```
+
+If a theme name is invalid for your current version, build/dev will report a theme loading error.
 
 ## Bilingual Locales
 

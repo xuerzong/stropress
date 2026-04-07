@@ -16,6 +16,17 @@ interface SidebarGroup {
   items: NavItem[];
 }
 
+type CodeThemeConfig =
+  | string
+  | {
+      light: string;
+      dark: string;
+    };
+
+interface MarkdownConfig {
+  codeTheme?: CodeThemeConfig;
+}
+
 interface SiteConfig {
   site?: {
     title?: string;
@@ -23,6 +34,7 @@ interface SiteConfig {
   };
   navbar?: NavItem[];
   sidebar?: SidebarGroup[];
+  markdown?: MarkdownConfig;
 }
 
 interface RunOptions {
@@ -247,6 +259,10 @@ async function writeAstroConfig(input: {
   const runtimeDir = path.join(input.themeDir, ".stropress");
   const astroConfigPath = path.join(runtimeDir, "astro.config.mjs");
   const serializedConfig = JSON.stringify(input.config);
+  const codeTheme = input.config.markdown?.codeTheme;
+  const shikiConfig = codeTheme
+    ? `,\n    shikiConfig: {\n      theme: ${JSON.stringify(codeTheme)}\n    }`
+    : "";
 
   await fs.ensureDir(runtimeDir);
 
@@ -260,7 +276,7 @@ export default defineConfig({
     enabled: false
   },
   markdown: {
-    remarkPlugins: [remarkGithubAlerts]
+    remarkPlugins: [remarkGithubAlerts]${shikiConfig}
   },
   integrations: [
     mdx({

@@ -38,6 +38,9 @@
       }
     ]
   },
+  "markdown": {
+    "codeTheme": "github-light"
+  },
   "navbar": [
     {
       "icon": "BookOpen",

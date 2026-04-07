@@ -56,6 +56,16 @@
         }
       }
     },
+    "markdown": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Markdown rendering options.",
+      "properties": {
+        "codeTheme": {
+          "$ref": "#/$defs/codeTheme"
+        }
+      }
+    },
     "navbar": {
       "type": "array",
       "description": "Top navigation links.",
@@ -243,6 +253,30 @@
           }
         }
       }
+    },
+    "codeTheme": {
+      "description": "Shiki theme for markdown code blocks. Supports a single theme name or light/dark themes.",
+      "oneOf": [
+        {
+          "type": "string",
+          "description": "Single theme name, for example github-dark or nord."
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["light", "dark"],
+          "properties": {
+            "light": {
+              "type": "string",
+              "description": "Theme used in light mode, for example github-light."
+            },
+            "dark": {
+              "type": "string",
+              "description": "Theme used in dark mode, for example github-dark."
+            }
+          }
+        }
+      ]
     }
   }
 }

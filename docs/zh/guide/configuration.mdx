@@ -10,6 +10,7 @@ description: 配置导航、侧边栏和双语
 - `navbar`：顶部导航
 - `sidebar`：侧边栏分组
 - `search`：本地搜索选项
+- `markdown`：Markdown 渲染选项
 - `locales`：多语言配置
 
 ## 搜索
@@ -23,6 +24,61 @@ description: 配置导航、侧边栏和双语
   }
 }
 ```
+
+## 代码块主题
+
+你可以在 `docs/config.json` 中通过 `markdown.codeTheme` 配置代码块高亮主题。
+
+使用单一主题：
+
+```json
+{
+  "markdown": {
+    "codeTheme": "github-dark"
+  }
+}
+```
+
+或分别配置亮色/暗色主题：
+
+```json
+{
+  "markdown": {
+    "codeTheme": {
+      "light": "github-light",
+      "dark": "github-dark"
+    }
+  }
+}
+```
+
+常见主题名（由 Astro 通过 Shiki 提供，具体可用性取决于 Astro/Shiki 版本）：
+
+- `github-light`
+- `github-dark`
+- `one-dark-pro`
+- `dracula`
+- `nord`
+- `material-theme-darker`
+- `catppuccin-latte`
+- `catppuccin-frappe`
+- `catppuccin-macchiato`
+- `catppuccin-mocha`
+
+One Dark + Catppuccin 示例：
+
+```json
+{
+  "markdown": {
+    "codeTheme": {
+      "light": "catppuccin-latte",
+      "dark": "one-dark-pro"
+    }
+  }
+}
+```
+
+如果主题名在当前版本不可用，`dev/build` 会提示主题加载错误。
 
 ## 双语配置
 
