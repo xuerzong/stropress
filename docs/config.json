@@ -43,11 +43,6 @@
   },
   "socialLinks": [
     {
-      "icon": "BookOpen",
-      "label": "Guide",
-      "link": "/guide/getting-started"
-    },
-    {
       "icon": "Github",
       "label": "GitHub",
       "link": "https://github.com/xuerzong/stropress"

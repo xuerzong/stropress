@@ -51,6 +51,18 @@ async function run(mode: "dev" | "build", options: RunOptions) {
   const themeDir = await resolveThemeDir();
   const themeContentDir = path.join(themeDir, "src/content/docs");
 
+  const loadAstroConfig = async (config: SiteConfig) => {
+    const astroConfigPath = await writeAstroConfig({
+      cwd,
+      themeDir,
+      config,
+    });
+    const astroConfigModule = await import(
+      `${pathToFileURL(astroConfigPath).href}?t=${Date.now()}`
+    );
+    return astroConfigModule.default;
+  };
+
   if (!(await fs.pathExists(themeDir))) {
     throw new Error(`Missing theme directory: ${themeDir}`);
   }
@@ -64,38 +76,75 @@ async function run(mode: "dev" | "build", options: RunOptions) {
     throw new Error("No .md or .mdx files found under docs/");
   }
 
-  const config = await readConfig(configPath);
   await syncDocs(docsDir, themeContentDir);
 
-  const astroConfigPath = await writeAstroConfig({
-    cwd,
-    themeDir,
-    config,
-  });
-  const astroConfigModule = await import(pathToFileURL(astroConfigPath).href);
-  const astroConfig = astroConfigModule.default;
-
   if (mode === "dev") {
-    await dev({
-      ...astroConfig,
-      root: themeDir,
-      site: astroConfig.site,
-      devOutput: "static",
-    });
+    let devServer: Awaited<ReturnType<typeof dev>> | undefined;
+    let restarting = false;
+    let pendingRestart = false;
+
+    const startDevServer = async () => {
+      const config = await readConfig(configPath);
+      const astroConfig = await loadAstroConfig(config);
+
+      devServer = await dev({
+        ...astroConfig,
+        root: themeDir,
+        site: astroConfig.site,
+        devOutput: "static",
+      });
+    };
+
+    const restartDevServer = async () => {
+      if (restarting) {
+        pendingRestart = true;
+        return;
+      }
+
+      restarting = true;
+      try {
+        console.log(
+          "[stropress] Detected config.json changes. Restarting dev server...",
+        );
+        if (devServer) {
+          await devServer.stop();
+        }
+        await startDevServer();
+        console.log("[stropress] Dev server restarted.");
+      } catch (error) {
+        const message = error instanceof Error ? error.message : String(error);
+        console.error(`[stropress] Failed to restart dev server: ${message}`);
+      } finally {
+        restarting = false;
+        if (pendingRestart) {
+          pendingRestart = false;
+          void restartDevServer();
+        }
+      }
+    };
+
+    await startDevServer();
 
     const stopWatching = watchDocsForChanges({
       sourceDir: docsDir,
       targetDir: themeContentDir,
+      onConfigChange: restartDevServer,
     });
 
     const shutdown = () => {
       stopWatching();
+      if (devServer) {
+        void devServer.stop();
+      }
     };
 
     process.once("SIGINT", shutdown);
     process.once("SIGTERM", shutdown);
     return;
   }
+
+  const config = await readConfig(configPath);
+  const astroConfig = await loadAstroConfig(config);
 
   await build({
     ...astroConfig,
@@ -156,8 +205,13 @@ async function syncDocs(sourceDir: string, targetDir: string) {
   await copyDocsRecursive(sourceDir, targetDir);
 }
 
-function watchDocsForChanges(input: { sourceDir: string; targetDir: string }) {
+function watchDocsForChanges(input: {
+  sourceDir: string;
+  targetDir: string;
+  onConfigChange?: () => void | Promise<void>;
+}) {
   let timer: NodeJS.Timeout | undefined;
+  let configTimer: NodeJS.Timeout | undefined;
   let syncing = false;
   let pending = false;
 
@@ -194,22 +248,35 @@ function watchDocsForChanges(input: { sourceDir: string; targetDir: string }) {
     }, 120);
   };
 
+  const queueConfigRestart = () => {
+    if (configTimer) {
+      clearTimeout(configTimer);
+    }
+
+    // Debounce duplicate fs events so one save causes one restart.
+    configTimer = setTimeout(() => {
+      void input.onConfigChange?.();
+    }, 160);
+  };
+
   const watcher = watch(
     input.sourceDir,
     { recursive: true },
     (_eventType, filename) => {
       const changedPath = typeof filename === "string" ? filename : "";
+      const normalizedPath = changedPath.replaceAll("\\", "/");
 
       if (!changedPath) {
         queueSync();
         return;
       }
 
-      if (changedPath === "config.json") {
+      if (normalizedPath === "config.json") {
+        queueConfigRestart();
         return;
       }
 
-      if (!/\.(md|mdx)$/i.test(changedPath)) {
+      if (!/\.(md|mdx)$/i.test(normalizedPath)) {
         return;
       }
 
@@ -222,6 +289,9 @@ function watchDocsForChanges(input: { sourceDir: string; targetDir: string }) {
     watcher.close();
     if (timer) {
       clearTimeout(timer);
+    }
+    if (configTimer) {
+      clearTimeout(configTimer);
     }
   };
 }
