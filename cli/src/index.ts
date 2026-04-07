@@ -59,7 +59,7 @@ interface RunOptions {
 const currentFilePath = fileURLToPath(import.meta.url);
 const currentDir = path.dirname(currentFilePath);
 
-async function run(mode: "dev" | "build", options: RunOptions) {
+const run = async (mode: "dev" | "build", options: RunOptions) => {
   const cwd = process.cwd();
   const docsDir = path.resolve(cwd, options.dir || "docs");
   const configPath = path.join(docsDir, "config.json");
@@ -133,7 +133,7 @@ async function run(mode: "dev" | "build", options: RunOptions) {
         restarting = false;
         if (pendingRestart) {
           pendingRestart = false;
-          void restartDevServer();
+          restartDevServer();
         }
       }
     };
@@ -151,7 +151,7 @@ async function run(mode: "dev" | "build", options: RunOptions) {
       stopWatching();
       stopOgPreview();
       if (devServer) {
-        void devServer.stop();
+        devServer.stop();
       }
     };
 
@@ -175,9 +175,9 @@ async function run(mode: "dev" | "build", options: RunOptions) {
     outputDir: path.join(cwd, "dist/og"),
     config,
   });
-}
+};
 
-async function resolveThemeDir() {
+const resolveThemeDir = async () => {
   const candidates = [
     path.resolve(currentDir, "theme-default"),
     path.resolve(currentDir, "../theme-default"),
@@ -191,9 +191,9 @@ async function resolveThemeDir() {
   }
 
   throw new Error("Missing bundled default theme");
-}
+};
 
-async function collectDocs(currentDir: string): Promise<string[]> {
+const collectDocs = async (currentDir: string): Promise<string[]> => {
   const entries = await fs.readdir(currentDir, { withFileTypes: true });
   const files: string[] = [];
 
@@ -214,26 +214,26 @@ async function collectDocs(currentDir: string): Promise<string[]> {
   }
 
   return files;
-}
+};
 
-async function readConfig(configPath: string): Promise<SiteConfig> {
+const readConfig = async (configPath: string): Promise<SiteConfig> => {
   if (!(await fs.pathExists(configPath))) {
     return {};
   }
 
   return fs.readJson(configPath) as Promise<SiteConfig>;
-}
+};
 
-async function syncDocs(sourceDir: string, targetDir: string) {
+const syncDocs = async (sourceDir: string, targetDir: string) => {
   await fs.emptyDir(targetDir);
   await copyDocsRecursive(sourceDir, targetDir);
-}
+};
 
-function watchDocsForChanges(input: {
+const watchDocsForChanges = (input: {
   sourceDir: string;
   targetDir: string;
   onConfigChange?: () => void | Promise<void>;
-}) {
+}) => {
   let timer: NodeJS.Timeout | undefined;
   let configTimer: NodeJS.Timeout | undefined;
   let syncing = false;
@@ -256,7 +256,7 @@ function watchDocsForChanges(input: {
       syncing = false;
       if (pending) {
         pending = false;
-        void runSync();
+        runSync();
       }
     }
   };
@@ -268,7 +268,7 @@ function watchDocsForChanges(input: {
 
     // Debounce fast consecutive writes from editors.
     timer = setTimeout(() => {
-      void runSync();
+      runSync();
     }, 120);
   };
 
@@ -279,7 +279,7 @@ function watchDocsForChanges(input: {
 
     // Debounce duplicate fs events so one save causes one restart.
     configTimer = setTimeout(() => {
-      void input.onConfigChange?.();
+      input.onConfigChange?.();
     }, 160);
   };
 
@@ -318,9 +318,9 @@ function watchDocsForChanges(input: {
       clearTimeout(configTimer);
     }
   };
-}
+};
 
-async function copyDocsRecursive(sourceDir: string, targetDir: string) {
+const copyDocsRecursive = async (sourceDir: string, targetDir: string) => {
   const entries = await fs.readdir(sourceDir, { withFileTypes: true });
 
   for (const entry of entries) {
@@ -342,13 +342,13 @@ async function copyDocsRecursive(sourceDir: string, targetDir: string) {
       await fs.copyFile(sourcePath, targetPath);
     }
   }
-}
+};
 
-async function writeAstroConfig(input: {
+const writeAstroConfig = async (input: {
   cwd: string;
   themeDir: string;
   config: SiteConfig;
-}) {
+}) => {
   await fs.remove(path.join(input.themeDir, ".daoke"));
   const runtimeDir = path.join(input.themeDir, ".stropress");
   const astroConfigPath = path.join(runtimeDir, "astro.config.mjs");
@@ -388,13 +388,13 @@ export default defineConfig({
 
   await fs.writeFile(astroConfigPath, content, "utf8");
   return astroConfigPath;
-}
+};
 
 program
   .name("stropress")
   .description("Build Astro docs from a local docs directory");
 
-function registerCommand(name: "dev" | "build") {
+const registerCommand = (name: "dev" | "build") => {
   program
     .command(name)
     .option(
@@ -403,7 +403,7 @@ function registerCommand(name: "dev" | "build") {
       "docs",
     )
     .action(async (options: RunOptions) => run(name, options));
-}
+};
 
 registerCommand("dev");
 registerCommand("build");

@@ -22,16 +22,15 @@ const {
   "aria-hidden": ariaHidden,
 } = Astro.props;
 
-function normalizeIconName(iconName: string) {
-  return iconName
+const normalizeIconName = (iconName: string) =>
+  iconName
     .trim()
     .replace(/(^[a-z])|[-_\s]+([a-zA-Z0-9])/g, (_, first, next) =>
       (first || next).toUpperCase(),
     )
     .replace(/[^a-zA-Z0-9]/g, "");
-}
 
-function resolveIconComponent(iconName?: string) {
+const resolveIconComponent = (iconName?: string) => {
   if (!iconName) {
     return undefined;
   }
@@ -40,16 +39,16 @@ function resolveIconComponent(iconName?: string) {
   const icon = lucideIcons[normalized] || lucideIcons[iconName];
 
   return typeof icon === "function" ? (icon as LucideIconComponent) : undefined;
-}
+};
 
-function isGithubIcon(iconName?: string) {
+const isGithubIcon = (iconName?: string) => {
   if (!iconName) {
     return false;
   }
 
   const normalized = normalizeIconName(iconName);
   return normalized.toLowerCase() === "github";
-}
+};
 
 const LucideIcon = resolveIconComponent(name);
 const useGithubIcon = isGithubIcon(name);

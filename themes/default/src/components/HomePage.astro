@@ -13,9 +13,8 @@ const heroDescription = homeConfig.description || siteDescription;
 const actions = homeConfig.actions || [];
 const features = homeConfig.features || [];
 
-function getActionClass(action: HomeAction) {
-  return action.theme === "alt" ? "action alt" : "action brand";
-}
+const getActionClass = (action: HomeAction) =>
+  action.theme === "alt" ? "action alt" : "action brand";
 ---
 
 <section class="hero">

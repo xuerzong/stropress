@@ -2,7 +2,7 @@
 import DocsLayout from "../../layouts/DocsLayout.astro";
 import { getCollection, render, type CollectionEntry } from "astro:content";
 
-export async function getStaticPaths() {
+export const getStaticPaths = async () => {
   const docs = await getCollection("docs");
 
   return docs
@@ -17,7 +17,7 @@ export async function getStaticPaths() {
         entry,
       },
     }));
-}
+};
 
 interface Props {
   entry: CollectionEntry<"docs">;

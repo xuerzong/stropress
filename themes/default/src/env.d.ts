@@ -10,5 +10,6 @@ declare module "copy-to-clipboard" {
     format?: string;
     onCopy?: (clipboardData: object) => void;
   }
-  export default function copy(text: string, options?: Options): boolean;
+  const copy: (text: string, options?: Options) => boolean;
+  export default copy;
 }

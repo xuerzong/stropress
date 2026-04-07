@@ -31,7 +31,7 @@ export interface OgPreviewInput {
   routePath?: string;
 }
 
-export async function generateOgImages(input: GenerateOgImagesInput) {
+export const generateOgImages = async (input: GenerateOgImagesInput) => {
   await fs.remove(input.outputDir);
   await fs.ensureDir(input.outputDir);
 
@@ -64,9 +64,9 @@ export async function generateOgImages(input: GenerateOgImagesInput) {
   }
 
   console.log(`[stropress] Generated ${docsFiles.length} OG images.`);
-}
+};
 
-export function renderOgPng(input: OgPreviewInput) {
+export const renderOgPng = (input: OgPreviewInput) => {
   const svg = buildOgSvg({
     title: truncateText(input.title || "Untitled", 84),
     description: truncateText(input.description || "", 160),
@@ -75,9 +75,9 @@ export function renderOgPng(input: OgPreviewInput) {
   });
 
   return renderSvgToPng(svg);
-}
+};
 
-async function collectMarkdownFiles(currentDir: string): Promise<string[]> {
+const collectMarkdownFiles = async (currentDir: string): Promise<string[]> => {
   const entries = await fs.readdir(currentDir, { withFileTypes: true });
   const files: string[] = [];
 
@@ -98,9 +98,9 @@ async function collectMarkdownFiles(currentDir: string): Promise<string[]> {
   }
 
   return files;
-}
+};
 
-function getRoutePathFromFile(docsDir: string, filePath: string) {
+const getRoutePathFromFile = (docsDir: string, filePath: string) => {
   const relativePath = normalizePath(path.relative(docsDir, filePath));
   const withoutExtension = relativePath.replace(/\.(md|mdx)$/i, "");
 
@@ -113,17 +113,17 @@ function getRoutePathFromFile(docsDir: string, filePath: string) {
   }
 
   return `/${withoutExtension}`;
-}
+};
 
-function routePathToFileStem(routePath: string) {
+const routePathToFileStem = (routePath: string) => {
   if (routePath === "/") {
     return "index";
   }
 
   return routePath.slice(1);
-}
+};
 
-function getSiteTitleForRoute(routePath: string, config: SiteConfig) {
+const getSiteTitleForRoute = (routePath: string, config: SiteConfig) => {
   const localeEntries = Object.entries(config.locales || {}).map(
     ([key, value]) => [normalizeLocaleKey(key), value] as const,
   );
@@ -142,18 +142,18 @@ function getSiteTitleForRoute(routePath: string, config: SiteConfig) {
   });
 
   return matched?.[1].site?.title || config.site?.title || "Stropress Docs";
-}
+};
 
-function normalizeLocaleKey(key: string) {
+const normalizeLocaleKey = (key: string) => {
   if (key === "/") {
     return "/";
   }
 
   const prefixed = key.startsWith("/") ? key : `/${key}`;
   return prefixed.endsWith("/") ? prefixed : `${prefixed}/`;
-}
+};
 
-async function readDocMeta(filePath: string) {
+const readDocMeta = async (filePath: string) => {
   const raw = await fs.readFile(filePath, "utf8");
   const frontmatterMatch = raw.match(/^---\n([\s\S]*?)\n---/);
   const frontmatter = frontmatterMatch?.[1] || "";
@@ -168,9 +168,9 @@ async function readDocMeta(filePath: string) {
     title,
     description,
   };
-}
+};
 
-function extractFrontmatterField(frontmatter: string, field: string) {
+const extractFrontmatterField = (frontmatter: string, field: string) => {
   const regex = new RegExp(`^${field}:\\s*(.+)$`, "m");
   const match = frontmatter.match(regex);
   if (!match) {
@@ -178,28 +178,28 @@ function extractFrontmatterField(frontmatter: string, field: string) {
   }
 
   return match[1].trim().replace(/^['\"]|['\"]$/g, "");
-}
+};
 
-function extractHeading(raw: string) {
+const extractHeading = (raw: string) => {
   const headingMatch = raw.match(/^#\s+(.+)$/m);
   return headingMatch?.[1]?.trim() || "";
-}
+};
 
-function fallbackTitleFromFile(filePath: string) {
+const fallbackTitleFromFile = (filePath: string) => {
   const stem = path.basename(filePath, path.extname(filePath));
   if (stem === "index") {
     return "Home";
   }
 
   return stem.replace(/[-_]/g, " ");
-}
+};
 
-function buildOgSvg(input: {
+const buildOgSvg = (input: {
   title: string;
   description: string;
   siteTitle: string;
   routePath: string;
-}) {
+}) => {
   const title = escapeXml(input.title);
   const description = escapeXml(input.description);
   const siteTitle = escapeXml(input.siteTitle);
@@ -223,9 +223,9 @@ function buildOgSvg(input: {
   <text x="112" y="322" fill="#cbd5e1" font-size="30" font-family="Inter, Arial, sans-serif" font-weight="500">${description}</text>
   <text x="112" y="512" fill="#94a3b8" font-size="24" font-family="Inter, Arial, sans-serif" font-weight="500">${routeText}</text>
 </svg>`;
-}
+};
 
-function renderSvgToPng(svg: string) {
+const renderSvgToPng = (svg: string) => {
   return new Resvg(svg, {
     fitTo: {
       mode: "width",
@@ -234,25 +234,25 @@ function renderSvgToPng(svg: string) {
   })
     .render()
     .asPng();
-}
+};
 
-function escapeXml(value: string) {
+const escapeXml = (value: string) => {
   return value
     .replaceAll("&", "&amp;")
     .replaceAll("<", "&lt;")
     .replaceAll(">", "&gt;")
     .replaceAll('"', "&quot;")
     .replaceAll("'", "&#39;");
-}
+};
 
-function normalizePath(value: string) {
+const normalizePath = (value: string) => {
   return value.replaceAll("\\", "/");
-}
+};
 
-function truncateText(value: string, maxLength: number) {
+const truncateText = (value: string, maxLength: number) => {
   if (value.length <= maxLength) {
     return value;
   }
 
   return `${value.slice(0, Math.max(0, maxLength - 1)).trimEnd()}…`;
-}
+};

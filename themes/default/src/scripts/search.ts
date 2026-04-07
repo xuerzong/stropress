@@ -242,7 +242,7 @@ const mountSearch = (documents: SearchDocument[]) => {
   const onTriggerClick = () => setModalOpen(true);
   const onCloseClick = () => setModalOpen(false);
   const onInput = () => {
-    void paintResults(input.value);
+    paintResults(input.value);
   };
 
   const onInputKeydown = (event: KeyboardEvent) => {
