@@ -81,9 +81,9 @@
         "description": "使用 Stropress 构建文档站点"
       },
       "home": {
-        "title": "构建像产品一样的文档站",
-        "tagline": "基于 Astro 的文档主题与 CLI，开箱即用。",
-        "description": "将 Stropress 指向你的 docs 目录，通过 config.json 配置导航与首页内容，快速生成高质量静态文档站。",
+        "title": "打造有产品质感的文档站",
+        "tagline": "基于 Astro 的文档主题与 CLI，支持 VitePress 风格首页，极速上线。",
+        "description": "将 Stropress 指向任意 docs 目录，在 config.json 中定义导航栏与侧边栏，一条命令即可生成精美的静态文档站。",
         "actions": [
           {
             "text": "快速开始",
@@ -91,7 +91,7 @@
             "theme": "brand"
           },
           {
-            "text": "配置说明",
+            "text": "配置参考",
             "link": "/zh/guide/configuration",
             "theme": "alt"
           }
@@ -100,17 +100,17 @@
           {
             "icon": "Rocket",
             "title": "Astro 原生",
-            "details": "使用 Astro 与 MDX 渲染文档，无需自建复杂的 Markdown 渲染链路。"
+            "details": "使用 Astro 和 MDX 构建高性能静态文档站，无需自己搭建 Markdown 渲染流水线。"
           },
           {
             "icon": "Terminal",
             "title": "CLI 驱动",
-            "details": "通过 stropress dev 或 stropress build，直接对任意 docs 目录进行构建。"
+            "details": "通过 --dir 指定任意目录，运行 stropress dev 或 stropress build 即可完成开发与构建。"
           },
           {
             "icon": "SlidersHorizontal",
             "title": "配置优先",
-            "details": "导航、侧边栏、首页主视觉与功能卡片均可在 config.json 中声明。"
+            "details": "导航栏、侧边栏、首页主视觉、CTA 按钮与特性卡片，均通过 config.json 统一配置。"
           }
         ]
       },
