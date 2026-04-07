@@ -14,6 +14,11 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
+        "url": {
+          "type": "string",
+          "description": "Canonical site URL used for SEO metadata such as canonical, og:url, and og:image.",
+          "format": "uri"
+        },
         "title": {
           "type": "string",
           "description": "Site title shown in the navbar and page titles."
@@ -210,6 +215,11 @@
           "type": "object",
           "additionalProperties": false,
           "properties": {
+            "url": {
+              "type": "string",
+              "description": "Locale-specific canonical site URL when needed.",
+              "format": "uri"
+            },
             "title": {
               "type": "string",
               "description": "Locale-specific site title."

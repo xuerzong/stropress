@@ -5,8 +5,6 @@ import fs from "fs-extra";
 import { watch } from "node:fs";
 import path from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
-import { generateOgImages } from "./og";
-import { startOgPreviewServer } from "./og-preview";
 
 interface NavItem {
   label: string;
@@ -31,6 +29,7 @@ interface MarkdownConfig {
 
 interface SiteConfig {
   site?: {
+    url?: string;
     title?: string;
     description?: string;
   };
@@ -145,11 +144,9 @@ const run = async (mode: "dev" | "build", options: RunOptions) => {
       targetDir: themeContentDir,
       onConfigChange: restartDevServer,
     });
-    const stopOgPreview = startOgPreviewServer();
 
     const shutdown = () => {
       stopWatching();
-      stopOgPreview();
       if (devServer) {
         devServer.stop();
       }
@@ -168,12 +165,6 @@ const run = async (mode: "dev" | "build", options: RunOptions) => {
     root: themeDir,
     site: astroConfig.site,
     devOutput: "static",
-  });
-
-  await generateOgImages({
-    docsDir,
-    outputDir: path.join(cwd, "dist/og"),
-    config,
   });
 };
 
@@ -353,6 +344,7 @@ const writeAstroConfig = async (input: {
   const runtimeDir = path.join(input.themeDir, ".stropress");
   const astroConfigPath = path.join(runtimeDir, "astro.config.mjs");
   const serializedConfig = JSON.stringify(input.config);
+  const siteUrl = resolveSiteUrl(input.config);
   const codeTheme = input.config.markdown?.codeTheme;
   const shikiConfig = codeTheme
     ? `,\n    shikiConfig: {\n      theme: ${JSON.stringify(codeTheme)}\n    }`
@@ -377,7 +369,7 @@ export default defineConfig({
       remarkPlugins: [remarkGithubAlerts]
     })
   ],
-  site: "http://localhost:4321",
+  site: ${JSON.stringify(siteUrl)},
   vite: {
     define: {
       "import.meta.env.STROPRESS_SITE_CONFIG": ${JSON.stringify(serializedConfig)}
@@ -388,6 +380,22 @@ export default defineConfig({
 
   await fs.writeFile(astroConfigPath, content, "utf8");
   return astroConfigPath;
+};
+
+const resolveSiteUrl = (config: SiteConfig) => {
+  const configuredUrl = config.site?.url?.trim();
+
+  if (!configuredUrl) {
+    return "http://localhost:4321";
+  }
+
+  try {
+    return new URL(configuredUrl).toString();
+  } catch {
+    throw new Error(
+      `Invalid site.url in config.json: ${configuredUrl}. Expected a full URL such as https://docs.example.com`,
+    );
+  }
 };
 
 program

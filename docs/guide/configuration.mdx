@@ -12,6 +12,22 @@ Use `docs/config.json` to define the navigation structure.
 - `search`: local search options
 - `markdown`: markdown rendering options
 
+## Site URL
+
+Set `site.url` in `docs/config.json` to control canonical URLs and OG image URLs in generated HTML.
+
+```json
+{
+  "site": {
+    "url": "https://docs.example.com",
+    "title": "Stropress Docs",
+    "description": "Documentation site powered by stropress"
+  }
+}
+```
+
+If `site.url` is omitted, Stropress falls back to `http://localhost:4321` for local development.
+
 ## Search
 
 Default search uses local MiniSearch indexing from your markdown content.

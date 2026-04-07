@@ -34,6 +34,7 @@ export interface LocaleConfig {
   label: string;
   lang?: string;
   site?: {
+    url?: string;
     title?: string;
     description?: string;
   };
@@ -45,6 +46,7 @@ export interface LocaleConfig {
 
 export interface SiteConfig {
   site?: {
+    url?: string;
     title?: string;
     description?: string;
   };

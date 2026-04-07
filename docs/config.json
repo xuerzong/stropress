@@ -1,6 +1,7 @@
 {
   "$schema": "../schema.json",
   "site": {
+    "url": "https://stropress.xuco.me",
     "title": "Stropress Docs",
     "description": "Documentation site powered by stropress"
   },
