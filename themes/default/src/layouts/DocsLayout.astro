@@ -2,6 +2,7 @@
 import NavBar from "../components/NavBar.astro";
 import Sidebar from "../components/Sidebar.astro";
 import DocToc from "../components/DocToc.astro";
+import BaseHead from "../components/BaseHead.astro";
 import { getResolvedSiteConfig } from "../lib/config";
 import "../styles/global.css";
 import "../styles/markdown.css";
@@ -38,10 +39,12 @@ const tocItems = tocHeadings.filter(
 <!doctype html>
 <html lang={resolvedConfig.localeLang}>
   <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content={pageDescription} />
-    <title>{pageTitle}</title>
+    <BaseHead
+      title={pageTitle}
+      description={pageDescription}
+      lang={resolvedConfig.localeLang}
+      ogType={sidebar ? "article" : "website"}
+    />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
