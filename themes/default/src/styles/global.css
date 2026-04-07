@@ -16,11 +16,11 @@
   --color-alert-caution: 220 38 38;
 
   --font-sans:
-    "Geist", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
-    "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+    Roboto, Helvetica, Arial, sans-serif;
   --font-mono:
-    "Geist Mono", ui-monospace, SF Mono, SF Mono-Regular, Consolas,
-    "Liberation Mono", Menlo, Courier, monospace;
+    ui-monospace, SF Mono, SF Mono-Regular, Consolas, "Liberation Mono", Menlo,
+    Courier, monospace;
   --border-radius: 0.5rem;
 }
 
