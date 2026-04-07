@@ -1,0 +1,159 @@
+---
+import Icon from "./Icon.astro";
+import type { LocaleLink } from "../lib/config";
+
+interface Props {
+  localeLinks: LocaleLink[];
+}
+
+const { localeLinks } = Astro.props;
+---
+
+{
+  localeLinks.length > 1 && (
+    <div class="locale-switcher" data-locale-switcher>
+      <button
+        type="button"
+        class="locale-popover-trigger"
+        aria-label="Switch language"
+        aria-haspopup="menu"
+        aria-expanded="false"
+        data-locale-trigger
+      >
+        <Icon name="Languages" class="locale-trigger-icon" aria-hidden="true" />
+      </button>
+      <div
+        class="locale-popover"
+        role="menu"
+        data-state="closed"
+        data-locale-popover
+      >
+        {localeLinks.map((locale) => (
+          <a
+            href={locale.link}
+            role="menuitem"
+            class="locale-popover-item"
+            data-state={locale.isActive ? "active" : "inactive"}
+          >
+            {locale.label}
+          </a>
+        ))}
+      </div>
+    </div>
+  )
+}
+
+<script>
+  const switcher = document.querySelector<HTMLElement>(
+    "[data-locale-switcher]",
+  );
+  const trigger = switcher?.querySelector<HTMLButtonElement>(
+    "[data-locale-trigger]",
+  );
+  const popover = switcher?.querySelector<HTMLElement>("[data-locale-popover]");
+
+  const setOpen = (open: boolean) => {
+    if (!trigger || !popover) {
+      return;
+    }
+
+    popover.dataset.state = open ? "open" : "closed";
+    trigger.setAttribute("aria-expanded", open ? "true" : "false");
+  };
+
+  trigger?.addEventListener("click", () => {
+    if (!popover) {
+      return;
+    }
+
+    setOpen(popover.dataset.state !== "open");
+  });
+
+  document.addEventListener("click", (event) => {
+    if (!switcher) {
+      return;
+    }
+
+    if (!switcher.contains(event.target as Node)) {
+      setOpen(false);
+    }
+  });
+
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape") {
+      setOpen(false);
+    }
+  });
+</script>
+
+<style is:global>
+  .locale-switcher {
+    position: relative;
+    display: flex;
+    align-items: center;
+    margin-left: 0.25rem;
+  }
+
+  .locale-popover-trigger {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid rgba(var(--border-color) / 1);
+    border-radius: 0.5rem;
+    background: rgba(var(--background-color) / 0.95);
+    color: rgba(var(--foreground-color) / 1);
+    width: 2rem;
+    height: 2rem;
+    cursor: pointer;
+  }
+
+  .locale-trigger-icon {
+    width: 1rem;
+    height: 1rem;
+  }
+
+  .locale-popover-trigger:focus-visible {
+    outline: 2px solid rgba(var(--foreground-color) / 0.2);
+    outline-offset: 2px;
+  }
+
+  .locale-popover {
+    position: absolute;
+    right: 0;
+    top: calc(100% + 0.35rem);
+    min-width: 8rem;
+    padding: 0.35rem;
+    border: 1px solid rgba(var(--border-color) / 1);
+    border-radius: 0.5rem;
+    background: rgba(var(--background-color) / 1);
+    box-shadow: 0 10px 28px rgba(0 0 0 / 0.14);
+    display: none;
+    z-index: 30;
+  }
+
+  .locale-popover[data-state="open"] {
+    display: grid;
+    gap: 0.15rem;
+  }
+
+  .locale-popover-item {
+    display: block;
+    padding: 0.45rem 0.55rem;
+    border-radius: 0.35rem;
+    font-size: 0.82rem;
+    line-height: 1.2;
+    color: rgba(var(--muted-color) / 1);
+  }
+
+  .locale-popover-item:hover,
+  .locale-popover-item[data-state="active"] {
+    background: rgba(var(--accent-color) / 1);
+    color: rgba(var(--foreground-color) / 1);
+  }
+
+  @media (max-width: 900px) {
+    .locale-switcher {
+      order: 4;
+    }
+  }
+</style>

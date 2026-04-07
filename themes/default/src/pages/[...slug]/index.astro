@@ -9,7 +9,9 @@ export async function getStaticPaths() {
     .filter((entry) => entry.id !== "index")
     .map((entry) => ({
       params: {
-        slug: entry.id,
+        slug: entry.id.endsWith("/index")
+          ? entry.id.slice(0, -"/index".length)
+          : entry.id,
       },
       props: {
         entry,

@@ -81,6 +81,17 @@
           "description": "Search provider. Local uses built-in MiniSearch."
         }
       }
+    },
+    "locales": {
+      "type": "object",
+      "description": "Bilingual or multilingual overrides by locale path prefix, for example '/' and '/zh/'.",
+      "propertyNames": {
+        "type": "string",
+        "pattern": "^/.*"
+      },
+      "additionalProperties": {
+        "$ref": "#/$defs/localeConfig"
+      }
     }
   },
   "$defs": {
@@ -162,6 +173,74 @@
         "details": {
           "type": "string",
           "description": "Feature description."
+        }
+      }
+    },
+    "localeConfig": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["label"],
+      "properties": {
+        "label": {
+          "type": "string",
+          "description": "Locale switcher label, for example English or 简体中文."
+        },
+        "lang": {
+          "type": "string",
+          "description": "Page language tag for html[lang], for example en-US or zh-CN."
+        },
+        "site": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "title": {
+              "type": "string",
+              "description": "Locale-specific site title."
+            },
+            "description": {
+              "type": "string",
+              "description": "Locale-specific site description."
+            }
+          }
+        },
+        "home": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "title": {
+              "type": "string"
+            },
+            "tagline": {
+              "type": "string"
+            },
+            "description": {
+              "type": "string"
+            },
+            "actions": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/homeAction"
+              }
+            },
+            "features": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/homeFeature"
+              }
+            }
+          }
+        },
+        "navbar": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/navItem"
+          }
+        },
+        "sidebar": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/sidebarGroup"
+          }
         }
       }
     }

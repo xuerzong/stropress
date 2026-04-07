@@ -1,9 +1,19 @@
 ---
 import Icon from "./Icon.astro";
-import { siteConfig } from "../lib/config";
+import { getResolvedSiteConfig } from "../lib/config";
 
-const groups = siteConfig.sidebar || [];
+const groups = getResolvedSiteConfig(Astro.url.pathname).sidebar;
 const pathname = Astro.url.pathname;
+
+const normalizePath = (input: string) => {
+  if (!input || input === "/") {
+    return "/";
+  }
+
+  return input.endsWith("/") ? input.slice(0, -1) : input;
+};
+
+const currentPath = normalizePath(pathname);
 ---
 
 <div class="sidebar">
@@ -17,7 +27,11 @@ const pathname = Astro.url.pathname;
               <a
                 href={item.link}
                 class="sidebar-link"
-                data-state={pathname === item.link ? "active" : "inactive"}
+                data-state={
+                  currentPath === normalizePath(item.link)
+                    ? "active"
+                    : "inactive"
+                }
               >
                 <span>{item.label}</span>
               </a>

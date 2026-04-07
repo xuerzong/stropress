@@ -1,11 +1,11 @@
 ---
 import Icon from "./Icon.astro";
-import {
-  homeConfig,
-  siteDescription,
-  siteTitle,
-  type HomeAction,
-} from "../lib/config";
+import { getResolvedSiteConfig, type HomeAction } from "../lib/config";
+
+const resolvedConfig = getResolvedSiteConfig(Astro.url.pathname);
+const homeConfig = resolvedConfig.homeConfig;
+const siteTitle = resolvedConfig.siteTitle;
+const siteDescription = resolvedConfig.siteDescription;
 
 const heroTitle = homeConfig.title || siteTitle;
 const heroTagline = homeConfig.tagline || siteDescription;

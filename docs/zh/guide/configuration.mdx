@@ -1,0 +1,44 @@
+---
+title: 配置
+description: 配置导航、侧边栏和双语
+---
+
+# 配置
+
+使用 `docs/config.json` 配置站点信息与导航结构。
+
+- `navbar`：顶部导航
+- `sidebar`：侧边栏分组
+- `search`：本地搜索选项
+- `locales`：多语言配置
+
+## 搜索
+
+默认搜索使用内置 MiniSearch，无需额外依赖。
+
+```json
+{
+  "search": {
+    "provider": "local"
+  }
+}
+```
+
+## 双语配置
+
+推荐将中文文档放在 `docs/zh/...` 目录下，并在 `locales` 中配置 `/zh/`：
+
+```json
+{
+  "locales": {
+    "/": {
+      "label": "English",
+      "lang": "en-US"
+    },
+    "/zh/": {
+      "label": "简体中文",
+      "lang": "zh-CN"
+    }
+  }
+}
+```

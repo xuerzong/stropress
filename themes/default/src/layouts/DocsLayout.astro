@@ -2,7 +2,7 @@
 import NavBar from "../components/NavBar.astro";
 import Sidebar from "../components/Sidebar.astro";
 import DocToc from "../components/DocToc.astro";
-import { siteDescription, siteTitle } from "../lib/config";
+import { getResolvedSiteConfig } from "../lib/config";
 import "../styles/global.css";
 import "../styles/markdown.css";
 
@@ -25,15 +25,18 @@ const {
   contentClass = "",
   tocHeadings = [],
 } = Astro.props;
-const pageTitle = title ? `${title} | ${siteTitle}` : siteTitle;
-const pageDescription = description || siteDescription;
+const resolvedConfig = getResolvedSiteConfig(Astro.url.pathname);
+const pageTitle = title
+  ? `${title} | ${resolvedConfig.siteTitle}`
+  : resolvedConfig.siteTitle;
+const pageDescription = description || resolvedConfig.siteDescription;
 const tocItems = tocHeadings.filter(
   (heading) => heading.depth >= 2 && heading.depth <= 3,
 );
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang={resolvedConfig.localeLang}>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
