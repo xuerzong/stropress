@@ -5,6 +5,8 @@ import fs from "fs-extra";
 import { watch } from "node:fs";
 import path from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
+import { generateOgImages } from "./og";
+import { startOgPreviewServer } from "./og-preview";
 
 interface NavItem {
   label: string;
@@ -32,6 +34,19 @@ interface SiteConfig {
     title?: string;
     description?: string;
   };
+  home?: {
+    title?: string;
+    description?: string;
+  };
+  locales?: Record<
+    string,
+    {
+      site?: {
+        title?: string;
+        description?: string;
+      };
+    }
+  >;
   navbar?: NavItem[];
   sidebar?: SidebarGroup[];
   markdown?: MarkdownConfig;
@@ -130,9 +145,11 @@ async function run(mode: "dev" | "build", options: RunOptions) {
       targetDir: themeContentDir,
       onConfigChange: restartDevServer,
     });
+    const stopOgPreview = startOgPreviewServer();
 
     const shutdown = () => {
       stopWatching();
+      stopOgPreview();
       if (devServer) {
         void devServer.stop();
       }
@@ -151,6 +168,12 @@ async function run(mode: "dev" | "build", options: RunOptions) {
     root: themeDir,
     site: astroConfig.site,
     devOutput: "static",
+  });
+
+  await generateOgImages({
+    docsDir,
+    outputDir: path.join(cwd, "dist/og"),
+    config,
   });
 }
 

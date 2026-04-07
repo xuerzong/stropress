@@ -31,6 +31,10 @@ const pageTitle = title
   ? `${title} | ${resolvedConfig.siteTitle}`
   : resolvedConfig.siteTitle;
 const pageDescription = description || resolvedConfig.siteDescription;
+const ogImagePath =
+  Astro.url.pathname === "/"
+    ? "/og/index.png"
+    : `/og${Astro.url.pathname.endsWith("/") ? Astro.url.pathname.slice(0, -1) : Astro.url.pathname}.png`;
 const tocItems = tocHeadings.filter(
   (heading) => heading.depth >= 2 && heading.depth <= 3,
 );
@@ -43,6 +47,7 @@ const tocItems = tocHeadings.filter(
       title={pageTitle}
       description={pageDescription}
       lang={resolvedConfig.localeLang}
+      image={ogImagePath}
       ogType={sidebar ? "article" : "website"}
     />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
