@@ -94,3 +94,5 @@ console.log("hello word")
 ```typescript
 console.log("hello word")
 ```
+
+![Test Image](https://www.xuco.me/images/rag-example/rag-workflow.png)
