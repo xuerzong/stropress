@@ -1,9 +1,4 @@
 .markdown-content {
-  border-left: 1px solid
-    color-mix(in srgb, rgba(var(--foreground-color) / 1) 12%, transparent);
-  border-right: 1px solid
-    color-mix(in srgb, rgba(var(--foreground-color) / 1) 12%, transparent);
-
   h1,
   h2,
   h3 {

@@ -156,6 +156,7 @@ async function run(mode: "dev" | "build", options: RunOptions) {
 
 async function resolveThemeDir() {
   const candidates = [
+    path.resolve(currentDir, "theme-default"),
     path.resolve(currentDir, "../theme-default"),
     path.resolve(currentDir, "../../themes/default"),
   ];
