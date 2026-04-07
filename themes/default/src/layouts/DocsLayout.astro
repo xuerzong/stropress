@@ -204,8 +204,10 @@ const tocItems = tocHeadings.filter(
   }
 
   .wrapper-without-sidebar {
-    max-width: unset;
     width: 100%;
+    border-width: 0 1px 0 1px;
+    border-style: solid;
+    border-color: rgba(var(--border-color) / 1);
   }
 
   @media (min-width: 1200px) {
@@ -220,6 +222,10 @@ const tocItems = tocHeadings.filter(
   @media (max-width: 900px) {
     .wrapper {
       flex-direction: column;
+    }
+
+    .wrapper-without-sidebar {
+      border-width: 0 0 0 0;
     }
 
     .sider-backdrop {
@@ -260,8 +266,6 @@ const tocItems = tocHeadings.filter(
 
     .content {
       border-left: 0;
-      border-top: 1px solid
-        color-mix(in srgb, rgba(var(--foreground-color) / 1) 12%, transparent);
       padding-inline: 0;
       padding-bottom: 0;
       padding-top: 1.5rem;
