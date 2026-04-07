@@ -38,6 +38,7 @@ export interface LocaleConfig {
     description?: string;
   };
   home?: HomeConfig;
+  socialLinks?: NavItem[];
   navbar?: NavItem[];
   sidebar?: SidebarGroup[];
 }
@@ -48,6 +49,7 @@ export interface SiteConfig {
     description?: string;
   };
   home?: HomeConfig;
+  socialLinks?: NavItem[];
   navbar?: NavItem[];
   sidebar?: SidebarGroup[];
   locales?: Record<string, LocaleConfig>;
@@ -67,7 +69,7 @@ export interface ResolvedSiteConfig {
   siteTitle: string;
   siteDescription: string;
   homeConfig: HomeConfig;
-  navbar: NavItem[];
+  socialLinks: NavItem[];
   sidebar: SidebarGroup[];
   localeLinks: LocaleLink[];
 }
@@ -175,7 +177,12 @@ export const getResolvedSiteConfig = (pathname: string): ResolvedSiteConfig => {
     siteTitle: resolvedTitle,
     siteDescription: resolvedDescription,
     homeConfig: localeConfig.home || siteConfig.home || {},
-    navbar: localeConfig.navbar || siteConfig.navbar || [],
+    socialLinks:
+      localeConfig.socialLinks ||
+      siteConfig.socialLinks ||
+      localeConfig.navbar ||
+      siteConfig.navbar ||
+      [],
     sidebar: localeConfig.sidebar || siteConfig.sidebar || [],
     localeLinks,
   };

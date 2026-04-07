@@ -73,6 +73,13 @@
         "$ref": "#/$defs/navItem"
       }
     },
+    "socialLinks": {
+      "type": "array",
+      "description": "Top-right social links rendered as icons.",
+      "items": {
+        "$ref": "#/$defs/navItem"
+      }
+    },
     "sidebar": {
       "type": "array",
       "description": "Sidebar groups and links.",
@@ -241,6 +248,12 @@
           }
         },
         "navbar": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/navItem"
+          }
+        },
+        "socialLinks": {
           "type": "array",
           "items": {
             "$ref": "#/$defs/navItem"

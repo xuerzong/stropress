@@ -15,7 +15,7 @@ const { showSidebarToggle = false } = Astro.props;
 
 const pathname = Astro.url.pathname;
 const resolvedConfig = getResolvedSiteConfig(pathname);
-const items = resolvedConfig.navbar;
+const items = resolvedConfig.socialLinks;
 const localePrefixes = resolvedConfig.localeLinks
   .map((locale) => locale.key)
   .filter((key) => key !== "/")

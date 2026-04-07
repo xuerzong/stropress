@@ -41,7 +41,7 @@
   "markdown": {
     "codeTheme": "github-light"
   },
-  "navbar": [
+  "socialLinks": [
     {
       "icon": "BookOpen",
       "label": "Guide",
@@ -118,7 +118,7 @@
           }
         ]
       },
-      "navbar": [
+      "socialLinks": [
         {
           "icon": "BookOpen",
           "label": "指南",
