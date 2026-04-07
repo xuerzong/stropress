@@ -7,6 +7,12 @@ import { getCollection } from "astro:content";
 import type { SearchDocument } from "../scripts/search";
 import { getResolvedSiteConfig } from "../lib/config";
 
+interface Props {
+  showSidebarToggle?: boolean;
+}
+
+const { showSidebarToggle = false } = Astro.props;
+
 const pathname = Astro.url.pathname;
 const resolvedConfig = getResolvedSiteConfig(pathname);
 const items = resolvedConfig.navbar;
@@ -47,6 +53,20 @@ const searchDocuments: SearchDocument[] = docs
 
 <header class="header">
   <div class="header-wrapper">
+    {
+      showSidebarToggle && (
+        <button
+          type="button"
+          class="header-menu-toggle"
+          aria-label="Toggle navigation menu"
+          aria-controls="sidebar-drawer"
+          aria-expanded="false"
+          data-sidebar-toggle
+        >
+          <Icon name="Menu" class="header-menu-icon" aria-hidden="true" />
+        </button>
+      )
+    }
     <div class="logo">
       <a
         href={resolvedConfig.localeKey === "/" ? "/" : resolvedConfig.localeKey}
@@ -121,9 +141,32 @@ const searchDocuments: SearchDocument[] = docs
     flex: none;
   }
 
+  .header-menu-toggle {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    width: 2rem;
+    height: 2rem;
+    border: 1px solid rgba(var(--border-color) / 1);
+    border-radius: 0.5rem;
+    background: rgba(var(--background-color) / 1);
+    color: rgba(var(--foreground-color) / 1);
+    cursor: pointer;
+    flex: none;
+  }
+
+  .header-menu-icon {
+    width: 1rem;
+    height: 1rem;
+  }
+
   @media (max-width: 900px) {
     .header {
       padding: 0.85rem 1rem;
+    }
+
+    .header-menu-toggle {
+      display: inline-flex;
     }
 
     .header-wrapper {

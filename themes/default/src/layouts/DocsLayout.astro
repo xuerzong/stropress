@@ -50,13 +50,27 @@ const tocItems = tocHeadings.filter(
     />
   </head>
   <body>
-    <NavBar />
+    <NavBar showSidebarToggle={sidebar} />
     <div class:list={["wrapper", !sidebar && "wrapper-without-sidebar"]}>
       {
         sidebar && (
-          <aside class="sider">
-            <Sidebar />
-          </aside>
+          <>
+            <button
+              type="button"
+              class="sider-backdrop"
+              data-sidebar-backdrop
+              data-state="closed"
+              aria-label="Close navigation menu"
+            />
+            <aside
+              id="sidebar-drawer"
+              class="sider"
+              data-sidebar-drawer
+              data-state="closed"
+            >
+              <Sidebar />
+            </aside>
+          </>
         )
       }
       <main class:list={["content", contentClass]}>
@@ -77,6 +91,78 @@ const tocItems = tocHeadings.filter(
       import { setupCodeCopyButtons } from "../scripts/code-copy";
 
       setupCodeCopyButtons();
+
+      let sidebarCleanup: (() => void) | null = null;
+
+      const setupSidebarDrawer = () => {
+        if (typeof sidebarCleanup === "function") {
+          sidebarCleanup();
+          sidebarCleanup = null;
+        }
+
+        const drawer = document.querySelector<HTMLElement>(
+          "[data-sidebar-drawer]",
+        );
+        const backdrop = document.querySelector<HTMLElement>(
+          "[data-sidebar-backdrop]",
+        );
+        const toggle = document.querySelector<HTMLElement>(
+          "[data-sidebar-toggle]",
+        );
+
+        if (!drawer || !backdrop || !toggle) {
+          return;
+        }
+
+        const linkElements = Array.from(
+          drawer.querySelectorAll<HTMLAnchorElement>("a"),
+        );
+
+        const setOpen = (open: boolean) => {
+          drawer.dataset.state = open ? "open" : "closed";
+          backdrop.dataset.state = open ? "open" : "closed";
+          toggle.setAttribute("aria-expanded", open ? "true" : "false");
+          document.body.style.overflow = open ? "hidden" : "";
+        };
+
+        const close = () => setOpen(false);
+        const onToggle = () => setOpen(drawer.dataset.state !== "open");
+
+        toggle.addEventListener("click", onToggle);
+        backdrop.addEventListener("click", close);
+        linkElements.forEach((element: HTMLAnchorElement) =>
+          element.addEventListener("click", close),
+        );
+
+        const onKeydown = (event: KeyboardEvent) => {
+          if (event.key === "Escape") {
+            close();
+          }
+        };
+
+        const onResize = () => {
+          if (window.innerWidth > 900) {
+            close();
+          }
+        };
+
+        document.addEventListener("keydown", onKeydown);
+        window.addEventListener("resize", onResize);
+
+        sidebarCleanup = () => {
+          toggle.removeEventListener("click", onToggle);
+          backdrop.removeEventListener("click", close);
+          linkElements.forEach((element: HTMLAnchorElement) =>
+            element.removeEventListener("click", close),
+          );
+          document.removeEventListener("keydown", onKeydown);
+          window.removeEventListener("resize", onResize);
+          document.body.style.overflow = "";
+        };
+      };
+
+      setupSidebarDrawer();
+      document.addEventListener("astro:page-load", setupSidebarDrawer);
     </script>
   </body>
 </html>
@@ -91,6 +177,10 @@ const tocItems = tocHeadings.filter(
   .sider {
     flex-shrink: 0;
     width: 16rem;
+  }
+
+  .sider-backdrop {
+    display: none;
   }
 
   .wrapper {
@@ -130,6 +220,42 @@ const tocItems = tocHeadings.filter(
   @media (max-width: 900px) {
     .wrapper {
       flex-direction: column;
+    }
+
+    .sider-backdrop {
+      display: block;
+      position: fixed;
+      inset: 0;
+      z-index: 20;
+      border: 0;
+      background: rgba(0 0 0 / 0.4);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 180ms ease;
+    }
+
+    .sider-backdrop[data-state="open"] {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .sider {
+      position: fixed;
+      left: 0;
+      top: 0;
+      z-index: 30;
+      width: min(84vw, 18rem);
+      height: 100dvh;
+      transform: translateX(-100%);
+      transition: transform 220ms ease;
+      background: rgba(var(--background-color) / 1);
+      border-right: 1px solid rgba(var(--border-color) / 1);
+      padding: 5rem 0.5rem 1rem;
+      overflow-y: auto;
+    }
+
+    .sider[data-state="open"] {
+      transform: translateX(0);
     }
 
     .content {

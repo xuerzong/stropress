@@ -256,6 +256,9 @@ import remarkGithubAlerts from "remark-github-alerts";
 
 export default defineConfig({
   outDir: ${JSON.stringify(path.join(input.cwd, "dist"))},
+  devToolbar: {
+    enabled: false
+  },
   markdown: {
     remarkPlugins: [remarkGithubAlerts]
   },
