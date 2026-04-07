@@ -69,6 +69,18 @@
       "items": {
         "$ref": "#/$defs/sidebarGroup"
       }
+    },
+    "search": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Search behavior and provider configuration.",
+      "properties": {
+        "provider": {
+          "type": "string",
+          "enum": ["local"],
+          "description": "Search provider. Local uses built-in MiniSearch."
+        }
+      }
     }
   },
   "$defs": {

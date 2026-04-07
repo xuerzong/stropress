@@ -9,3 +9,18 @@ Use `docs/config.json` to define the navigation structure.
 
 - `navbar`: top navigation items
 - `sidebar`: side navigation groups
+- `search`: local search options
+
+## Search
+
+Default search uses local MiniSearch indexing from your markdown content.
+
+You can keep the default behavior or set it explicitly in `docs/config.json`:
+
+```json
+{
+  "search": {
+    "provider": "local"
+  }
+}
+```

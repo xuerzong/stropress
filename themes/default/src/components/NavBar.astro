@@ -3,15 +3,16 @@ import Icon from "./Icon.astro";
 import SearchInput from "./SearchInput.astro";
 import SearchModal from "./SearchModal.astro";
 import { getCollection } from "astro:content";
+import type { SearchDocument } from "../scripts/search";
 import { siteConfig, siteTitle } from "../lib/config";
 
 const items = siteConfig.navbar || [];
 const docs = await getCollection("docs");
-const searchDocuments = docs.map((entry) => ({
+const searchDocuments: SearchDocument[] = docs.map((entry) => ({
   id: entry.id,
   title: entry.data.title,
   description: entry.data.description || "",
-  body: entry.body,
+  body: entry.body || "",
   url: entry.id === "index" ? "/" : `/${entry.id}`,
 }));
 ---

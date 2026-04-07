@@ -1,0 +1,41 @@
+---
+title: Search
+description: Configure and use search in your Stropress documentation site
+---
+
+# Search
+
+Stropress has built-in search that works out of the box — no configuration required.  
+Search is powered by local MiniSearch.
+
+## How it works
+
+A search button is displayed in the header. Clicking it opens a modal where you can type to find pages across your docs.
+
+**Keyboard shortcuts**
+
+| Key             | Action               |
+| :-------------- | :------------------- |
+| `⌘K` / `Ctrl K` | Open search          |
+| `↑` / `↓`       | Navigate results     |
+| `Enter`         | Open selected result |
+| `Esc`           | Close search         |
+
+## Local search (default)
+
+By default, Stropress indexes all your `.md` and `.mdx` pages at build time using [MiniSearch](https://lucaong.github.io/minisearch/).  
+No extra setup is needed.
+
+```json
+{
+  "search": {
+    "provider": "local"
+  }
+}
+```
+
+The `provider: "local"` line is optional — local search is enabled even without a `search` field.
+
+## Notes
+
+Search indexes your markdown content and runs fully on the client.

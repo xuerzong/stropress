@@ -54,6 +54,18 @@ const renderResultItem = (doc: ResultDocument) => {
   return item;
 };
 
+const toSafeResult = (
+  source: Partial<SearchDocument> & { score?: number },
+  fallbackId: string,
+): ResultDocument => ({
+  id: source.id || fallbackId,
+  title: source.title || "Untitled",
+  description: source.description || "",
+  body: source.body || "",
+  url: source.url || "#",
+  score: source.score || 0,
+});
+
 const buildSearch = (documents: SearchDocument[]) => {
   const docs = documents.map((doc) => ({
     ...doc,
@@ -77,6 +89,37 @@ const buildSearch = (documents: SearchDocument[]) => {
 
   miniSearch.addAll(docs);
   return miniSearch;
+};
+
+const searchLocal = (
+  index: MiniSearch<SearchDocument>,
+  sourceDocuments: SearchDocument[],
+  query: string,
+): ResultDocument[] => {
+  const docById = new Map(sourceDocuments.map((doc) => [doc.id, doc]));
+
+  return index
+    .search(query, {
+      combineWith: "AND",
+      prefix: true,
+      fuzzy: 0.2,
+    })
+    .map((hit, i) => {
+      const id = String(hit.id);
+      const source = docById.get(id);
+
+      return toSafeResult(
+        {
+          id,
+          title: source?.title,
+          description: source?.description,
+          body: source?.body,
+          url: source?.url,
+          score: hit.score,
+        },
+        `local-${i}`,
+      );
+    });
 };
 
 const mountSearch = (documents: SearchDocument[]) => {
@@ -105,6 +148,7 @@ const mountSearch = (documents: SearchDocument[]) => {
 
   const index = buildSearch(documents);
   let selectedIndex = -1;
+  let searchToken = 0;
 
   const setModalOpen = (open: boolean) => {
     modal.dataset.state = open ? "open" : "closed";
@@ -126,9 +170,10 @@ const mountSearch = (documents: SearchDocument[]) => {
     triggerButton.blur();
   };
 
-  const paintResults = (query: string) => {
+  const paintResults = async (query: string) => {
     results.innerHTML = "";
     selectedIndex = -1;
+    const token = ++searchToken;
 
     const normalizedQuery = query.trim();
     if (!normalizedQuery) {
@@ -137,11 +182,18 @@ const mountSearch = (documents: SearchDocument[]) => {
       return;
     }
 
-    const matches = index.search(normalizedQuery, {
-      combineWith: "AND",
-      prefix: true,
-      fuzzy: 0.2,
-    }) as ResultDocument[];
+    let matches: ResultDocument[] = [];
+
+    try {
+      matches = searchLocal(index, documents, normalizedQuery);
+    } catch (error) {
+      console.error("[stropress] Search query failed:", error);
+      matches = searchLocal(index, documents, normalizedQuery);
+    }
+
+    if (token !== searchToken) {
+      return;
+    }
 
     if (matches.length === 0) {
       empty.hidden = false;
@@ -189,7 +241,9 @@ const mountSearch = (documents: SearchDocument[]) => {
 
   const onTriggerClick = () => setModalOpen(true);
   const onCloseClick = () => setModalOpen(false);
-  const onInput = () => paintResults(input.value);
+  const onInput = () => {
+    void paintResults(input.value);
+  };
 
   const onInputKeydown = (event: KeyboardEvent) => {
     if (event.key === "ArrowDown") {

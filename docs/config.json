@@ -61,6 +61,10 @@
         {
           "label": "Configuration",
           "link": "/guide/configuration"
+        },
+        {
+          "label": "Search",
+          "link": "/guide/search"
         }
       ]
     }
