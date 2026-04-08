@@ -15,7 +15,8 @@ const { showSidebarToggle = false } = Astro.props;
 
 const pathname = Astro.url.pathname;
 const resolvedConfig = getResolvedSiteConfig(pathname);
-const items = resolvedConfig.socialLinks;
+const navItems = resolvedConfig.nav;
+const socialItems = resolvedConfig.socialLinks;
 const localePrefixes = resolvedConfig.localeLinks
   .map((locale) => locale.key)
   .filter((key) => key !== "/")
@@ -75,13 +76,38 @@ const searchDocuments: SearchDocument[] = docs
       </a>
     </div>
     <SearchInput />
+    {
+      navItems.length > 0 && (
+        <ul class="header-nav-list">
+          {navItems.map((item) => (
+            <li>
+              <a href={item.link} class="nav-link nav-link-text">
+                {item.icon && (
+                  <Icon name={item.icon} class="nav-icon" aria-hidden="true" />
+                )}
+                <span>{item.label}</span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      )
+    }
     <LocaleSelect localeLinks={resolvedConfig.localeLinks} />
     <ul class="social-links-list">
       {
-        items.map((item) => (
+        socialItems.map((item) => (
           <li>
-            <a href={item.link} class="nav-link">
-              <Icon name={item.icon} class="nav-icon" aria-hidden="true" />
+            <a
+              href={item.link}
+              class="nav-link"
+              aria-label={item.label}
+              title={item.label}
+            >
+              {item.icon ? (
+                <Icon name={item.icon} class="nav-icon" aria-hidden="true" />
+              ) : (
+                <span>{item.label}</span>
+              )}
             </a>
           </li>
         ))
@@ -118,13 +144,22 @@ const searchDocuments: SearchDocument[] = docs
     white-space: nowrap;
   }
 
+  .header-nav-list,
   .social-links-list {
     list-style: none;
     padding: 0;
     margin: 0;
     display: flex;
     gap: 1rem;
+    align-items: center;
+  }
+
+  .header-nav-list {
     margin-left: auto;
+  }
+
+  .social-links-list {
+    margin-left: 0;
   }
 
   .nav-link {
@@ -133,6 +168,10 @@ const searchDocuments: SearchDocument[] = docs
     gap: 0.45rem;
     padding: 0.35rem 0;
     font-size: 0.875rem;
+  }
+
+  .nav-link-text {
+    white-space: nowrap;
   }
 
   .nav-icon {
@@ -174,10 +213,19 @@ const searchDocuments: SearchDocument[] = docs
       gap: 0.7rem;
     }
 
-    .social-links-list {
-      flex-wrap: wrap;
+    .header-nav-list {
+      order: 10;
       width: 100%;
+      margin-right: 0;
+      flex-wrap: wrap;
+    }
+
+    .social-links-list {
+      order: 11;
+      flex-wrap: wrap;
+      width: auto;
       justify-content: flex-end;
+      margin-left: auto;
     }
   }
 </style>

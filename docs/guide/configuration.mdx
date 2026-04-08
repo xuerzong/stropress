@@ -8,6 +8,7 @@ description: Configure navbar and sidebar
 Use `docs/config.json` to define the navigation structure.
 
 - `navbar`: top navigation items
+- `nav`: primary header links shown next to social links
 - `sidebar`: side navigation groups
 - `search`: local search options
 - `markdown`: markdown rendering options
@@ -117,7 +118,7 @@ Define `locales` in `docs/config.json`, using path prefixes as keys:
         "title": "Stropress 文档",
         "description": "使用 Stropress 构建文档站点"
       },
-      "navbar": [
+      "nav": [
         {
           "label": "指南",
           "link": "/zh/guide/getting-started"
@@ -142,7 +143,7 @@ Define `locales` in `docs/config.json`, using path prefixes as keys:
 Recommendations:
 
 - Put localized markdown under folders such as `docs/zh/...`.
-- Use locale-prefixed links in locale `navbar` and `sidebar`.
+- Use locale-prefixed links in locale `nav`, `navbar`, and `sidebar`.
 - Add `docs/zh/index.md` to enable a clean `/zh/` landing route.
 
 ## Custom Homepage

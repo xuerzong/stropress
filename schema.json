@@ -78,6 +78,13 @@
         "$ref": "#/$defs/navItem"
       }
     },
+    "nav": {
+      "type": "array",
+      "description": "Primary header links rendered next to social links.",
+      "items": {
+        "$ref": "#/$defs/navItem"
+      }
+    },
     "socialLinks": {
       "type": "array",
       "description": "Top-right social links rendered as icons.",
@@ -255,6 +262,13 @@
                 "$ref": "#/$defs/homeFeature"
               }
             }
+          }
+        },
+        "nav": {
+          "type": "array",
+          "description": "Locale-specific header links rendered next to social links.",
+          "items": {
+            "$ref": "#/$defs/navItem"
           }
         },
         "navbar": {

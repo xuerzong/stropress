@@ -49,6 +49,16 @@
       "link": "https://github.com/xuerzong/stropress"
     }
   ],
+  "nav": [
+    {
+      "label": "Guide",
+      "link": "/guide/getting-started"
+    },
+    {
+      "label": "Configuration",
+      "link": "/guide/configuration"
+    }
+  ],
   "sidebar": [
     {
       "label": "Guide",
@@ -119,6 +129,16 @@
           "icon": "Github",
           "label": "GitHub",
           "link": "https://github.com/xuerzong/stropress"
+        }
+      ],
+      "nav": [
+        {
+          "label": "指南",
+          "link": "/zh/guide/getting-started"
+        },
+        {
+          "label": "配置",
+          "link": "/zh/guide/configuration"
         }
       ],
       "sidebar": [
