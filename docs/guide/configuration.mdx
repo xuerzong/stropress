@@ -174,3 +174,21 @@ export const sidebar = false;
   <h1>Custom homepage</h1>
 </section>
 ```
+
+## Global Style Overrides
+
+You can add a root-level stylesheet at `docs/index.css` to override the default theme styles globally.
+
+This file is loaded after the built-in theme CSS, so it can be used to override `:root` variables and any selectors used by the theme.
+
+```css
+:root {
+  --background-color: 250 247 240;
+  --foreground-color: 28 28 28;
+  --primary-color: 176 78 44;
+}
+
+.topbar {
+  backdrop-filter: blur(20px);
+}
+```

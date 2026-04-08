@@ -16,12 +16,14 @@ The target directory should contain:
 - `config.json`
 - `*.md` and `*.mdx` files
 - Optional homepage overrides via `index.astro` and localized `*/index.astro`
+- Optional global style overrides via `index.css`
 
 Example:
 
 ```text
 docs/
   config.json
+  index.css
   index.md
   index.astro
   zh/
@@ -46,6 +48,7 @@ If omitted, it defaults to `docs` under the current working directory.
 
 If `docs/index.astro` exists, it overrides the JSON-driven homepage for `/`.
 If `docs/zh/index.astro` exists, it overrides the locale homepage for `/zh/`.
+If `docs/index.css` exists, it is injected globally after the theme styles so you can override `:root` variables and component styles.
 
 These files are rendered inside the default docs layout. You can optionally export `title`, `description`, `sidebar`, or `contentClass` from the Astro file frontmatter to control the surrounding page metadata and layout.
 

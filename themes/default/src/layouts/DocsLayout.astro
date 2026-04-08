@@ -4,6 +4,7 @@ import Sidebar from "../components/Sidebar.astro";
 import DocToc from "../components/DocToc.astro";
 import BaseHead from "../components/BaseHead.astro";
 import { getResolvedSiteConfig } from "../lib/config";
+import { customGlobalStyle } from "../lib/custom-style";
 import "../styles/global.css";
 import "../styles/markdown.css";
 
@@ -50,6 +51,7 @@ const tocItems = tocHeadings.filter(
       image={ogImagePath}
       ogType={sidebar ? "article" : "website"}
     />
+    {customGlobalStyle && <style is:global set:html={customGlobalStyle} />}
   </head>
   <body>
     <NavBar showSidebarToggle={sidebar} />

@@ -128,3 +128,21 @@ export const sidebar = false;
   <h1>自定义首页</h1>
 </section>
 ```
+
+## 全局样式覆盖
+
+你可以在根目录增加 `docs/index.css`，用来全局覆盖默认主题样式。
+
+这份文件会在内置主题 CSS 之后加载，因此适合用来重写 `:root` 变量，或者覆盖主题里的选择器。
+
+```css
+:root {
+  --background-color: 250 247 240;
+  --foreground-color: 28 28 28;
+  --primary-color: 176 78 44;
+}
+
+.topbar {
+  backdrop-filter: blur(20px);
+}
+```

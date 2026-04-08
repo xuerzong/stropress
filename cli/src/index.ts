@@ -214,12 +214,21 @@ const isSupportedDocFile = (fileName: string, filePath: string) => {
     return true;
   }
 
+  if (fileName === "index.css" && isRootCustomStyleFile(filePath)) {
+    return true;
+  }
+
   return fileName === "index.astro" && isHomepageAstroFile(filePath);
 };
 
 const isHomepageAstroFile = (filePath: string) => {
   const normalizedPath = filePath.replaceAll("\\", "/");
   return /(^|\/)index\.astro$/i.test(normalizedPath);
+};
+
+const isRootCustomStyleFile = (filePath: string) => {
+  const normalizedPath = filePath.replaceAll("\\", "/");
+  return /(^|\/)docs\/index\.css$/i.test(normalizedPath);
 };
 
 const readConfig = async (configPath: string): Promise<SiteConfig> => {
@@ -308,6 +317,7 @@ const watchDocsForChanges = (input: {
 
       if (
         !/\.(md|mdx)$/i.test(normalizedPath) &&
+        normalizedPath !== "index.css" &&
         !(
           normalizedPath.endsWith("/index.astro") ||
           normalizedPath === "index.astro"
