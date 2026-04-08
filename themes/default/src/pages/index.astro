@@ -2,28 +2,46 @@
 import DocsLayout from "../layouts/DocsLayout.astro";
 import HomePage from "../components/HomePage.astro";
 import { homeConfig } from "../lib/config";
+import { getCustomHomeModule } from "../lib/custom-home";
 import { getCollection, render } from "astro:content";
 
+const customHomeModule = await getCustomHomeModule(Astro.url.pathname);
 const pages = await getCollection("docs");
 const homeDoc = pages.find((entry) => entry.id === "index");
 
-if (!homeDoc) {
+if (!homeDoc && !customHomeModule) {
   throw new Error("docs/index.md is required");
 }
 
-const { Content } = await render(homeDoc);
+const CustomHome = customHomeModule?.default;
+const customTitle = customHomeModule?.title;
+const customDescription = customHomeModule?.description;
+const customSidebar = customHomeModule?.sidebar;
+const customContentClass = customHomeModule?.contentClass;
+const renderedHomeDoc = homeDoc ? await render(homeDoc) : null;
+const Content = renderedHomeDoc?.Content;
 const hasHomeContent =
   Boolean(homeConfig.title) ||
   Boolean(homeConfig.tagline) ||
   Boolean(homeConfig.description) ||
   (homeConfig.actions?.length || 0) > 0 ||
   (homeConfig.features?.length || 0) > 0;
+const useCustomHome = Boolean(CustomHome);
 ---
 
 <DocsLayout
-  title={homeDoc.data.title}
-  description={homeDoc.data.description}
-  sidebar={!hasHomeContent}
+  title={customTitle || homeDoc?.data.title}
+  description={customDescription || homeDoc?.data.description}
+  sidebar={typeof customSidebar === "boolean" ? customSidebar : !hasHomeContent}
+  contentClass={customContentClass}
 >
-  {hasHomeContent ? <HomePage /> : <Content />}
+  {
+    useCustomHome ? (
+      <CustomHome />
+    ) : hasHomeContent ? (
+      <HomePage />
+    ) : Content ? (
+      <Content />
+    ) : null
+  }
 </DocsLayout>

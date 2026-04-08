@@ -98,3 +98,33 @@ One Dark + Catppuccin 示例：
   }
 }
 ```
+
+## 自定义首页
+
+如果 `config.json` 里的 `home` 配置不够灵活，可以直接在 `config.json` 同目录放置 Astro 首页文件：
+
+```text
+docs/
+  config.json
+  index.astro
+  zh/
+    index.astro
+```
+
+- `docs/index.astro` 会覆盖根路径 `/` 的首页。
+- `docs/zh/index.astro` 会覆盖 `/zh/` 的多语言首页。
+- 只要存在匹配的 `index.astro`，Stropress 就会优先使用它，而不是 `home` 或 `locales[locale].home`。
+
+这些文件会渲染在默认文档布局内部。你也可以在 Astro frontmatter 中导出一些可选元信息：
+
+```astro
+---
+export const title = "自定义首页";
+export const description = "使用 Astro 编写的首页";
+export const sidebar = false;
+---
+
+<section>
+  <h1>自定义首页</h1>
+</section>
+```

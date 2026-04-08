@@ -144,3 +144,33 @@ Recommendations:
 - Put localized markdown under folders such as `docs/zh/...`.
 - Use locale-prefixed links in locale `navbar` and `sidebar`.
 - Add `docs/zh/index.md` to enable a clean `/zh/` landing route.
+
+## Custom Homepage
+
+If JSON-based `home` configuration is too limiting, you can add Astro homepage files next to `config.json`:
+
+```text
+docs/
+  config.json
+  index.astro
+  zh/
+    index.astro
+```
+
+- `docs/index.astro` overrides the root homepage `/`.
+- `docs/zh/index.astro` overrides the localized homepage `/zh/`.
+- If a matching `index.astro` exists, Stropress will prefer it over `home` or `locales[locale].home`.
+
+These files render inside the default docs layout. You can optionally export page metadata from Astro frontmatter:
+
+```astro
+---
+export const title = "Custom Home";
+export const description = "Landing page built with Astro";
+export const sidebar = false;
+---
+
+<section>
+  <h1>Custom homepage</h1>
+</section>
+```

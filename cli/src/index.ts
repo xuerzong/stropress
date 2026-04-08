@@ -85,9 +85,11 @@ const run = async (mode: "dev" | "build", options: RunOptions) => {
     throw new Error(`Missing docs directory: ${docsDir}`);
   }
 
-  const docs = await collectDocs(docsDir);
-  if (docs.length === 0) {
-    throw new Error("No .md or .mdx files found under docs/");
+  const docSources = await collectDocSources(docsDir);
+  if (docSources.length === 0) {
+    throw new Error(
+      "No supported docs files found under docs/. Add .md/.mdx content or index.astro homepage files.",
+    );
   }
 
   await syncDocs(docsDir, themeContentDir);
@@ -184,7 +186,7 @@ const resolveThemeDir = async () => {
   throw new Error("Missing bundled default theme");
 };
 
-const collectDocs = async (currentDir: string): Promise<string[]> => {
+const collectDocSources = async (currentDir: string): Promise<string[]> => {
   const entries = await fs.readdir(currentDir, { withFileTypes: true });
   const files: string[] = [];
 
@@ -195,16 +197,29 @@ const collectDocs = async (currentDir: string): Promise<string[]> => {
 
     const fullPath = path.join(currentDir, entry.name);
     if (entry.isDirectory()) {
-      files.push(...(await collectDocs(fullPath)));
+      files.push(...(await collectDocSources(fullPath)));
       continue;
     }
 
-    if (/\.(md|mdx)$/i.test(entry.name)) {
+    if (isSupportedDocFile(entry.name, fullPath)) {
       files.push(fullPath);
     }
   }
 
   return files;
+};
+
+const isSupportedDocFile = (fileName: string, filePath: string) => {
+  if (/\.(md|mdx)$/i.test(fileName)) {
+    return true;
+  }
+
+  return fileName === "index.astro" && isHomepageAstroFile(filePath);
+};
+
+const isHomepageAstroFile = (filePath: string) => {
+  const normalizedPath = filePath.replaceAll("\\", "/");
+  return /(^|\/)index\.astro$/i.test(normalizedPath);
 };
 
 const readConfig = async (configPath: string): Promise<SiteConfig> => {
@@ -291,7 +306,13 @@ const watchDocsForChanges = (input: {
         return;
       }
 
-      if (!/\.(md|mdx)$/i.test(normalizedPath)) {
+      if (
+        !/\.(md|mdx)$/i.test(normalizedPath) &&
+        !(
+          normalizedPath.endsWith("/index.astro") ||
+          normalizedPath === "index.astro"
+        )
+      ) {
         return;
       }
 
@@ -328,7 +349,7 @@ const copyDocsRecursive = async (sourceDir: string, targetDir: string) => {
       continue;
     }
 
-    if (/\.(md|mdx)$/i.test(entry.name)) {
+    if (isSupportedDocFile(entry.name, sourcePath)) {
       await fs.ensureDir(path.dirname(targetPath));
       await fs.copyFile(sourcePath, targetPath);
     }

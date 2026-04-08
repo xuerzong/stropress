@@ -3,6 +3,7 @@ import DocsLayout from "../../layouts/DocsLayout.astro";
 import HomePage from "../../components/HomePage.astro";
 import { getCollection, render, type CollectionEntry } from "astro:content";
 import { getResolvedSiteConfig } from "../../lib/config";
+import { getCustomHomeModule } from "../../lib/custom-home";
 
 export const getStaticPaths = async () => {
   const docs = await getCollection("docs");
@@ -35,9 +36,18 @@ const normalizedPathname = Astro.url.pathname.endsWith("/")
 const isLocaleHome =
   resolvedConfig.localeKey !== "/" &&
   normalizedPathname === resolvedConfig.localeKey;
+const customHomeModule = isLocaleHome
+  ? await getCustomHomeModule(Astro.url.pathname)
+  : null;
+const CustomHome = customHomeModule?.default;
+const customTitle = customHomeModule?.title;
+const customDescription = customHomeModule?.description;
+const customSidebar = customHomeModule?.sidebar;
+const customContentClass = customHomeModule?.contentClass;
 const localeHomeConfig = isLocaleHome ? resolvedConfig.homeConfig : null;
 const hasHomeContent =
   isLocaleHome &&
+  !customHomeModule &&
   (Boolean(localeHomeConfig?.title) ||
     Boolean(localeHomeConfig?.tagline) ||
     Boolean(localeHomeConfig?.description) ||
@@ -46,13 +56,24 @@ const hasHomeContent =
 ---
 
 <DocsLayout
-  title={entry.data.title}
-  description={entry.data.description}
-  sidebar={!hasHomeContent}
-  tocHeadings={hasHomeContent ? undefined : headings}
-  contentClass={hasHomeContent ? undefined : "docs-content markdown-content"}
+  title={customTitle || entry.data.title}
+  description={customDescription || entry.data.description}
+  sidebar={typeof customSidebar === "boolean" ? customSidebar : !hasHomeContent}
+  tocHeadings={hasHomeContent || customHomeModule ? undefined : headings}
+  contentClass={customContentClass ||
+    (hasHomeContent || customHomeModule
+      ? undefined
+      : "docs-content markdown-content")}
 >
-  {hasHomeContent ? <HomePage /> : <Content />}
+  {
+    customHomeModule ? (
+      <CustomHome />
+    ) : hasHomeContent ? (
+      <HomePage />
+    ) : (
+      <Content />
+    )
+  }
 </DocsLayout>
 
 <style is:global>

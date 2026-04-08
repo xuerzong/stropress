@@ -15,6 +15,7 @@ The target directory should contain:
 
 - `config.json`
 - `*.md` and `*.mdx` files
+- Optional homepage overrides via `index.astro` and localized `*/index.astro`
 
 Example:
 
@@ -22,6 +23,9 @@ Example:
 docs/
   config.json
   index.md
+  index.astro
+  zh/
+    index.astro
   guide/
     getting-started.md
     configuration.mdx
@@ -39,6 +43,11 @@ npx stropress build --dir=docs
 `--dir` supports both relative and absolute paths.
 
 If omitted, it defaults to `docs` under the current working directory.
+
+If `docs/index.astro` exists, it overrides the JSON-driven homepage for `/`.
+If `docs/zh/index.astro` exists, it overrides the locale homepage for `/zh/`.
+
+These files are rendered inside the default docs layout. You can optionally export `title`, `description`, `sidebar`, or `contentClass` from the Astro file frontmatter to control the surrounding page metadata and layout.
 
 ## config.json
 
