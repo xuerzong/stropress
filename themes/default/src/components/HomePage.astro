@@ -18,8 +18,7 @@ const getActionClass = (action: HomeAction) =>
 ---
 
 <section class="hero">
-  <p class="eyebrow">Stropress</p>
-  <h1>{heroTitle}</h1>
+  <h1 class="hero-title">{heroTitle}</h1>
   <p class="tagline">{heroTagline}</p>
   <p class="description">{heroDescription}</p>
 
@@ -55,31 +54,15 @@ const getActionClass = (action: HomeAction) =>
   )
 }
 
-<style>
+<style is:global>
   .hero {
     padding: 1.5rem;
   }
 
-  .eyebrow {
-    display: inline-flex;
-    margin: 0 0 1rem;
-    padding: 0.15rem 0;
-    border-radius: 0;
-    background: transparent;
-    color: rgba(var(--foreground-color) / 1);
-    font-size: 0.82rem;
-    font-weight: 700;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    border-bottom: 1px solid
-      color-mix(in srgb, rgba(var(--foreground-color) / 1) 18%, transparent);
-  }
-
-  h1 {
+  .hero-title {
     margin: 0;
-    max-width: 10ch;
-    font-family: "Space Grotesk", "IBM Plex Sans", sans-serif;
-    font-size: clamp(3.4rem, 9vw, 6.8rem);
+    font-size: 3rem;
+    max-width: min(50vw, 100%);
     line-height: 0.95;
     letter-spacing: -0.04em;
   }
@@ -87,7 +70,7 @@ const getActionClass = (action: HomeAction) =>
   .tagline {
     margin: 1.25rem 0 0;
     max-width: 24ch;
-    font-size: clamp(1.35rem, 3vw, 2rem);
+    font-size: 1.25rem;
     color: rgba(var(--foreground-color) / 1);
   }
 
@@ -130,8 +113,7 @@ const getActionClass = (action: HomeAction) =>
 
   .action.alt {
     background: rgba(var(--secondary-color) / 1);
-    border: 1px solid
-      color-mix(in srgb, rgba(var(--foreground-color) / 1) 14%, transparent);
+    border: 1px solid rgba(var(--border-color) / 1);
     color: rgba(var(--foreground-color) / 1);
   }
 
@@ -140,14 +122,12 @@ const getActionClass = (action: HomeAction) =>
     grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 0;
     margin-top: 3rem;
-    border-top: 1px solid
-      color-mix(in srgb, rgba(var(--foreground-color) / 1) 12%, transparent);
+    border-top: 1px solid rgba(var(--border-color) / 1);
   }
 
   .feature-card {
     padding: 1.5rem;
-    border-right: 1px solid
-      color-mix(in srgb, rgba(var(--foreground-color) / 1) 12%, transparent);
+    border-right: 1px solid rgba(var(--border-color) / 1);
     background: transparent;
   }
 

@@ -6,9 +6,9 @@
     "description": "Documentation site powered by stropress"
   },
   "home": {
-    "title": "Build documentation that feels like a product",
-    "tagline": "A fast Astro-powered docs theme and CLI with a VitePress-style landing page.",
-    "description": "Point Stropress at any docs directory, define your navbar and sidebar in config.json, and generate a polished static documentation site with one command.",
+    "title": "Stropress",
+    "tagline": "Lightning Fast Documentation Sites with Astro",
+    "description": "Lightning, SEO-friendly, Easy",
     "actions": [
       {
         "text": "Get Started",
@@ -91,9 +91,9 @@
         "description": "使用 Stropress 构建文档站点"
       },
       "home": {
-        "title": "打造有产品质感的文档站",
-        "tagline": "基于 Astro 的文档主题与 CLI，支持 VitePress 风格首页，极速上线。",
-        "description": "将 Stropress 指向任意 docs 目录，在 config.json 中定义导航栏与侧边栏，一条命令即可生成精美的静态文档站。",
+        "title": "Stropress",
+        "tagline": "基于 Astro 的轻量文档站点",
+        "description": "轻量、SEO 友好、简单易用。",
         "actions": [
           {
             "text": "快速开始",

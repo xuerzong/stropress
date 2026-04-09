@@ -5,7 +5,7 @@
   "type": "module",
   "dependencies": {
     "@astrojs/mdx": "5.0.3",
-    "@fontsource/inter": "^5.2.8",
+    "@fontsource/bricolage-grotesque": "^5.2.10",
     "@fontsource/jetbrains-mono": "^5.2.8",
     "@lucide/astro": "^1.7.0",
     "@resvg/resvg-js": "^2.6.2",
