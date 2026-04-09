@@ -69,6 +69,41 @@
     padding-left: 0;
   }
 
+  .task-list-item input[type="checkbox"] {
+    appearance: none;
+    -webkit-appearance: none;
+    display: inline-grid;
+    place-content: center;
+    width: 1rem;
+    height: 1rem;
+    margin: 0 0.5rem 0 0;
+    border: 1px solid rgba(var(--border-color) / 1);
+    border-radius: 0.25rem;
+    background-color: rgba(var(--background-color) / 1);
+    color: rgba(var(--foreground-color) / 1);
+    vertical-align: text-bottom;
+    opacity: 1;
+  }
+
+  .task-list-item input[type="checkbox"]::before {
+    content: "";
+    width: 0.55rem;
+    height: 0.55rem;
+    transform: scale(0);
+    transition: transform 0.12s ease-in-out;
+    box-shadow: inset 1em 1em rgba(var(--background-color) / 1);
+    clip-path: polygon(14% 44%, 0 59%, 43% 100%, 100% 20%, 84% 6%, 43% 62%);
+  }
+
+  .task-list-item input[type="checkbox"]:checked {
+    background-color: rgba(var(--foreground-color) / 1);
+    border-color: rgba(var(--foreground-color) / 1);
+  }
+
+  .task-list-item input[type="checkbox"]:checked::before {
+    transform: scale(1);
+  }
+
   a {
     color: var(--primary-color);
     text-decoration: underline;
@@ -137,5 +172,11 @@
     text-transform: uppercase;
     color: var(--color);
     font-weight: bolder;
+  }
+
+  hr {
+    background-color: rgba(var(--border-color) / 1);
+    color: rgba(var(--border-color) / 1);
+    margin: 1rem 0;
   }
 }
