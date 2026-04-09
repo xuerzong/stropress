@@ -49,6 +49,7 @@ If omitted, it defaults to `docs` under the current working directory.
 If `docs/index.astro` exists, it overrides the JSON-driven homepage for `/`.
 If `docs/zh/index.astro` exists, it overrides the locale homepage for `/zh/`.
 If `docs/index.css` exists, it is injected globally after the theme styles so you can override `:root` variables and component styles.
+The generated site also exposes an auto-generated `llms.txt` endpoint built from the docs collection.
 
 These files are rendered inside the default docs layout. You can optionally export `title`, `description`, `sidebar`, or `contentClass` from the Astro file frontmatter to control the surrounding page metadata and layout.
 

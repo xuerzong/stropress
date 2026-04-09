@@ -70,6 +70,7 @@ export interface ResolvedSiteConfig {
   localeKey: string;
   localeLabel: string;
   localeLang: string;
+  siteUrl?: string;
   siteTitle: string;
   siteDescription: string;
   homeConfig: HomeConfig;
@@ -166,6 +167,7 @@ export const getResolvedSiteConfig = (pathname: string): ResolvedSiteConfig => {
     localeConfig.site?.description ||
     siteConfig.site?.description ||
     "Documentation site";
+  const resolvedUrl = localeConfig.site?.url || siteConfig.site?.url;
 
   const localeLinks = localeEntries.map(([key, config]) => ({
     key,
@@ -179,6 +181,7 @@ export const getResolvedSiteConfig = (pathname: string): ResolvedSiteConfig => {
     localeLabel:
       localeConfig.label || (localeKey === "/" ? "Default" : localeKey),
     localeLang: localeConfig.lang || "en",
+    siteUrl: resolvedUrl,
     siteTitle: resolvedTitle,
     siteDescription: resolvedDescription,
     homeConfig: localeConfig.home || siteConfig.home || {},
