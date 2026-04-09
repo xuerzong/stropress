@@ -1,0 +1,146 @@
+---
+title: Markdown Demo
+description: A playground page for debugging Markdown and MDX styles
+---
+
+# Markdown Demo
+
+This page intentionally collects common Markdown and MDX patterns so you can inspect how the docs theme renders typography, spacing, blocks, tables, and interactive content.
+
+## Typography
+
+Plain text should sit comfortably next to **bold text**, _italic text_, **_bold italic text_**, ~~strikethrough~~, `inline code`, and <kbd>Ctrl</kbd> + <kbd>K</kbd> style keyboard hints.
+
+You can also verify [internal links](/guide/getting-started) and [external links](https://astro.build).
+
+## Headings
+
+### Heading Level 3
+
+#### Heading Level 4
+
+##### Heading Level 5
+
+###### Heading Level 6
+
+## Lists
+
+- Unordered item one
+- Unordered item two
+  - Nested item
+    - Deeply nested item
+- Unordered item three
+
+1. Ordered item one
+2. Ordered item two
+3. Ordered item three
+
+- [ ] Incomplete task
+- [x] Completed task
+
+## Quote
+
+> Good docs make the product feel easier to use.
+>
+> They should also make structure, emphasis, and hierarchy obvious at a glance.
+
+## Alerts
+
+> [!NOTE]
+> This is a note block for general information.
+
+> [!TIP]
+> This is a tip block for useful shortcuts or best practices.
+
+> [!IMPORTANT]
+> This is an important block for behavior that users should not miss.
+
+> [!WARNING]
+> This is a warning block for risky or destructive actions.
+
+> [!CAUTION]
+> This is a caution block for edge cases and easy-to-make mistakes.
+
+## Table
+
+| Element     | Example        | Purpose                                |
+| ----------- | -------------- | -------------------------------------- |
+| Bold        | `**text**`     | Highlights strong emphasis             |
+| Inline code | `` `code` ``   | Displays commands or identifiers       |
+| Link        | `[label](url)` | Navigates to another page              |
+| Task list   | `- [x] done`   | Represents progress or checklist items |
+
+## Code Blocks
+
+```bash
+bun install
+bun run --cwd cli build
+bun cli/src/index.ts dev --dir=docs
+```
+
+```ts
+interface SiteConfig {
+  title: string;
+  description?: string;
+}
+
+const config: SiteConfig = {
+  title: "Stropress Docs",
+  description: "A docs site powered by Astro.",
+};
+
+console.log(config.title);
+```
+
+```json
+{
+  "site": {
+    "url": "https://stropress.xuco.me",
+    "title": "Stropress Docs"
+  }
+}
+```
+
+```diff
+- placeholder markdown for style testing
++ a dedicated demo page for markdown styling
+```
+
+## Horizontal Rule
+
+---
+
+## Image
+
+![Markdown demo placeholder](https://placehold.co/960x360/e2e8f0/0f172a?text=Markdown+Image)
+
+## Footnote
+
+Footnotes are useful when you want a compact page with optional details.[^demo-footnote]
+
+[^demo-footnote]: This is a footnote rendered from standard Markdown syntax.
+
+## Inline HTML and MDX
+
+<details>
+  <summary>Expandable details block</summary>
+
+This section checks how raw HTML blocks render inside MDX content.
+
+</details>
+
+<mark>Highlighted text</mark> can be useful for checking inline HTML styling.
+
+## Mixed Content
+
+1. Start with a paragraph.
+2. Follow it with a list.
+3. Drop in a code block.
+
+```yaml
+theme: default
+search:
+  provider: local
+```
+
+4. Finish with another paragraph so you can inspect the spacing between mixed block types.
