@@ -5,6 +5,7 @@ interface Props {
   lang?: string;
   canonical?: string;
   image?: string;
+  favicon?: string;
   noindex?: boolean;
   ogType?: "website" | "article";
 }
@@ -15,6 +16,7 @@ const {
   lang = "en-US",
   canonical,
   image,
+  favicon,
   noindex = false,
   ogType = "website",
 } = Astro.props;
@@ -39,6 +41,7 @@ const twitterCard = imageUrl ? "summary_large_image" : "summary";
 <meta name="robots" content={noindex ? "noindex, nofollow" : "index, follow"} />
 
 {canonicalUrl && <link rel="canonical" href={canonicalUrl} />}
+{favicon && <link rel="icon" href={favicon} />}
 
 <meta property="og:type" content={ogType} />
 <meta property="og:title" content={title} />

@@ -49,6 +49,7 @@ const tocItems = tocHeadings.filter(
       description={pageDescription}
       lang={resolvedConfig.localeLang}
       image={ogImagePath}
+      favicon={resolvedConfig.siteFavicon}
       ogType={sidebar ? "article" : "website"}
     />
     {customGlobalStyle && <style is:global set:html={customGlobalStyle} />}

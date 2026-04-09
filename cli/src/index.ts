@@ -32,6 +32,7 @@ interface SiteConfig {
     url?: string;
     title?: string;
     description?: string;
+    favicon?: string;
   };
   home?: {
     title?: string;
@@ -43,6 +44,7 @@ interface SiteConfig {
       site?: {
         title?: string;
         description?: string;
+        favicon?: string;
       };
     }
   >;
@@ -64,6 +66,7 @@ const run = async (mode: "dev" | "build", options: RunOptions) => {
   const configPath = path.join(docsDir, "config.json");
   const themeDir = await resolveThemeDir();
   const themeContentDir = path.join(themeDir, "src/content/docs");
+  const themePublicDir = path.join(themeDir, ".stropress/public");
 
   const loadAstroConfig = async (config: SiteConfig) => {
     const astroConfigPath = await writeAstroConfig({
@@ -92,7 +95,7 @@ const run = async (mode: "dev" | "build", options: RunOptions) => {
     );
   }
 
-  await syncDocs(docsDir, themeContentDir);
+  await syncDocs(docsDir, themeContentDir, themePublicDir);
 
   if (mode === "dev") {
     let devServer: Awaited<ReturnType<typeof dev>> | undefined;
@@ -144,6 +147,7 @@ const run = async (mode: "dev" | "build", options: RunOptions) => {
     const stopWatching = watchDocsForChanges({
       sourceDir: docsDir,
       targetDir: themeContentDir,
+      publicDir: themePublicDir,
       onConfigChange: restartDevServer,
     });
 
@@ -239,14 +243,21 @@ const readConfig = async (configPath: string): Promise<SiteConfig> => {
   return fs.readJson(configPath) as Promise<SiteConfig>;
 };
 
-const syncDocs = async (sourceDir: string, targetDir: string) => {
+const syncDocs = async (
+  sourceDir: string,
+  targetDir: string,
+  publicDir: string,
+) => {
   await fs.emptyDir(targetDir);
+  await fs.emptyDir(publicDir);
   await copyDocsRecursive(sourceDir, targetDir);
+  await copyPublicAssets(sourceDir, publicDir);
 };
 
 const watchDocsForChanges = (input: {
   sourceDir: string;
   targetDir: string;
+  publicDir: string;
   onConfigChange?: () => void | Promise<void>;
 }) => {
   let timer: NodeJS.Timeout | undefined;
@@ -262,7 +273,7 @@ const watchDocsForChanges = (input: {
 
     syncing = true;
     try {
-      await syncDocs(input.sourceDir, input.targetDir);
+      await syncDocs(input.sourceDir, input.targetDir, input.publicDir);
       console.log("[stropress] Synced docs changes.");
     } catch (error) {
       const message = error instanceof Error ? error.message : String(error);
@@ -318,6 +329,7 @@ const watchDocsForChanges = (input: {
       if (
         !/\.(md|mdx)$/i.test(normalizedPath) &&
         normalizedPath !== "index.css" &&
+        !normalizedPath.startsWith("public/") &&
         !(
           normalizedPath.endsWith("/index.astro") ||
           normalizedPath === "index.astro"
@@ -366,6 +378,23 @@ const copyDocsRecursive = async (sourceDir: string, targetDir: string) => {
   }
 };
 
+const copyPublicAssets = async (sourceDir: string, publicDir: string) => {
+  const bundledPublicDir = path.resolve(publicDir, "../..");
+  const sourcePublicDir = path.join(sourceDir, "public");
+
+  if (await fs.pathExists(path.join(bundledPublicDir, "public"))) {
+    await fs.copy(path.join(bundledPublicDir, "public"), publicDir, {
+      overwrite: true,
+    });
+  }
+
+  if (!(await fs.pathExists(sourcePublicDir))) {
+    return;
+  }
+
+  await fs.copy(sourcePublicDir, publicDir, { overwrite: true });
+};
+
 const writeAstroConfig = async (input: {
   cwd: string;
   themeDir: string;
@@ -373,6 +402,7 @@ const writeAstroConfig = async (input: {
 }) => {
   await fs.remove(path.join(input.themeDir, ".daoke"));
   const runtimeDir = path.join(input.themeDir, ".stropress");
+  const runtimePublicDir = path.join(runtimeDir, "public");
   const astroConfigPath = path.join(runtimeDir, "astro.config.mjs");
   const serializedConfig = JSON.stringify(input.config);
   const siteUrl = resolveSiteUrl(input.config);
@@ -389,6 +419,7 @@ import remarkGithubAlerts from "remark-github-alerts";
 
 export default defineConfig({
   outDir: ${JSON.stringify(path.join(input.cwd, "dist"))},
+  publicDir: ${JSON.stringify(runtimePublicDir)},
   devToolbar: {
     enabled: false
   },

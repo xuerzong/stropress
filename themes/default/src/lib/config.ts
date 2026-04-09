@@ -37,6 +37,7 @@ export interface LocaleConfig {
     url?: string;
     title?: string;
     description?: string;
+    favicon?: string;
   };
   home?: HomeConfig;
   nav?: NavItem[];
@@ -50,6 +51,7 @@ export interface SiteConfig {
     url?: string;
     title?: string;
     description?: string;
+    favicon?: string;
   };
   home?: HomeConfig;
   nav?: NavItem[];
@@ -73,6 +75,7 @@ export interface ResolvedSiteConfig {
   siteUrl?: string;
   siteTitle: string;
   siteDescription: string;
+  siteFavicon?: string;
   homeConfig: HomeConfig;
   nav: NavItem[];
   socialLinks: NavItem[];
@@ -168,6 +171,8 @@ export const getResolvedSiteConfig = (pathname: string): ResolvedSiteConfig => {
     siteConfig.site?.description ||
     "Documentation site";
   const resolvedUrl = localeConfig.site?.url || siteConfig.site?.url;
+  const resolvedFavicon =
+    localeConfig.site?.favicon || siteConfig.site?.favicon || "/favicon.svg";
 
   const localeLinks = localeEntries.map(([key, config]) => ({
     key,
@@ -184,6 +189,7 @@ export const getResolvedSiteConfig = (pathname: string): ResolvedSiteConfig => {
     siteUrl: resolvedUrl,
     siteTitle: resolvedTitle,
     siteDescription: resolvedDescription,
+    siteFavicon: resolvedFavicon,
     homeConfig: localeConfig.home || siteConfig.home || {},
     nav:
       localeConfig.nav ||

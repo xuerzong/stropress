@@ -26,6 +26,11 @@
         "description": {
           "type": "string",
           "description": "Default site description used in metadata and homepage fallbacks."
+        },
+        "favicon": {
+          "type": "string",
+          "description": "Path or URL for the favicon link tag, for example /favicon.svg or https://example.com/favicon.ico.",
+          "minLength": 1
         }
       }
     },
@@ -234,6 +239,11 @@
             "description": {
               "type": "string",
               "description": "Locale-specific site description."
+            },
+            "favicon": {
+              "type": "string",
+              "description": "Locale-specific favicon path or URL.",
+              "minLength": 1
             }
           }
         },
