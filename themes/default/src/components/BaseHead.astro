@@ -1,44 +1,60 @@
 ---
 interface Props {
-  title: string;
-  description: string;
-  lang?: string;
-  canonical?: string;
-  image?: string;
-  favicon?: string;
-  noindex?: boolean;
-  ogType?: "website" | "article";
+  title: string
+  description: string
+  lang?: string
+  canonical?: string
+  image?: string
+  favicon?: string
+  noindex?: boolean
+  ogType?: 'website' | 'article'
 }
 
 const {
   title,
   description,
-  lang = "en-US",
+  lang = 'en-US',
   canonical,
   image,
   favicon,
   noindex = false,
-  ogType = "website",
-} = Astro.props;
+  ogType = 'website',
+} = Astro.props
 
-const site = Astro.site;
+const site = Astro.site
 const canonicalUrl =
-  canonical ||
-  (site ? new URL(Astro.url.pathname, site).toString() : undefined);
+  canonical || (site ? new URL(Astro.url.pathname, site).toString() : undefined)
 const imageUrl = image
   ? site
     ? new URL(image, site).toString()
     : image
-  : undefined;
-const locale = lang.replace("-", "_");
-const twitterCard = imageUrl ? "summary_large_image" : "summary";
+  : undefined
+const locale = lang.replace('-', '_')
+const twitterCard = imageUrl ? 'summary_large_image' : 'summary'
 ---
 
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<script is:inline>
+  ;(() => {
+    const storageKey = 'stropress-theme'
+    const root = document.documentElement
+    const saved = localStorage.getItem(storageKey)
+    const prefersDark = window.matchMedia(
+      '(prefers-color-scheme: dark)'
+    ).matches
+    const theme =
+      saved === 'dark' || saved === 'light'
+        ? saved
+        : prefersDark
+          ? 'dark'
+          : 'light'
+    root.dataset.theme = theme
+  })()
+</script>
 <title>{title}</title>
 <meta name="description" content={description} />
-<meta name="robots" content={noindex ? "noindex, nofollow" : "index, follow"} />
+<meta name="robots" content={noindex ? 'noindex, nofollow' : 'index, follow'} />
 
 {canonicalUrl && <link rel="canonical" href={canonicalUrl} />}
 {favicon && <link rel="icon" href={favicon} />}

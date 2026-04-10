@@ -1,0 +1,89 @@
+---
+import Icon from './Icon.astro'
+---
+
+<button
+  type="button"
+  class="theme-toggle"
+  data-theme-toggle
+  aria-label="Toggle theme"
+  title="Toggle theme"
+>
+  <Icon name="Sun" class="theme-icon theme-icon-light" aria-hidden="true" />
+  <Icon name="Moon" class="theme-icon theme-icon-dark" aria-hidden="true" />
+</button>
+
+<script>
+  const setupThemeToggle = () => {
+    const root = document.documentElement
+    const button = document.querySelector<HTMLButtonElement>(
+      '[data-theme-toggle]'
+    )
+
+    if (!button) {
+      return
+    }
+
+    const storageKey = 'stropress-theme'
+    const getCurrentTheme = () =>
+      root.dataset.theme === 'dark' ? 'dark' : 'light'
+
+    const setTheme = (theme: 'light' | 'dark') => {
+      root.dataset.theme = theme
+      button.setAttribute(
+        'aria-label',
+        `Switch to ${theme === 'dark' ? 'light' : 'dark'} theme`
+      )
+      button.setAttribute(
+        'title',
+        `Switch to ${theme === 'dark' ? 'light' : 'dark'} theme`
+      )
+    }
+
+    setTheme(getCurrentTheme())
+
+    const onClick = () => {
+      const nextTheme = getCurrentTheme() === 'dark' ? 'light' : 'dark'
+      localStorage.setItem(storageKey, nextTheme)
+      setTheme(nextTheme)
+    }
+
+    button.onclick = onClick
+  }
+
+  setupThemeToggle()
+  document.addEventListener('astro:page-load', setupThemeToggle)
+</script>
+
+<style is:global>
+  .theme-toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2rem;
+    height: 2rem;
+    border: 1px solid rgba(var(--border-color) / 1);
+    border-radius: 0.5rem;
+    background: rgba(var(--background-color) / 1);
+    color: rgba(var(--foreground-color) / 1);
+    cursor: pointer;
+    flex: none;
+  }
+
+  .theme-icon {
+    width: 1rem;
+    height: 1rem;
+  }
+
+  .theme-icon-dark {
+    display: none;
+  }
+
+  html[data-theme='dark'] .theme-icon-light {
+    display: none;
+  }
+
+  html[data-theme='dark'] .theme-icon-dark {
+    display: block;
+  }
+</style>

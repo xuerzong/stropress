@@ -29,10 +29,22 @@
   --border-radius: 0.5rem;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    color-scheme: dark;
-  }
+:root[data-theme='dark'] {
+  color-scheme: dark;
+  --background-color: 11 14 18;
+  --foreground-color: 233 236 239;
+  --primary-color: 244 244 245;
+  --primary-foreground-color: 15 18 22;
+  --secondary-color: rgba(20, 24, 30, 0.86);
+  --muted-color: 153 162 176;
+  --accent-color: 28 34 42;
+  --border-color: 52 62 75;
+
+  --color-alert-note: 96 165 250;
+  --color-alert-tip: 52 211 153;
+  --color-alert-warning: 251 191 36;
+  --color-alert-important: 196 181 253;
+  --color-alert-caution: 248 113 113;
 }
 
 * {

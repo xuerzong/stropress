@@ -1,55 +1,54 @@
 ---
-import Icon from "./Icon.astro";
-import SearchInput from "./SearchInput.astro";
-import SearchModal from "./SearchModal.astro";
-import LocaleSelect from "./LocaleSelect.astro";
-import { getCollection } from "astro:content";
-import type { SearchDocument } from "../scripts/search";
-import { getResolvedSiteConfig } from "../lib/config";
+import Icon from './Icon.astro'
+import SearchInput from './SearchInput.astro'
+import SearchModal from './SearchModal.astro'
+import LocaleSelect from './LocaleSelect.astro'
+import ThemeToggle from './ThemeToggle.astro'
+import { getCollection } from 'astro:content'
+import type { SearchDocument } from '../scripts/search'
+import { getResolvedSiteConfig } from '../lib/config'
 
 interface Props {
-  showSidebarToggle?: boolean;
+  showSidebarToggle?: boolean
 }
 
-const { showSidebarToggle = false } = Astro.props;
+const { showSidebarToggle = false } = Astro.props
 
-const pathname = Astro.url.pathname;
-const resolvedConfig = getResolvedSiteConfig(pathname);
-const navItems = resolvedConfig.nav;
-const socialItems = resolvedConfig.socialLinks;
+const pathname = Astro.url.pathname
+const resolvedConfig = getResolvedSiteConfig(pathname)
+const navItems = resolvedConfig.nav
+const socialItems = resolvedConfig.socialLinks
 const localePrefixes = resolvedConfig.localeLinks
   .map((locale) => locale.key)
-  .filter((key) => key !== "/")
-  .map((key) => key.slice(1, -1));
+  .filter((key) => key !== '/')
+  .map((key) => key.slice(1, -1))
 const currentLocalePrefix =
-  resolvedConfig.localeKey === "/" ? "" : resolvedConfig.localeKey.slice(1, -1);
-const docs = await getCollection("docs");
+  resolvedConfig.localeKey === '/' ? '' : resolvedConfig.localeKey.slice(1, -1)
+const docs = await getCollection('docs')
 const searchDocuments: SearchDocument[] = docs
   .filter((entry) => {
-    if (resolvedConfig.localeKey === "/") {
-      return !localePrefixes.some((prefix) =>
-        entry.id.startsWith(`${prefix}/`),
-      );
+    if (resolvedConfig.localeKey === '/') {
+      return !localePrefixes.some((prefix) => entry.id.startsWith(`${prefix}/`))
     }
 
     return (
       entry.id === currentLocalePrefix ||
       entry.id.startsWith(`${currentLocalePrefix}/`)
-    );
+    )
   })
   .map((entry) => {
-    const normalizedId = entry.id.endsWith("/index")
-      ? entry.id.slice(0, -"/index".length)
-      : entry.id;
+    const normalizedId = entry.id.endsWith('/index')
+      ? entry.id.slice(0, -'/index'.length)
+      : entry.id
 
     return {
       id: entry.id,
       title: entry.data.title,
-      description: entry.data.description || "",
-      body: entry.body || "",
-      url: normalizedId === "index" ? "/" : `/${normalizedId}`,
-    };
-  });
+      description: entry.data.description || '',
+      body: entry.body || '',
+      url: normalizedId === 'index' ? '/' : `/${normalizedId}`,
+    }
+  })
 ---
 
 <header class="header">
@@ -70,7 +69,7 @@ const searchDocuments: SearchDocument[] = docs
     }
     <div class="logo">
       <a
-        href={resolvedConfig.localeKey === "/" ? "/" : resolvedConfig.localeKey}
+        href={resolvedConfig.localeKey === '/' ? '/' : resolvedConfig.localeKey}
       >
         {resolvedConfig.siteTitle}
       </a>
@@ -92,6 +91,7 @@ const searchDocuments: SearchDocument[] = docs
         </ul>
       )
     }
+    <ThemeToggle />
     <LocaleSelect localeLinks={resolvedConfig.localeLinks} />
     <ul class="social-links-list">
       {
