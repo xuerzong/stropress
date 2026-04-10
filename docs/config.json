@@ -40,7 +40,10 @@
     ]
   },
   "markdown": {
-    "codeTheme": "github-light"
+    "codeTheme": {
+      "light": "min-light",
+      "dark": "min-dark"
+    }
   },
   "socialLinks": [
     {

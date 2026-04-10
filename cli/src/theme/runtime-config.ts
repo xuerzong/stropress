@@ -17,9 +17,12 @@ export const writeAstroRuntimeConfig = async (input: WriteAstroConfigInput) => {
   const serializedConfig = JSON.stringify(input.config)
   const siteUrl = resolveSiteUrl(input.config)
   const codeTheme = input.config.markdown?.codeTheme
-  const shikiConfig = codeTheme
-    ? `,\n    shikiConfig: {\n      theme: ${JSON.stringify(codeTheme)}\n    }`
-    : ''
+  const shikiConfig =
+    typeof codeTheme === 'string'
+      ? `,\n    shikiConfig: {\n      theme: ${JSON.stringify(codeTheme)}\n    }`
+      : codeTheme
+        ? `,\n    shikiConfig: {\n      themes: ${JSON.stringify(codeTheme)},\n      defaultColor: false\n    }`
+        : ''
 
   await fs.ensureDir(runtimeDir)
 
