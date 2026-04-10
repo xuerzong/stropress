@@ -10,9 +10,25 @@ description: 配置导航、侧边栏和双语
 - `navbar`：顶部导航
 - `nav`：显示在社交链接旁边的主导航
 - `sidebar`：侧边栏分组
+- `footer`：页面底部页脚文本
 - `search`：本地搜索选项
 - `markdown`：Markdown 渲染选项
 - `locales`：多语言配置
+
+## 页脚
+
+你可以在 `docs/config.json` 里通过 `footer` 配置页面底部内容。
+
+```json
+{
+  "footer": {
+    "message": "基于 MIT License 发布。",
+    "copyright": "Copyright © 2026 Your Name"
+  }
+}
+```
+
+如果不同语言需要不同页脚内容，也可以在 `locales[localeKey]` 中单独覆盖 `footer`。
 
 ## 搜索
 

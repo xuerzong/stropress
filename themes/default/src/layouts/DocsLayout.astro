@@ -2,6 +2,7 @@
 import NavBar from "../components/NavBar.astro";
 import Sidebar from "../components/Sidebar.astro";
 import DocToc from "../components/DocToc.astro";
+import Footer from "../components/Footer.astro";
 import BaseHead from "../components/BaseHead.astro";
 import { getResolvedSiteConfig } from "../lib/config";
 import { customGlobalStyle } from "../lib/custom-style";
@@ -38,6 +39,10 @@ const ogImagePath =
     : `/og${Astro.url.pathname.endsWith("/") ? Astro.url.pathname.slice(0, -1) : Astro.url.pathname}.png`;
 const tocItems = tocHeadings.filter(
   (heading) => heading.depth >= 2 && heading.depth <= 3,
+);
+const hasFooter = Boolean(
+  resolvedConfig.footer.message?.trim() ||
+  resolvedConfig.footer.copyright?.trim(),
 );
 ---
 
@@ -92,6 +97,14 @@ const tocItems = tocHeadings.filter(
         </div>
       </main>
     </div>
+    {
+      hasFooter && (
+        <Footer
+          message={resolvedConfig.footer.message}
+          copyright={resolvedConfig.footer.copyright}
+        />
+      )
+    }
     <script>
       import { setupCodeCopyButtons } from "../scripts/code-copy";
 

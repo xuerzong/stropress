@@ -10,8 +10,24 @@ Use `docs/config.json` to define the navigation structure.
 - `navbar`: top navigation items
 - `nav`: primary header links shown next to social links
 - `sidebar`: side navigation groups
+- `footer`: footer text shown at the bottom of the page
 - `search`: local search options
 - `markdown`: markdown rendering options
+
+## Footer
+
+Use `footer` in `docs/config.json` to render footer text under the page content.
+
+```json
+{
+  "footer": {
+    "message": "Released under the MIT License.",
+    "copyright": "Copyright © 2026 Your Name"
+  }
+}
+```
+
+You can also override `footer` inside `locales[localeKey]` for locale-specific content.
 
 ## Site URL
 
@@ -144,6 +160,7 @@ Recommendations:
 
 - Put localized markdown under folders such as `docs/zh/...`.
 - Use locale-prefixed links in locale `nav`, `navbar`, and `sidebar`.
+- Use locale-level `footer` when message or copyright text should differ by language.
 - Add `docs/zh/index.md` to enable a clean `/zh/` landing route.
 
 ## Custom Homepage

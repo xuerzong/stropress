@@ -104,6 +104,10 @@
         "$ref": "#/$defs/sidebarGroup"
       }
     },
+    "footer": {
+      "$ref": "#/$defs/footerConfig",
+      "description": "Footer content shown at the bottom of the page."
+    },
     "search": {
       "type": "object",
       "additionalProperties": false,
@@ -210,6 +214,20 @@
         }
       }
     },
+    "footerConfig": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "message": {
+          "type": "string",
+          "description": "Primary footer text shown above copyright."
+        },
+        "copyright": {
+          "type": "string",
+          "description": "Copyright text shown in the footer."
+        }
+      }
+    },
     "localeConfig": {
       "type": "object",
       "additionalProperties": false,
@@ -298,6 +316,9 @@
           "items": {
             "$ref": "#/$defs/sidebarGroup"
           }
+        },
+        "footer": {
+          "$ref": "#/$defs/footerConfig"
         }
       }
     },

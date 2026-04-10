@@ -27,6 +27,11 @@ interface MarkdownConfig {
   codeTheme?: CodeThemeConfig;
 }
 
+interface FooterConfig {
+  message?: string;
+  copyright?: string;
+}
+
 interface SiteConfig {
   site?: {
     url?: string;
@@ -46,11 +51,13 @@ interface SiteConfig {
         description?: string;
         favicon?: string;
       };
+      footer?: FooterConfig;
     }
   >;
   navbar?: NavItem[];
   sidebar?: SidebarGroup[];
   markdown?: MarkdownConfig;
+  footer?: FooterConfig;
 }
 
 interface RunOptions {

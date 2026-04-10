@@ -24,6 +24,11 @@ export interface HomeConfig {
   features?: HomeFeature[];
 }
 
+export interface FooterConfig {
+  message?: string;
+  copyright?: string;
+}
+
 export interface SidebarGroup {
   label: string;
   icon?: string;
@@ -44,6 +49,7 @@ export interface LocaleConfig {
   socialLinks?: NavItem[];
   navbar?: NavItem[];
   sidebar?: SidebarGroup[];
+  footer?: FooterConfig;
 }
 
 export interface SiteConfig {
@@ -58,6 +64,7 @@ export interface SiteConfig {
   socialLinks?: NavItem[];
   navbar?: NavItem[];
   sidebar?: SidebarGroup[];
+  footer?: FooterConfig;
   locales?: Record<string, LocaleConfig>;
 }
 
@@ -80,6 +87,7 @@ export interface ResolvedSiteConfig {
   nav: NavItem[];
   socialLinks: NavItem[];
   sidebar: SidebarGroup[];
+  footer: FooterConfig;
   localeLinks: LocaleLink[];
 }
 
@@ -199,6 +207,7 @@ export const getResolvedSiteConfig = (pathname: string): ResolvedSiteConfig => {
       [],
     socialLinks: localeConfig.socialLinks || siteConfig.socialLinks || [],
     sidebar: localeConfig.sidebar || siteConfig.sidebar || [],
+    footer: localeConfig.footer || siteConfig.footer || {},
     localeLinks,
   };
 };

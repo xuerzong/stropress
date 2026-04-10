@@ -1,0 +1,48 @@
+---
+interface Props {
+  message?: string;
+  copyright?: string;
+}
+
+const { message, copyright } = Astro.props;
+const footerMessage = message?.trim();
+const footerCopyright = copyright?.trim();
+---
+
+<footer class="footer">
+  <div class="footer-inner">
+    {footerMessage && <p class="footer-message">{footerMessage}</p>}
+    {footerCopyright && <p class="footer-copyright">{footerCopyright}</p>}
+  </div>
+</footer>
+
+<style is:global>
+  .footer {
+    border-top: 1px solid rgba(var(--border-color) / 1);
+  }
+
+  .footer-inner {
+    width: 100%;
+    max-width: 80rem;
+    margin: 0 auto;
+    padding: 1.5rem;
+    color: rgba(var(--muted-color) / 1);
+    font-size: 0.95rem;
+  }
+
+  .footer-message,
+  .footer-copyright {
+    margin: 0;
+    line-height: 1.7;
+  }
+
+  .footer-copyright {
+    margin-top: 0.35rem;
+  }
+
+  @media (max-width: 900px) {
+    .footer {
+      margin-top: 2rem;
+    }
+  }
+</style>
