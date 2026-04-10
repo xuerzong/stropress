@@ -1,28 +1,28 @@
-import fs from "fs-extra";
-import path from "node:path";
-import { isSupportedDocFile } from "./file-classifier";
+import fs from 'fs-extra'
+import path from 'node:path'
+import { isSupportedDocFile } from './file-classifier'
 
 export const collectDocSources = async (
-  currentDir: string,
+  currentDir: string
 ): Promise<string[]> => {
-  const entries = await fs.readdir(currentDir, { withFileTypes: true });
-  const files: string[] = [];
+  const entries = await fs.readdir(currentDir, { withFileTypes: true })
+  const files: string[] = []
 
   for (const entry of entries) {
-    if (entry.name === "config.json") {
-      continue;
+    if (entry.name === 'config.json') {
+      continue
     }
 
-    const fullPath = path.join(currentDir, entry.name);
+    const fullPath = path.join(currentDir, entry.name)
     if (entry.isDirectory()) {
-      files.push(...(await collectDocSources(fullPath)));
-      continue;
+      files.push(...(await collectDocSources(fullPath)))
+      continue
     }
 
     if (isSupportedDocFile(entry.name, fullPath)) {
-      files.push(fullPath);
+      files.push(fullPath)
     }
   }
 
-  return files;
-};
+  return files
+}

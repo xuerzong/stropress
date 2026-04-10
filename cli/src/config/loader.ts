@@ -1,29 +1,29 @@
-import fs from "fs-extra";
-import { ZodError } from "zod";
-import { parseSiteConfig, type SiteConfig } from "./schema";
+import fs from 'fs-extra'
+import { ZodError } from 'zod'
+import { parseSiteConfig, type SiteConfig } from './schema'
 
 export const readSiteConfig = async (
-  configPath: string,
+  configPath: string
 ): Promise<SiteConfig> => {
   if (!(await fs.pathExists(configPath))) {
-    return {};
+    return {}
   }
 
-  const rawConfig = await fs.readJson(configPath);
-  const result = parseSiteConfig(rawConfig);
+  const rawConfig = await fs.readJson(configPath)
+  const result = parseSiteConfig(rawConfig)
 
   if (result.success) {
-    return result.data;
+    return result.data
   }
 
-  throw new Error(formatConfigValidationError(configPath, result.error));
-};
+  throw new Error(formatConfigValidationError(configPath, result.error))
+}
 
 const formatConfigValidationError = (configPath: string, error: ZodError) => {
   const issues = error.issues.map((issue) => {
-    const pathLabel = issue.path.length > 0 ? issue.path.join(".") : "$";
-    return `- ${pathLabel}: ${issue.message}`;
-  });
+    const pathLabel = issue.path.length > 0 ? issue.path.join('.') : '$'
+    return `- ${pathLabel}: ${issue.message}`
+  })
 
-  return `Invalid config.json at ${configPath}\n${issues.join("\n")}`;
-};
+  return `Invalid config.json at ${configPath}\n${issues.join('\n')}`
+}

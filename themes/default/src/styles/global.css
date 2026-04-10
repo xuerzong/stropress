@@ -1,7 +1,7 @@
-@import "@fontsource/bricolage-grotesque/400.css";
-@import "@fontsource/bricolage-grotesque/700.css";
-@import "@fontsource/jetbrains-mono/400.css";
-@import "@fontsource/jetbrains-mono/700.css";
+@import '@fontsource/bricolage-grotesque/400.css';
+@import '@fontsource/bricolage-grotesque/700.css';
+@import '@fontsource/jetbrains-mono/400.css';
+@import '@fontsource/jetbrains-mono/700.css';
 
 :root {
   color-scheme: light;
@@ -21,11 +21,11 @@
   --color-alert-caution: 220 38 38;
 
   --font-sans:
-    "Bricolage Grotesque", ui-sans-serif, system-ui, -apple-system,
-    BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    'Bricolage Grotesque', ui-sans-serif, system-ui, -apple-system,
+    BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
   --font-mono:
-    "JetBrains Mono", ui-monospace, SF Mono, SF Mono-Regular, Consolas,
-    "Liberation Mono", Menlo, Courier, monospace;
+    'JetBrains Mono', ui-monospace, SF Mono, SF Mono-Regular, Consolas,
+    'Liberation Mono', Menlo, Courier, monospace;
   --border-radius: 0.5rem;
 }
 

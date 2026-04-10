@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from 'zod'
 
 const navItemSchema = z
   .object({
@@ -6,7 +6,7 @@ const navItemSchema = z
     label: z.string().min(1),
     link: z.string().min(1),
   })
-  .strict();
+  .strict()
 
 const sidebarGroupSchema = z
   .object({
@@ -14,15 +14,15 @@ const sidebarGroupSchema = z
     label: z.string().min(1),
     items: z.array(navItemSchema),
   })
-  .strict();
+  .strict()
 
 const homeActionSchema = z
   .object({
     text: z.string().min(1),
     link: z.string().min(1),
-    theme: z.enum(["brand", "alt"]).optional(),
+    theme: z.enum(['brand', 'alt']).optional(),
   })
-  .strict();
+  .strict()
 
 const homeFeatureSchema = z
   .object({
@@ -30,7 +30,7 @@ const homeFeatureSchema = z
     title: z.string().min(1),
     details: z.string().min(1),
   })
-  .strict();
+  .strict()
 
 const homeConfigSchema = z
   .object({
@@ -40,14 +40,14 @@ const homeConfigSchema = z
     actions: z.array(homeActionSchema).optional(),
     features: z.array(homeFeatureSchema).optional(),
   })
-  .strict();
+  .strict()
 
 const footerConfigSchema = z
   .object({
     message: z.string().min(1).optional(),
     copyright: z.string().min(1).optional(),
   })
-  .strict();
+  .strict()
 
 const siteMetadataSchema = z
   .object({
@@ -56,7 +56,7 @@ const siteMetadataSchema = z
     description: z.string().min(1).optional(),
     favicon: z.string().min(1).optional(),
   })
-  .strict();
+  .strict()
 
 const codeThemeSchema = z.union([
   z.string().min(1),
@@ -66,19 +66,19 @@ const codeThemeSchema = z.union([
       dark: z.string().min(1),
     })
     .strict(),
-]);
+])
 
 const markdownConfigSchema = z
   .object({
     codeTheme: codeThemeSchema.optional(),
   })
-  .strict();
+  .strict()
 
 const searchConfigSchema = z
   .object({
-    provider: z.enum(["local"]).optional(),
+    provider: z.enum(['local']).optional(),
   })
-  .strict();
+  .strict()
 
 const localeConfigSchema: z.ZodType<LocaleConfig> = z
   .object({
@@ -92,7 +92,7 @@ const localeConfigSchema: z.ZodType<LocaleConfig> = z
     sidebar: z.array(sidebarGroupSchema).optional(),
     footer: footerConfigSchema.optional(),
   })
-  .strict();
+  .strict()
 
 export const siteConfigSchema = z
   .object({
@@ -108,20 +108,20 @@ export const siteConfigSchema = z
     search: searchConfigSchema.optional(),
     locales: z.record(z.string(), localeConfigSchema).optional(),
   })
-  .strict();
+  .strict()
 
-export type SiteConfig = z.infer<typeof siteConfigSchema>;
+export type SiteConfig = z.infer<typeof siteConfigSchema>
 export type LocaleConfig = {
-  label: string;
-  lang?: string;
-  site?: z.infer<typeof siteMetadataSchema>;
-  home?: z.infer<typeof homeConfigSchema>;
-  nav?: z.infer<typeof navItemSchema>[];
-  socialLinks?: z.infer<typeof navItemSchema>[];
-  navbar?: z.infer<typeof navItemSchema>[];
-  sidebar?: z.infer<typeof sidebarGroupSchema>[];
-  footer?: z.infer<typeof footerConfigSchema>;
-};
+  label: string
+  lang?: string
+  site?: z.infer<typeof siteMetadataSchema>
+  home?: z.infer<typeof homeConfigSchema>
+  nav?: z.infer<typeof navItemSchema>[]
+  socialLinks?: z.infer<typeof navItemSchema>[]
+  navbar?: z.infer<typeof navItemSchema>[]
+  sidebar?: z.infer<typeof sidebarGroupSchema>[]
+  footer?: z.infer<typeof footerConfigSchema>
+}
 
 export const parseSiteConfig = (input: unknown) =>
-  siteConfigSchema.safeParse(input);
+  siteConfigSchema.safeParse(input)

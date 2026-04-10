@@ -12,6 +12,7 @@
   ],
   "scripts": {
     "build": "bun cli/src/index.ts build",
-    "dev": "bun cli/src/index.ts dev"
+    "dev": "bun cli/src/index.ts dev",
+    "format": "prettier --write ."
   }
 }
