@@ -1,12 +1,16 @@
 #!/usr/bin/env node
 import { build, dev } from "astro";
 import { program } from "commander";
-import { ZodError } from "zod";
 import fs from "fs-extra";
-import { watch } from "node:fs";
 import path from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
-import { parseSiteConfig, type SiteConfig } from "./config-schema";
+import { readSiteConfig } from "./config/loader";
+import type { SiteConfig } from "./config/schema";
+import { watchDocsChanges } from "./docs/change-watcher";
+import { syncDocsContent } from "./docs/content-sync";
+import { collectDocSources } from "./docs/source-collector";
+import { writeAstroRuntimeConfig } from "./theme/runtime-config";
+import { resolveThemeDir } from "./theme/directory-resolver";
 
 interface RunOptions {
   dir: string;
@@ -19,12 +23,12 @@ const run = async (mode: "dev" | "build", options: RunOptions) => {
   const cwd = process.cwd();
   const docsDir = path.resolve(cwd, options.dir || "docs");
   const configPath = path.join(docsDir, "config.json");
-  const themeDir = await resolveThemeDir();
+  const themeDir = await resolveThemeDir(currentDir);
   const themeContentDir = path.join(themeDir, "src/content/docs");
   const themePublicDir = path.join(themeDir, ".stropress/public");
 
   const loadAstroConfig = async (config: SiteConfig) => {
-    const astroConfigPath = await writeAstroConfig({
+    const astroConfigPath = await writeAstroRuntimeConfig({
       cwd,
       themeDir,
       config,
@@ -50,7 +54,7 @@ const run = async (mode: "dev" | "build", options: RunOptions) => {
     );
   }
 
-  await syncDocs(docsDir, themeContentDir, themePublicDir);
+  await syncDocsContent(docsDir, themeContentDir, themePublicDir);
 
   if (mode === "dev") {
     let devServer: Awaited<ReturnType<typeof dev>> | undefined;
@@ -58,7 +62,7 @@ const run = async (mode: "dev" | "build", options: RunOptions) => {
     let pendingRestart = false;
 
     const startDevServer = async () => {
-      const config = await readConfig(configPath);
+      const config = await readSiteConfig(configPath);
       const astroConfig = await loadAstroConfig(config);
 
       devServer = await dev({
@@ -99,7 +103,7 @@ const run = async (mode: "dev" | "build", options: RunOptions) => {
 
     await startDevServer();
 
-    const stopWatching = watchDocsForChanges({
+    const stopWatching = watchDocsChanges({
       sourceDir: docsDir,
       targetDir: themeContentDir,
       publicDir: themePublicDir,
@@ -118,7 +122,7 @@ const run = async (mode: "dev" | "build", options: RunOptions) => {
     return;
   }
 
-  const config = await readConfig(configPath);
+  const config = await readSiteConfig(configPath);
   const astroConfig = await loadAstroConfig(config);
 
   await build({
@@ -127,308 +131,6 @@ const run = async (mode: "dev" | "build", options: RunOptions) => {
     site: astroConfig.site,
     devOutput: "static",
   });
-};
-
-const resolveThemeDir = async () => {
-  const candidates = [
-    path.resolve(currentDir, "theme-default"),
-    path.resolve(currentDir, "../theme-default"),
-    path.resolve(currentDir, "../../themes/default"),
-  ];
-
-  for (const candidate of candidates) {
-    if (await fs.pathExists(candidate)) {
-      return candidate;
-    }
-  }
-
-  throw new Error("Missing bundled default theme");
-};
-
-const collectDocSources = async (currentDir: string): Promise<string[]> => {
-  const entries = await fs.readdir(currentDir, { withFileTypes: true });
-  const files: string[] = [];
-
-  for (const entry of entries) {
-    if (entry.name === "config.json") {
-      continue;
-    }
-
-    const fullPath = path.join(currentDir, entry.name);
-    if (entry.isDirectory()) {
-      files.push(...(await collectDocSources(fullPath)));
-      continue;
-    }
-
-    if (isSupportedDocFile(entry.name, fullPath)) {
-      files.push(fullPath);
-    }
-  }
-
-  return files;
-};
-
-const isSupportedDocFile = (fileName: string, filePath: string) => {
-  if (/\.(md|mdx)$/i.test(fileName)) {
-    return true;
-  }
-
-  if (fileName === "index.css" && isRootCustomStyleFile(filePath)) {
-    return true;
-  }
-
-  return fileName === "index.astro" && isHomepageAstroFile(filePath);
-};
-
-const isHomepageAstroFile = (filePath: string) => {
-  const normalizedPath = filePath.replaceAll("\\", "/");
-  return /(^|\/)index\.astro$/i.test(normalizedPath);
-};
-
-const isRootCustomStyleFile = (filePath: string) => {
-  const normalizedPath = filePath.replaceAll("\\", "/");
-  return /(^|\/)docs\/index\.css$/i.test(normalizedPath);
-};
-
-const readConfig = async (configPath: string): Promise<SiteConfig> => {
-  if (!(await fs.pathExists(configPath))) {
-    return {};
-  }
-
-  const rawConfig = await fs.readJson(configPath);
-  const result = parseSiteConfig(rawConfig);
-
-  if (result.success) {
-    return result.data;
-  }
-
-  throw new Error(formatConfigValidationError(configPath, result.error));
-};
-
-const formatConfigValidationError = (configPath: string, error: ZodError) => {
-  const issues = error.issues.map((issue) => {
-    const pathLabel = issue.path.length > 0 ? issue.path.join(".") : "$";
-    return `- ${pathLabel}: ${issue.message}`;
-  });
-
-  return `Invalid config.json at ${configPath}\n${issues.join("\n")}`;
-};
-
-const syncDocs = async (
-  sourceDir: string,
-  targetDir: string,
-  publicDir: string,
-) => {
-  await fs.emptyDir(targetDir);
-  await fs.emptyDir(publicDir);
-  await copyDocsRecursive(sourceDir, targetDir);
-  await copyPublicAssets(sourceDir, publicDir);
-};
-
-const watchDocsForChanges = (input: {
-  sourceDir: string;
-  targetDir: string;
-  publicDir: string;
-  onConfigChange?: () => void | Promise<void>;
-}) => {
-  let timer: NodeJS.Timeout | undefined;
-  let configTimer: NodeJS.Timeout | undefined;
-  let syncing = false;
-  let pending = false;
-
-  const runSync = async () => {
-    if (syncing) {
-      pending = true;
-      return;
-    }
-
-    syncing = true;
-    try {
-      await syncDocs(input.sourceDir, input.targetDir, input.publicDir);
-      console.log("[stropress] Synced docs changes.");
-    } catch (error) {
-      const message = error instanceof Error ? error.message : String(error);
-      console.error(`[stropress] Failed to sync docs changes: ${message}`);
-    } finally {
-      syncing = false;
-      if (pending) {
-        pending = false;
-        runSync();
-      }
-    }
-  };
-
-  const queueSync = () => {
-    if (timer) {
-      clearTimeout(timer);
-    }
-
-    // Debounce fast consecutive writes from editors.
-    timer = setTimeout(() => {
-      runSync();
-    }, 120);
-  };
-
-  const queueConfigRestart = () => {
-    if (configTimer) {
-      clearTimeout(configTimer);
-    }
-
-    // Debounce duplicate fs events so one save causes one restart.
-    configTimer = setTimeout(() => {
-      input.onConfigChange?.();
-    }, 160);
-  };
-
-  const watcher = watch(
-    input.sourceDir,
-    { recursive: true },
-    (_eventType, filename) => {
-      const changedPath = typeof filename === "string" ? filename : "";
-      const normalizedPath = changedPath.replaceAll("\\", "/");
-
-      if (!changedPath) {
-        queueSync();
-        return;
-      }
-
-      if (normalizedPath === "config.json") {
-        queueConfigRestart();
-        return;
-      }
-
-      if (
-        !/\.(md|mdx)$/i.test(normalizedPath) &&
-        normalizedPath !== "index.css" &&
-        !normalizedPath.startsWith("public/") &&
-        !(
-          normalizedPath.endsWith("/index.astro") ||
-          normalizedPath === "index.astro"
-        )
-      ) {
-        return;
-      }
-
-      queueSync();
-    },
-  );
-
-  console.log(`[stropress] Watching docs changes: ${input.sourceDir}`);
-  return () => {
-    watcher.close();
-    if (timer) {
-      clearTimeout(timer);
-    }
-    if (configTimer) {
-      clearTimeout(configTimer);
-    }
-  };
-};
-
-const copyDocsRecursive = async (sourceDir: string, targetDir: string) => {
-  const entries = await fs.readdir(sourceDir, { withFileTypes: true });
-
-  for (const entry of entries) {
-    if (entry.name === "config.json") {
-      continue;
-    }
-
-    const sourcePath = path.join(sourceDir, entry.name);
-    const targetPath = path.join(targetDir, entry.name);
-
-    if (entry.isDirectory()) {
-      await fs.ensureDir(targetPath);
-      await copyDocsRecursive(sourcePath, targetPath);
-      continue;
-    }
-
-    if (isSupportedDocFile(entry.name, sourcePath)) {
-      await fs.ensureDir(path.dirname(targetPath));
-      await fs.copyFile(sourcePath, targetPath);
-    }
-  }
-};
-
-const copyPublicAssets = async (sourceDir: string, publicDir: string) => {
-  const bundledPublicDir = path.resolve(publicDir, "../..");
-  const sourcePublicDir = path.join(sourceDir, "public");
-
-  if (await fs.pathExists(path.join(bundledPublicDir, "public"))) {
-    await fs.copy(path.join(bundledPublicDir, "public"), publicDir, {
-      overwrite: true,
-    });
-  }
-
-  if (!(await fs.pathExists(sourcePublicDir))) {
-    return;
-  }
-
-  await fs.copy(sourcePublicDir, publicDir, { overwrite: true });
-};
-
-const writeAstroConfig = async (input: {
-  cwd: string;
-  themeDir: string;
-  config: SiteConfig;
-}) => {
-  await fs.remove(path.join(input.themeDir, ".daoke"));
-  const runtimeDir = path.join(input.themeDir, ".stropress");
-  const runtimePublicDir = path.join(runtimeDir, "public");
-  const astroConfigPath = path.join(runtimeDir, "astro.config.mjs");
-  const serializedConfig = JSON.stringify(input.config);
-  const siteUrl = resolveSiteUrl(input.config);
-  const codeTheme = input.config.markdown?.codeTheme;
-  const shikiConfig = codeTheme
-    ? `,\n    shikiConfig: {\n      theme: ${JSON.stringify(codeTheme)}\n    }`
-    : "";
-
-  await fs.ensureDir(runtimeDir);
-
-  const content = `import { defineConfig } from "astro/config";
-import mdx from "@astrojs/mdx";
-import remarkGithubAlerts from "remark-github-alerts";
-
-export default defineConfig({
-  outDir: ${JSON.stringify(path.join(input.cwd, "dist"))},
-  publicDir: ${JSON.stringify(runtimePublicDir)},
-  devToolbar: {
-    enabled: false
-  },
-  markdown: {
-    remarkPlugins: [remarkGithubAlerts]${shikiConfig}
-  },
-  integrations: [
-    mdx({
-      remarkPlugins: [remarkGithubAlerts]
-    })
-  ],
-  site: ${JSON.stringify(siteUrl)},
-  vite: {
-    define: {
-      "import.meta.env.STROPRESS_SITE_CONFIG": ${JSON.stringify(serializedConfig)}
-    }
-  }
-});
-`;
-
-  await fs.writeFile(astroConfigPath, content, "utf8");
-  return astroConfigPath;
-};
-
-const resolveSiteUrl = (config: SiteConfig) => {
-  const configuredUrl = config.site?.url?.trim();
-
-  if (!configuredUrl) {
-    return "http://localhost:4321";
-  }
-
-  try {
-    return new URL(configuredUrl).toString();
-  } catch {
-    throw new Error(
-      `Invalid site.url in config.json: ${configuredUrl}. Expected a full URL such as https://docs.example.com`,
-    );
-  }
 };
 
 program
