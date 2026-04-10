@@ -1,64 +1,12 @@
 #!/usr/bin/env node
 import { build, dev } from "astro";
 import { program } from "commander";
+import { ZodError } from "zod";
 import fs from "fs-extra";
 import { watch } from "node:fs";
 import path from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
-
-interface NavItem {
-  label: string;
-  link: string;
-}
-
-interface SidebarGroup {
-  label: string;
-  items: NavItem[];
-}
-
-type CodeThemeConfig =
-  | string
-  | {
-      light: string;
-      dark: string;
-    };
-
-interface MarkdownConfig {
-  codeTheme?: CodeThemeConfig;
-}
-
-interface FooterConfig {
-  message?: string;
-  copyright?: string;
-}
-
-interface SiteConfig {
-  site?: {
-    url?: string;
-    title?: string;
-    description?: string;
-    favicon?: string;
-  };
-  home?: {
-    title?: string;
-    description?: string;
-  };
-  locales?: Record<
-    string,
-    {
-      site?: {
-        title?: string;
-        description?: string;
-        favicon?: string;
-      };
-      footer?: FooterConfig;
-    }
-  >;
-  navbar?: NavItem[];
-  sidebar?: SidebarGroup[];
-  markdown?: MarkdownConfig;
-  footer?: FooterConfig;
-}
+import { parseSiteConfig, type SiteConfig } from "./config-schema";
 
 interface RunOptions {
   dir: string;
@@ -247,7 +195,23 @@ const readConfig = async (configPath: string): Promise<SiteConfig> => {
     return {};
   }
 
-  return fs.readJson(configPath) as Promise<SiteConfig>;
+  const rawConfig = await fs.readJson(configPath);
+  const result = parseSiteConfig(rawConfig);
+
+  if (result.success) {
+    return result.data;
+  }
+
+  throw new Error(formatConfigValidationError(configPath, result.error));
+};
+
+const formatConfigValidationError = (configPath: string, error: ZodError) => {
+  const issues = error.issues.map((issue) => {
+    const pathLabel = issue.path.length > 0 ? issue.path.join(".") : "$";
+    return `- ${pathLabel}: ${issue.message}`;
+  });
+
+  return `Invalid config.json at ${configPath}\n${issues.join("\n")}`;
 };
 
 const syncDocs = async (
