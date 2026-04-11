@@ -1,0 +1,70 @@
+name: Publish Packages
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    env:
+      NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          registry-url: https://registry.npmjs.org
+
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
+
+      - name: Sync package versions from tag
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          tag="${GITHUB_REF_NAME#v}"
+          node <<'EOF'
+          const fs = require('fs')
+
+          const tag = process.env.GITHUB_REF_NAME.replace(/^v/, '')
+          const updatePackage = (filePath, updater) => {
+            const packageJson = JSON.parse(fs.readFileSync(filePath, 'utf8'))
+            updater(packageJson, tag)
+            fs.writeFileSync(filePath, `${JSON.stringify(packageJson, null, 2)}\n`)
+          }
+
+          updatePackage('./packages/ui/package.json', (pkg, version) => {
+            pkg.version = version
+          })
+
+          updatePackage('./cli/package.json', (pkg, version) => {
+            pkg.version = version
+            if (pkg.dependencies && pkg.dependencies['@stropress/ui']) {
+              pkg.dependencies['@stropress/ui'] = `^${version}`
+            }
+          })
+          EOF
+
+      - name: Build CLI
+        run: bun run --cwd cli build
+
+      - name: Publish @stropress/ui
+        run: npm publish --access public
+        working-directory: packages/ui
+
+      - name: Publish stropress
+        run: npm publish --access public
+        working-directory: cli

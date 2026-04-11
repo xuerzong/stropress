@@ -2,8 +2,8 @@ node_modules
 .dist
 dist
 cli/dist
-themes/default/.astro
-themes/default/dist
-themes/default/.stropress
-themes/default/src/content/docs
+packages/ui/.astro
+packages/ui/dist
+packages/ui/.stropress
+packages/ui/src/content/docs
 .DS_Store

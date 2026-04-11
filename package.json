@@ -8,7 +8,7 @@
   },
   "workspaces": [
     "cli",
-    "themes/default"
+    "packages/ui"
   ],
   "scripts": {
     "build": "bun cli/src/index.ts build",

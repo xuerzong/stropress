@@ -82,11 +82,13 @@ const resolveFontsourceFontFile = async (
   packageName: string,
   weight: '400' | '700'
 ) => {
+  const resolvedCssPath = resolveInstalledFontCss(packageName, weight)
   const cssCandidates = [
+    ...(resolvedCssPath ? [resolvedCssPath] : []),
     path.resolve(process.cwd(), `node_modules/${packageName}/${weight}.css`),
     path.resolve(
       process.cwd(),
-      `themes/default/node_modules/${packageName}/${weight}.css`
+      `packages/ui/node_modules/${packageName}/${weight}.css`
     ),
     path.resolve(
       process.cwd(),
@@ -101,6 +103,17 @@ const resolveFontsourceFontFile = async (
   const fontUrl = extractFontUrlFromCss(cssContent)
 
   return path.resolve(path.dirname(cssPath), fontUrl)
+}
+
+const resolveInstalledFontCss = (
+  packageName: string,
+  weight: '400' | '700'
+) => {
+  try {
+    return require.resolve(`${packageName}/${weight}.css`)
+  } catch {
+    return null
+  }
 }
 
 const resolvePathCandidate = async (candidates: string[]) => {

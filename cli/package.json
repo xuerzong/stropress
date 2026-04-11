@@ -1,6 +1,6 @@
 {
   "name": "stropress",
-  "version": "0.0.2",
+  "version": "0.0.4",
   "type": "module",
   "files": [
     "dist"
@@ -12,17 +12,15 @@
     "clean": "rm -rf dist",
     "build:js": "bun build src/index.ts --target=node --format=esm --packages=external --outfile dist/index.js",
     "build:types": "tsc -p tsconfig.json --emitDeclarationOnly --declaration --declarationDir dist",
-    "build:theme": "bun run scripts/copy-theme.mjs",
-    "build": "bun run clean && bun run build:js && bun run build:types && bun run build:theme",
+    "build": "bun run clean && bun run build:js && bun run build:types",
     "dev": "bun src/index.ts dev",
     "pack:check": "bun run build && npm pack --dry-run"
   },
   "dependencies": {
-    "@astrojs/mdx": "5.0.3",
+    "@stropress/ui": "^0.0.4",
     "astro": "6.1.3",
     "commander": "^14.0.0",
     "fs-extra": "^11.3.0",
-    "remark-github-alerts": "^0.1.1",
     "zod": "^4.3.6"
   },
   "devDependencies": {

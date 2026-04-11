@@ -1,49 +1,49 @@
 ---
-import NavBar from "../components/NavBar.astro";
-import Sidebar from "../components/Sidebar.astro";
-import DocToc from "../components/DocToc.astro";
-import Footer from "../components/Footer.astro";
-import BaseHead from "../components/BaseHead.astro";
-import { getResolvedSiteConfig } from "../lib/config";
-import { customGlobalStyle } from "../lib/custom-style";
-import "../styles/global.css";
-import "../styles/markdown.css";
+import NavBar from '../components/NavBar.astro'
+import Sidebar from '../components/Sidebar.astro'
+import DocToc from '../components/DocToc.astro'
+import Footer from '../components/Footer.astro'
+import BaseHead from '../components/BaseHead.astro'
+import { getResolvedSiteConfig } from '../lib/config'
+import { customGlobalStyle } from '../lib/custom-style'
+import '../styles/global.css'
+import '../styles/markdown.css'
 
 interface Props {
-  title?: string;
-  description?: string;
-  sidebar?: boolean;
-  contentClass?: string;
+  title?: string
+  description?: string
+  sidebar?: boolean
+  contentClass?: string
   tocHeadings?: Array<{
-    depth: number;
-    slug: string;
-    text: string;
-  }>;
+    depth: number
+    slug: string
+    text: string
+  }>
 }
 
 const {
   title,
   description,
   sidebar = true,
-  contentClass = "",
+  contentClass = '',
   tocHeadings = [],
-} = Astro.props;
-const resolvedConfig = getResolvedSiteConfig(Astro.url.pathname);
+} = Astro.props
+const resolvedConfig = getResolvedSiteConfig(Astro.url.pathname)
 const pageTitle = title
   ? `${title} | ${resolvedConfig.siteTitle}`
-  : resolvedConfig.siteTitle;
-const pageDescription = description || resolvedConfig.siteDescription;
+  : resolvedConfig.siteTitle
+const pageDescription = description || resolvedConfig.siteDescription
 const ogImagePath =
-  Astro.url.pathname === "/"
-    ? "/og/index.png"
-    : `/og${Astro.url.pathname.endsWith("/") ? Astro.url.pathname.slice(0, -1) : Astro.url.pathname}.png`;
+  Astro.url.pathname === '/'
+    ? '/og/index.png'
+    : `/og${Astro.url.pathname.endsWith('/') ? Astro.url.pathname.slice(0, -1) : Astro.url.pathname}.png`
 const tocItems = tocHeadings.filter(
-  (heading) => heading.depth >= 2 && heading.depth <= 3,
-);
+  (heading) => heading.depth >= 2 && heading.depth <= 3
+)
 const hasFooter = Boolean(
   resolvedConfig.footer.message?.trim() ||
-  resolvedConfig.footer.copyright?.trim(),
-);
+  resolvedConfig.footer.copyright?.trim()
+)
 ---
 
 <!doctype html>
@@ -55,13 +55,13 @@ const hasFooter = Boolean(
       lang={resolvedConfig.localeLang}
       image={ogImagePath}
       favicon={resolvedConfig.siteFavicon}
-      ogType={sidebar ? "article" : "website"}
+      ogType={sidebar ? 'article' : 'website'}
     />
     {customGlobalStyle && <style is:global set:html={customGlobalStyle} />}
   </head>
   <body>
     <NavBar showSidebarToggle={sidebar} />
-    <div class:list={["wrapper", !sidebar && "wrapper-without-sidebar"]}>
+    <div class:list={['wrapper', !sidebar && 'wrapper-without-sidebar']}>
       {
         sidebar && (
           <>
@@ -83,11 +83,11 @@ const hasFooter = Boolean(
           </>
         )
       }
-      <main class:list={["content", contentClass]}>
+      <main class:list={['content', contentClass]}>
         <div
           class:list={[
-            "docs-main",
-            tocItems.length > 0 && "docs-main-with-toc",
+            'docs-main',
+            tocItems.length > 0 && 'docs-main-with-toc',
           ]}
         >
           <div class="docs-main-content">
@@ -106,81 +106,81 @@ const hasFooter = Boolean(
       )
     }
     <script>
-      import { setupCodeCopyButtons } from "../scripts/code-copy";
+      import { setupCodeCopyButtons } from '../scripts/code-copy'
 
-      setupCodeCopyButtons();
+      setupCodeCopyButtons()
 
-      let sidebarCleanup: (() => void) | null = null;
+      let sidebarCleanup: (() => void) | null = null
 
       const setupSidebarDrawer = () => {
-        if (typeof sidebarCleanup === "function") {
-          sidebarCleanup();
-          sidebarCleanup = null;
+        if (typeof sidebarCleanup === 'function') {
+          sidebarCleanup()
+          sidebarCleanup = null
         }
 
         const drawer = document.querySelector<HTMLElement>(
-          "[data-sidebar-drawer]",
-        );
+          '[data-sidebar-drawer]'
+        )
         const backdrop = document.querySelector<HTMLElement>(
-          "[data-sidebar-backdrop]",
-        );
+          '[data-sidebar-backdrop]'
+        )
         const toggle = document.querySelector<HTMLElement>(
-          "[data-sidebar-toggle]",
-        );
+          '[data-sidebar-toggle]'
+        )
 
         if (!drawer || !backdrop || !toggle) {
-          return;
+          return
         }
 
         const linkElements = Array.from(
-          drawer.querySelectorAll<HTMLAnchorElement>("a"),
-        );
+          drawer.querySelectorAll<HTMLAnchorElement>('a')
+        )
 
         const setOpen = (open: boolean) => {
-          drawer.dataset.state = open ? "open" : "closed";
-          backdrop.dataset.state = open ? "open" : "closed";
-          toggle.setAttribute("aria-expanded", open ? "true" : "false");
-          document.body.style.overflow = open ? "hidden" : "";
-        };
+          drawer.dataset.state = open ? 'open' : 'closed'
+          backdrop.dataset.state = open ? 'open' : 'closed'
+          toggle.setAttribute('aria-expanded', open ? 'true' : 'false')
+          document.body.style.overflow = open ? 'hidden' : ''
+        }
 
-        const close = () => setOpen(false);
-        const onToggle = () => setOpen(drawer.dataset.state !== "open");
+        const close = () => setOpen(false)
+        const onToggle = () => setOpen(drawer.dataset.state !== 'open')
 
-        toggle.addEventListener("click", onToggle);
-        backdrop.addEventListener("click", close);
+        toggle.addEventListener('click', onToggle)
+        backdrop.addEventListener('click', close)
         linkElements.forEach((element: HTMLAnchorElement) =>
-          element.addEventListener("click", close),
-        );
+          element.addEventListener('click', close)
+        )
 
         const onKeydown = (event: KeyboardEvent) => {
-          if (event.key === "Escape") {
-            close();
+          if (event.key === 'Escape') {
+            close()
           }
-        };
+        }
 
         const onResize = () => {
           if (window.innerWidth > 900) {
-            close();
+            close()
           }
-        };
+        }
 
-        document.addEventListener("keydown", onKeydown);
-        window.addEventListener("resize", onResize);
+        document.addEventListener('keydown', onKeydown)
+        window.addEventListener('resize', onResize)
 
         sidebarCleanup = () => {
-          toggle.removeEventListener("click", onToggle);
-          backdrop.removeEventListener("click", close);
+          toggle.removeEventListener('click', onToggle)
+          backdrop.removeEventListener('click', close)
           linkElements.forEach((element: HTMLAnchorElement) =>
-            element.removeEventListener("click", close),
-          );
-          document.removeEventListener("keydown", onKeydown);
-          window.removeEventListener("resize", onResize);
-          document.body.style.overflow = "";
-        };
-      };
+            element.removeEventListener('click', close)
+          )
+          document.removeEventListener('keydown', onKeydown)
+          window.removeEventListener('resize', onResize)
+          document.body.style.overflow = ''
+        }
+      }
 
-      setupSidebarDrawer();
-      document.addEventListener("astro:page-load", setupSidebarDrawer);
+      setupSidebarDrawer()
+      document.addEventListener('astro:page-load', setupSidebarDrawer)
     </script>
   </body>
 </html>
@@ -258,7 +258,7 @@ const hasFooter = Boolean(
       transition: opacity 180ms ease;
     }
 
-    .sider-backdrop[data-state="open"] {
+    .sider-backdrop[data-state='open'] {
       opacity: 1;
       pointer-events: auto;
     }
@@ -278,7 +278,7 @@ const hasFooter = Boolean(
       overflow-y: auto;
     }
 
-    .sider[data-state="open"] {
+    .sider[data-state='open'] {
       transform: translateX(0);
     }
 
