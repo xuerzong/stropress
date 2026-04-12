@@ -1,50 +1,50 @@
 ---
-import DocsLayout from "../../layouts/DocsLayout.astro";
-import HomePage from "../../components/HomePage.astro";
-import { getCollection, render, type CollectionEntry } from "astro:content";
-import { getResolvedSiteConfig } from "../../lib/config";
-import { getCustomHomeModule } from "../../lib/custom-home";
+import DocsLayout from '../../layouts/DocsLayout.astro'
+import HomePage from '../../components/HomePage.astro'
+import { getCollection, render, type CollectionEntry } from 'astro:content'
+import { getResolvedSiteConfig } from '../../lib/config'
+import { getCustomHomeModule } from '../../lib/custom-home'
 
 export const getStaticPaths = async () => {
-  const docs = await getCollection("docs");
+  const docs = await getCollection('docs')
 
   return docs
-    .filter((entry) => entry.id !== "index")
+    .filter((entry) => entry.id !== 'index')
     .map((entry) => ({
       params: {
-        slug: entry.id.endsWith("/index")
-          ? entry.id.slice(0, -"/index".length)
+        slug: entry.id.endsWith('/index')
+          ? entry.id.slice(0, -'/index'.length)
           : entry.id,
       },
       props: {
         entry,
       },
-    }));
-};
-
-interface Props {
-  entry: CollectionEntry<"docs">;
+    }))
 }
 
-const { entry } = Astro.props;
-const { Content, headings } = await render(entry);
+interface Props {
+  entry: CollectionEntry<'docs'>
+}
 
-const resolvedConfig = getResolvedSiteConfig(Astro.url.pathname);
-const normalizedPathname = Astro.url.pathname.endsWith("/")
+const { entry } = Astro.props
+const { Content, headings } = await render(entry)
+
+const resolvedConfig = getResolvedSiteConfig(Astro.url.pathname)
+const normalizedPathname = Astro.url.pathname.endsWith('/')
   ? Astro.url.pathname
-  : `${Astro.url.pathname}/`;
+  : `${Astro.url.pathname}/`
 const isLocaleHome =
-  resolvedConfig.localeKey !== "/" &&
-  normalizedPathname === resolvedConfig.localeKey;
+  resolvedConfig.localeKey !== '/' &&
+  normalizedPathname === resolvedConfig.localeKey
 const customHomeModule = isLocaleHome
   ? await getCustomHomeModule(Astro.url.pathname)
-  : null;
-const CustomHome = customHomeModule?.default;
-const customTitle = customHomeModule?.title;
-const customDescription = customHomeModule?.description;
-const customSidebar = customHomeModule?.sidebar;
-const customContentClass = customHomeModule?.contentClass;
-const localeHomeConfig = isLocaleHome ? resolvedConfig.homeConfig : null;
+  : null
+const CustomHome = customHomeModule?.default
+const customTitle = customHomeModule?.title
+const customDescription = customHomeModule?.description
+const customSidebar = customHomeModule?.sidebar
+const customContentClass = customHomeModule?.contentClass
+const localeHomeConfig = isLocaleHome ? resolvedConfig.homeConfig : null
 const hasHomeContent =
   isLocaleHome &&
   !customHomeModule &&
@@ -52,18 +52,18 @@ const hasHomeContent =
     Boolean(localeHomeConfig?.tagline) ||
     Boolean(localeHomeConfig?.description) ||
     (localeHomeConfig?.actions?.length || 0) > 0 ||
-    (localeHomeConfig?.features?.length || 0) > 0);
+    (localeHomeConfig?.features?.length || 0) > 0)
 ---
 
 <DocsLayout
   title={customTitle || entry.data.title}
   description={customDescription || entry.data.description}
-  sidebar={typeof customSidebar === "boolean" ? customSidebar : !hasHomeContent}
+  sidebar={typeof customSidebar === 'boolean' ? customSidebar : !hasHomeContent}
   tocHeadings={hasHomeContent || customHomeModule ? undefined : headings}
   contentClass={customContentClass ||
     (hasHomeContent || customHomeModule
       ? undefined
-      : "docs-content markdown-content")}
+      : 'docs-content markdown-content')}
 >
   {
     customHomeModule ? (
@@ -75,9 +75,3 @@ const hasHomeContent =
     )
   }
 </DocsLayout>
-
-<style is:global>
-  .docs-content {
-    padding: 1rem;
-  }
-</style>

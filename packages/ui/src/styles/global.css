@@ -65,6 +65,10 @@ a {
   text-decoration: none;
 }
 
+.docs-content {
+  padding: 1rem;
+}
+
 .sr-only {
   position: absolute;
   width: 1px;
