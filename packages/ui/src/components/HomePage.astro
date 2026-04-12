@@ -1,20 +1,20 @@
 ---
-import Icon from "./Icon.astro";
-import { getResolvedSiteConfig, type HomeAction } from "../lib/config";
+import Icon from './Icon.astro'
+import { getResolvedSiteConfig, type HomeAction } from '../lib/config'
 
-const resolvedConfig = getResolvedSiteConfig(Astro.url.pathname);
-const homeConfig = resolvedConfig.homeConfig;
-const siteTitle = resolvedConfig.siteTitle;
-const siteDescription = resolvedConfig.siteDescription;
+const resolvedConfig = getResolvedSiteConfig(Astro.url.pathname)
+const homeConfig = resolvedConfig.homeConfig
+const siteTitle = resolvedConfig.siteTitle
+const siteDescription = resolvedConfig.siteDescription
 
-const heroTitle = homeConfig.title || siteTitle;
-const heroTagline = homeConfig.tagline || siteDescription;
-const heroDescription = homeConfig.description || siteDescription;
-const actions = homeConfig.actions || [];
-const features = homeConfig.features || [];
+const heroTitle = homeConfig.title || siteTitle
+const heroTagline = homeConfig.tagline || siteDescription
+const heroDescription = homeConfig.description || siteDescription
+const actions = homeConfig.actions || []
+const features = homeConfig.features || []
 
 const getActionClass = (action: HomeAction) =>
-  action.theme === "alt" ? "action alt" : "action brand";
+  action.theme === 'alt' ? 'action alt' : 'action brand'
 ---
 
 <section class="hero">
@@ -124,18 +124,11 @@ const getActionClass = (action: HomeAction) =>
     grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 0;
     margin-top: 3rem;
-    border-top: 1px solid rgba(var(--border-color) / 1);
-    border-bottom: 1px solid rgba(var(--border-color) / 1);
   }
 
   .feature-card {
     padding: 1.5rem;
-    border-right: 1px solid rgba(var(--border-color) / 1);
     background: transparent;
-  }
-
-  .feature-card:last-child {
-    border-right: 0;
   }
 
   .feature-icon-wrapper {
