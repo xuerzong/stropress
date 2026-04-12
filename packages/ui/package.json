@@ -1,6 +1,6 @@
 {
   "name": "@stropress/ui",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "type": "module",
   "files": [
     "src",
@@ -10,17 +10,12 @@
   ],
   "dependencies": {
     "@astrojs/mdx": "5.0.3",
-    "@fontsource/bricolage-grotesque": "^5.2.10",
-    "@fontsource/inter": "^5.2.8",
-    "@fontsource/jetbrains-mono": "^5.2.8",
     "@lucide/astro": "^1.8.0",
     "@resvg/resvg-js": "^2.6.2",
     "copy-to-clipboard": "^3.3.3",
     "minisearch": "^7.2.0",
     "postcss-nesting": "^14.0.0",
-    "remark-github-alerts": "^0.1.1",
-    "satori": "^0.26.0",
-    "satori-html": "^0.3.2"
+    "remark-github-alerts": "^0.1.1"
   },
   "peerDependencies": {
     "astro": "6.1.3"

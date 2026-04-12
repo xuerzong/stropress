@@ -7,3 +7,5 @@ packages/ui/dist
 packages/ui/.stropress
 packages/ui/src/content/docs
 .DS_Store
+
+*.tgz
