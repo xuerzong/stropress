@@ -131,6 +131,8 @@ const mapLocaleEntries = () => {
   return entries.sort((a, b) => b[0].length - a[0].length)
 }
 
+export const getLocaleEntries = () => mapLocaleEntries()
+
 const stripLocalePrefix = (pathname: string, localeKey: string) => {
   if (localeKey === '/') {
     return pathname

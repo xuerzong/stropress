@@ -28,6 +28,17 @@ const getCustomHomeModulePath = (pathname: string) => {
   return `../content/docs${normalizedPath.slice(0, -1)}/index.astro`
 }
 
+const getCustomHomePathname = (modulePath: string) => {
+  const relativePath = modulePath
+    .replace('../content/docs', '')
+    .replace(/\/index\.astro$/, '')
+
+  return normalizePathname(relativePath || '/')
+}
+
+export const getCustomHomePathnames = () =>
+  Object.keys(customHomeModules).map(getCustomHomePathname)
+
 export const getCustomHomeModule = async (pathname: string) => {
   const modulePath = getCustomHomeModulePath(pathname)
   const loader = customHomeModules[modulePath]

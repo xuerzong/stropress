@@ -2,32 +2,94 @@
 import DocsLayout from '../../layouts/DocsLayout.astro'
 import HomePage from '../../components/HomePage.astro'
 import { getCollection, render, type CollectionEntry } from 'astro:content'
-import { getResolvedSiteConfig } from '../../lib/config'
-import { getCustomHomeModule } from '../../lib/custom-home'
+import { getLocaleEntries, getResolvedSiteConfig } from '../../lib/config'
+import {
+  getCustomHomeModule,
+  getCustomHomePathnames,
+} from '../../lib/custom-home'
+
+const hasConfiguredHomeContent = (homeConfig?: {
+  title?: string
+  tagline?: string
+  description?: string
+  actions?: unknown[]
+  features?: unknown[]
+}) =>
+  Boolean(homeConfig?.title) ||
+  Boolean(homeConfig?.tagline) ||
+  Boolean(homeConfig?.description) ||
+  (homeConfig?.actions?.length || 0) > 0 ||
+  (homeConfig?.features?.length || 0) > 0
 
 export const getStaticPaths = async () => {
   const docs = await getCollection('docs')
+  const docIds = new Set(docs.map((entry) => entry.id))
+  const customHomePathnames = new Set(getCustomHomePathnames())
+  const hasLocaleHomeContent = (homeConfig?: {
+    title?: string
+    tagline?: string
+    description?: string
+    actions?: unknown[]
+    features?: unknown[]
+  }) =>
+    Boolean(homeConfig?.title) ||
+    Boolean(homeConfig?.tagline) ||
+    Boolean(homeConfig?.description) ||
+    (homeConfig?.actions?.length || 0) > 0 ||
+    (homeConfig?.features?.length || 0) > 0
 
-  return docs
-    .filter((entry) => entry.id !== 'index')
-    .map((entry) => ({
-      params: {
-        slug: entry.id.endsWith('/index')
-          ? entry.id.slice(0, -'/index'.length)
-          : entry.id,
-      },
-      props: {
-        entry,
-      },
-    }))
+  const localeHomePaths = getLocaleEntries()
+    .filter(([localeKey]) => localeKey !== '/')
+    .flatMap(([localeKey, localeConfig]) => {
+      const localeSlug = localeKey.slice(1, -1)
+      if (docIds.has(localeSlug) || docIds.has(`${localeSlug}/index`)) {
+        return []
+      }
+
+      const hasCustomHome = customHomePathnames.has(localeKey)
+      const hasLocaleHome = hasLocaleHomeContent(localeConfig.home)
+
+      if (!hasCustomHome && !hasLocaleHome) {
+        return []
+      }
+
+      return [
+        {
+          params: {
+            slug: localeSlug,
+          },
+          props: {
+            entry: null,
+          },
+        },
+      ]
+    })
+
+  return [
+    ...docs
+      .filter((entry) => entry.id !== 'index')
+      .map((entry) => ({
+        params: {
+          slug: entry.id.endsWith('/index')
+            ? entry.id.slice(0, -'/index'.length)
+            : entry.id,
+        },
+        props: {
+          entry,
+        },
+      })),
+    ...localeHomePaths,
+  ]
 }
 
 interface Props {
-  entry: CollectionEntry<'docs'>
+  entry: CollectionEntry<'docs'> | null
 }
 
 const { entry } = Astro.props
-const { Content, headings } = await render(entry)
+const renderedEntry = entry ? await render(entry) : null
+const Content = renderedEntry?.Content
+const headings = renderedEntry?.headings
 
 const resolvedConfig = getResolvedSiteConfig(Astro.url.pathname)
 const normalizedPathname = Astro.url.pathname.endsWith('/')
@@ -44,20 +106,16 @@ const customTitle = customHomeModule?.title
 const customDescription = customHomeModule?.description
 const customSidebar = customHomeModule?.sidebar
 const customContentClass = customHomeModule?.contentClass
-const localeHomeConfig = isLocaleHome ? resolvedConfig.homeConfig : null
+const localeHomeConfig = isLocaleHome ? resolvedConfig.homeConfig : undefined
 const hasHomeContent =
   isLocaleHome &&
   !customHomeModule &&
-  (Boolean(localeHomeConfig?.title) ||
-    Boolean(localeHomeConfig?.tagline) ||
-    Boolean(localeHomeConfig?.description) ||
-    (localeHomeConfig?.actions?.length || 0) > 0 ||
-    (localeHomeConfig?.features?.length || 0) > 0)
+  hasConfiguredHomeContent(localeHomeConfig)
 ---
 
 <DocsLayout
-  title={customTitle || entry.data.title}
-  description={customDescription || entry.data.description}
+  title={customTitle || entry?.data.title}
+  description={customDescription || entry?.data.description}
   sidebar={typeof customSidebar === 'boolean' ? customSidebar : !hasHomeContent}
   tocHeadings={hasHomeContent || customHomeModule ? undefined : headings}
   contentClass={customContentClass ||
@@ -70,8 +128,8 @@ const hasHomeContent =
       <CustomHome />
     ) : hasHomeContent ? (
       <HomePage />
-    ) : (
+    ) : Content ? (
       <Content />
-    )
+    ) : null
   }
 </DocsLayout>
