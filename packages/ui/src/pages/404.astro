@@ -1,0 +1,76 @@
+---
+import DocsLayout from '../layouts/DocsLayout.astro'
+import { getCustomNotFoundModule } from '../lib/custom-not-found'
+
+const customNotFoundModule = await getCustomNotFoundModule(Astro.url.pathname)
+const CustomNotFound = customNotFoundModule?.default
+const customTitle = customNotFoundModule?.title
+const customDescription = customNotFoundModule?.description
+const customSidebar = customNotFoundModule?.sidebar
+const customContentClass = customNotFoundModule?.contentClass
+---
+
+<DocsLayout
+  title={customTitle || 'Page Not Found'}
+  description={customDescription ||
+    'The page you are looking for could not be found.'}
+  sidebar={typeof customSidebar === 'boolean' ? customSidebar : false}
+  contentClass={customContentClass || 'docs-content markdown-content'}
+>
+  {
+    CustomNotFound ? (
+      <CustomNotFound />
+    ) : (
+      <section class="not-found">
+        <p class="not-found-code">404</p>
+        <h1>Page not found</h1>
+        <p>The link may be broken or the page may have moved.</p>
+        <a href="/" class="not-found-link">
+          Back to home
+        </a>
+      </section>
+    )
+  }
+</DocsLayout>
+
+<style>
+  .not-found {
+    margin: 4rem auto;
+    max-width: 34rem;
+    text-align: center;
+    padding: 0 1rem;
+  }
+
+  .not-found-code {
+    margin: 0;
+    font-size: 0.9rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    color: rgb(var(--primary-color));
+  }
+
+  h1 {
+    margin: 0.75rem 0 1rem;
+    font-size: clamp(2rem, 5vw, 2.75rem);
+  }
+
+  p {
+    margin: 0;
+    color: rgb(var(--muted-foreground-color));
+  }
+
+  .not-found-link {
+    display: inline-flex;
+    margin-top: 1.5rem;
+    padding: 0.6rem 1rem;
+    border-radius: 999px;
+    text-decoration: none;
+    color: rgb(var(--background-color));
+    background: rgb(var(--foreground-color));
+    transition: opacity 160ms ease;
+  }
+
+  .not-found-link:hover {
+    opacity: 0.88;
+  }
+</style>
