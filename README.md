@@ -2,6 +2,23 @@
 
 Vitepress, but powered by [Astro](https://astro.build/).
 
+## Install
+
+Use `npx` to try Stropress without adding it to your project:
+
+```bash
+npx stropress dev --dir docs
+npx stropress build --dir docs
+```
+
+Or install it locally with npm:
+
+```bash
+npm install -D stropress
+npx stropress dev --dir docs
+npx stropress build --dir docs
+```
+
 ## Documentation
 
 For full documentation, see [Stropress](https://stropress.xuco.me).

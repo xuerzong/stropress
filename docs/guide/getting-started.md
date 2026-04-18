@@ -7,10 +7,24 @@ description: Start your documentation site
 
 Markdown files under `docs/` are rendered into static HTML pages.
 
+## Install Stropress
+
+If you want to add Stropress to your project, install it with npm:
+
+```bash
+npm install -D stropress
+```
+
+You can also try it directly without installing:
+
+```bash
+npx stropress dev --dir docs
+```
+
 ## Run the Development Server
 
 ```bash
-bun run dev --dir=docs
+npx stropress dev --dir docs
 ```
 
 This starts a local Astro dev server and watches your docs content for changes.
@@ -18,7 +32,7 @@ This starts a local Astro dev server and watches your docs content for changes.
 ## Build for Production
 
 ```bash
-bun run build --dir=docs
+npx stropress build --dir docs
 ```
 
 The generated site is written to the build output directory as a static site.

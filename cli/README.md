@@ -12,9 +12,17 @@ npx stropress build --dir docs
 Or install locally:
 
 ```bash
+npm install -D stropress
+npx stropress dev --dir docs
+npx stropress build --dir docs
+```
+
+If you use Bun instead of npm:
+
+```bash
 bun add -D stropress
-bun stropress dev --dir docs
-bun stropress build --dir docs
+bunx stropress dev --dir docs
+bunx stropress build --dir docs
 ```
 
 ## Commands
