@@ -154,21 +154,48 @@
   .markdown-alert {
     margin-block: 1rem;
     padding: 0.75rem 1rem;
+    border: 1px solid var(--color);
+    border-left-width: 4px;
+    background-color: var(--bg-color);
     border-radius: var(--border-radius);
+  }
+
+  .markdown-alert-note {
+    --color: rgba(var(--color-alert-note) / 1);
+    --bg-color: rgba(var(--color-alert-note) / 0.1);
   }
 
   .markdown-alert-tip {
     --color: rgba(var(--color-alert-tip) / 1);
-    background-color: rgba(var(--color-alert-tip) / 0.1);
+    --bg-color: rgba(var(--color-alert-tip) / 0.1);
   }
 
   .markdown-alert-important {
     --color: rgba(var(--color-alert-important) / 1);
-    background-color: rgba(var(--color-alert-important) / 0.1);
+    --bg-color: rgba(var(--color-alert-important) / 0.1);
+  }
+
+  .markdown-alert-warning {
+    --color: rgba(var(--color-alert-warning) / 1);
+    --bg-color: rgba(var(--color-alert-warning) / 0.1);
+  }
+
+  .markdown-alert-caution {
+    --color: rgba(var(--color-alert-caution) / 1);
+    --bg-color: rgba(var(--color-alert-caution) / 0.1);
+  }
+
+  .markdown-alert > :last-child {
+    margin-bottom: 0;
+  }
+
+  .markdown-alert p:not(.markdown-alert-title) {
+    color: rgba(var(--foreground-color) / 0.88);
   }
 
   .markdown-alert-title {
     margin: 0;
+    margin-bottom: 0.35rem;
     text-transform: uppercase;
     color: var(--color);
     font-weight: bolder;
