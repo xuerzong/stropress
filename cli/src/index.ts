@@ -58,6 +58,7 @@ const run = async (mode: 'dev' | 'build', options: RunOptions) => {
 
   if (mode === 'dev') {
     let devServer: Awaited<ReturnType<typeof dev>> | undefined
+    let devServerPort: number | undefined
     let restarting = false
     let pendingRestart = false
 
@@ -70,7 +71,17 @@ const run = async (mode: 'dev' | 'build', options: RunOptions) => {
         root: themeDir,
         site: astroConfig.site,
         devOutput: 'static',
+        server: {
+          ...astroConfig.server,
+          ...(devServerPort ? { port: devServerPort, strictPort: true } : {}),
+        },
       })
+
+      devServerPort = devServer.address.port
+
+      console.log(
+        `[stropress] Dev server listening on http://localhost:${devServerPort}`
+      )
     }
 
     const restartDevServer = async () => {
@@ -85,6 +96,7 @@ const run = async (mode: 'dev' | 'build', options: RunOptions) => {
           '[stropress] Detected config.json changes. Restarting dev server...'
         )
         if (devServer) {
+          devServerPort = devServer.address.port
           await devServer.stop()
         }
         await startDevServer()

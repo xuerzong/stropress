@@ -1,4 +1,8 @@
 import { watch } from 'node:fs'
+import {
+  isHomepageAstroFile,
+  isRootCustomStyleFile,
+} from './file-classifier'
 import { syncDocsContent } from './content-sync'
 
 interface WatchDocsOptions {
@@ -9,50 +13,98 @@ interface WatchDocsOptions {
 }
 
 export const watchDocsChanges = (input: WatchDocsOptions) => {
-  let timer: NodeJS.Timeout | undefined
-  let configTimer: NodeJS.Timeout | undefined
-  let syncing = false
-  let pending = false
+  let syncTimer: NodeJS.Timeout | undefined
+  let restartTimer: NodeJS.Timeout | undefined
+  let running = false
+  let pendingSync = false
+  let pendingRestart = false
 
-  const runSync = async () => {
-    if (syncing) {
-      pending = true
-      return
+  const normalizePath = (value: string) => value.replaceAll('\\', '/')
+
+  const isConfigChange = (filePath: string) => normalizePath(filePath) === 'config.json'
+
+  const isContentChange = (filePath: string) => {
+    const normalizedPath = normalizePath(filePath)
+
+    if (/\.(md|mdx)$/i.test(normalizedPath)) {
+      return true
     }
 
-    syncing = true
+    if (normalizedPath.startsWith('public/')) {
+      return true
+    }
+
+    if (isRootCustomStyleFile(`docs/${normalizedPath}`)) {
+      return true
+    }
+
+    return isHomepageAstroFile(normalizedPath)
+  }
+
+  const runSync = async () => {
     try {
       await syncDocsContent(input.sourceDir, input.targetDir, input.publicDir)
       console.log('[stropress] Synced docs changes.')
     } catch (error) {
       const message = error instanceof Error ? error.message : String(error)
       console.error(`[stropress] Failed to sync docs changes: ${message}`)
-    } finally {
-      syncing = false
-      if (pending) {
-        pending = false
-        runSync()
+    }
+  }
+
+  const runRestart = async () => {
+    try {
+      await syncDocsContent(input.sourceDir, input.targetDir, input.publicDir)
+      await input.onConfigChange?.()
+    } catch (error) {
+      const message = error instanceof Error ? error.message : String(error)
+      console.error(`[stropress] Failed to restart after config changes: ${message}`)
+    }
+  }
+
+  const flushQueue = async () => {
+    if (running) {
+      return
+    }
+
+    running = true
+    try {
+      while (pendingRestart || pendingSync) {
+        if (pendingRestart) {
+          pendingRestart = false
+          pendingSync = false
+          await runRestart()
+          continue
+        }
+
+        pendingSync = false
+        await runSync()
       }
+    } finally {
+      running = false
     }
   }
 
   const queueSync = () => {
-    if (timer) {
-      clearTimeout(timer)
+    pendingSync = true
+
+    if (syncTimer) {
+      clearTimeout(syncTimer)
     }
 
-    timer = setTimeout(() => {
-      runSync()
+    syncTimer = setTimeout(() => {
+      void flushQueue()
     }, 120)
   }
 
   const queueConfigRestart = () => {
-    if (configTimer) {
-      clearTimeout(configTimer)
+    pendingRestart = true
+
+    if (restartTimer) {
+      clearTimeout(restartTimer)
     }
 
-    configTimer = setTimeout(() => {
-      input.onConfigChange?.()
+    restartTimer = setTimeout(() => {
+      void flushQueue()
     }, 160)
   }
 
@@ -61,27 +113,18 @@ export const watchDocsChanges = (input: WatchDocsOptions) => {
     { recursive: true },
     (_eventType, filename) => {
       const changedPath = typeof filename === 'string' ? filename : ''
-      const normalizedPath = changedPath.replaceAll('\\', '/')
 
       if (!changedPath) {
         queueSync()
         return
       }
 
-      if (normalizedPath === 'config.json') {
+      if (isConfigChange(changedPath)) {
         queueConfigRestart()
         return
       }
 
-      if (
-        !/\.(md|mdx)$/i.test(normalizedPath) &&
-        normalizedPath !== 'index.css' &&
-        !normalizedPath.startsWith('public/') &&
-        !(
-          normalizedPath.endsWith('/index.astro') ||
-          normalizedPath === 'index.astro'
-        )
-      ) {
+      if (!isContentChange(changedPath)) {
         return
       }
 
@@ -92,11 +135,11 @@ export const watchDocsChanges = (input: WatchDocsOptions) => {
   console.log(`[stropress] Watching docs changes: ${input.sourceDir}`)
   return () => {
     watcher.close()
-    if (timer) {
-      clearTimeout(timer)
+    if (syncTimer) {
+      clearTimeout(syncTimer)
     }
-    if (configTimer) {
-      clearTimeout(configTimer)
+    if (restartTimer) {
+      clearTimeout(restartTimer)
     }
   }
 }

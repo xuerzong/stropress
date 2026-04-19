@@ -41,8 +41,8 @@
   },
   "markdown": {
     "codeTheme": {
-      "light": "min-light",
-      "dark": "min-dark"
+      "light": "vitesse-light",
+      "dark": "vitesse-dark"
     }
   },
   "socialLinks": [
