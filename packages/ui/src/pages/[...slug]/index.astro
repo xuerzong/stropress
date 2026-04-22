@@ -116,7 +116,9 @@ const hasHomeContent =
 <DocsLayout
   title={customTitle || entry?.data.title}
   description={customDescription || entry?.data.description}
-  sidebar={typeof customSidebar === 'boolean' ? customSidebar : !hasHomeContent}
+  sidebar={typeof customSidebar === 'boolean'
+    ? customSidebar
+    : !(hasHomeContent || Boolean(customHomeModule))}
   tocHeadings={hasHomeContent || customHomeModule ? undefined : headings}
   contentClass={customContentClass ||
     (hasHomeContent || customHomeModule

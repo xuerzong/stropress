@@ -33,7 +33,9 @@ const useCustomHome = Boolean(CustomHome)
 <DocsLayout
   title={customTitle || homeDoc?.data.title}
   description={customDescription || homeDoc?.data.description}
-  sidebar={typeof customSidebar === 'boolean' ? customSidebar : !hasHomeContent}
+  sidebar={typeof customSidebar === 'boolean'
+    ? customSidebar
+    : !(hasHomeContent || useCustomHome)}
   tocHeadings={hasHomeContent || useCustomHome ? undefined : headings}
   contentClass={customContentClass ||
     (hasHomeContent || useCustomHome
