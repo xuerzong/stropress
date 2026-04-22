@@ -29,6 +29,13 @@ npx stropress dev --dir docs
 
 This starts a local Astro dev server and watches your docs content for changes.
 
+To run the dev server on a custom port:
+
+```bash
+npx stropress dev --dir docs --port 3000
+PORT=3000 npx stropress dev --dir docs
+```
+
 ## Build for Production
 
 ```bash

@@ -11,6 +11,13 @@ npx stropress dev --dir docs
 npx stropress build --dir docs
 ```
 
+Use a custom dev port with `--port` or the `PORT` environment variable:
+
+```bash
+npx stropress dev --dir docs --port 3000
+PORT=3000 npx stropress dev --dir docs
+```
+
 Or install it locally with npm:
 
 ```bash

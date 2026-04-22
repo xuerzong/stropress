@@ -11,9 +11,11 @@ import { syncDocsContent } from './docs/content-sync'
 import { collectDocSources } from './docs/source-collector'
 import { writeAstroRuntimeConfig } from './theme/runtime-config'
 import { resolveThemeDir } from './theme/directory-resolver'
+import { resolveAvailablePort, resolveRequestedPort } from './utils/port'
 
 interface RunOptions {
   dir: string
+  port?: string
 }
 
 const currentFilePath = fileURLToPath(import.meta.url)
@@ -57,6 +59,10 @@ const run = async (mode: 'dev' | 'build', options: RunOptions) => {
   await syncDocsContent(docsDir, themeContentDir, themePublicDir)
 
   if (mode === 'dev') {
+    const requestedPort = resolveRequestedPort(options.port ?? process.env.PORT)
+    const initialPort = requestedPort
+      ? await resolveAvailablePort(requestedPort)
+      : undefined
     let devServer: Awaited<ReturnType<typeof dev>> | undefined
     let devServerPort: number | undefined
     let restarting = false
@@ -73,11 +79,19 @@ const run = async (mode: 'dev' | 'build', options: RunOptions) => {
         devOutput: 'static',
         server: {
           ...astroConfig.server,
-          ...(devServerPort ? { port: devServerPort, strictPort: true } : {}),
+          ...((initialPort ?? devServerPort)
+            ? { port: initialPort ?? devServerPort, strictPort: true }
+            : {}),
         },
       })
 
       devServerPort = devServer.address.port
+
+      if (requestedPort && devServerPort !== requestedPort) {
+        console.log(
+          `[stropress] Port ${requestedPort} is in use, switched to http://localhost:${devServerPort}`
+        )
+      }
 
       console.log(
         `[stropress] Dev server listening on http://localhost:${devServerPort}`
@@ -150,14 +164,19 @@ program
   .description('Build Astro docs from a local docs directory')
 
 const registerCommand = (name: 'dev' | 'build') => {
-  program
+  const command = program
     .command(name)
     .option(
       '--dir <dir>',
       'Directory containing docs content and config.json',
       'docs'
     )
-    .action(async (options: RunOptions) => run(name, options))
+
+  if (name === 'dev') {
+    command.option('--port <port>', 'Port for the dev server')
+  }
+
+  command.action(async (options: RunOptions) => run(name, options))
 }
 
 registerCommand('dev')

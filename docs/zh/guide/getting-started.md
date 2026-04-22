@@ -27,6 +27,13 @@ npx stropress dev --dir docs
 npx stropress dev --dir docs
 ```
 
+如果你想自定义开发端口，可以这样运行：
+
+```bash
+npx stropress dev --dir docs --port 3000
+PORT=3000 npx stropress dev --dir docs
+```
+
 ## 构建生产版本
 
 ```bash

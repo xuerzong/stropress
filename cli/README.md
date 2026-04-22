@@ -33,6 +33,7 @@ bunx stropress build --dir docs
 ## Options
 
 - `--dir <dir>`: Target docs directory (default: `docs`)
+- `--port <port>`: Dev server port. You can also use the `PORT` environment variable.
 
 ## Documentation
 
