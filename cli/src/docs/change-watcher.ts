@@ -1,8 +1,5 @@
 import { watch } from 'node:fs'
-import {
-  isHomepageAstroFile,
-  isRootCustomStyleFile,
-} from './file-classifier'
+import { isHomepageAstroFile, isRootCustomStyleFile } from './file-classifier'
 import { syncDocsContent } from './content-sync'
 
 interface WatchDocsOptions {
@@ -21,12 +18,17 @@ export const watchDocsChanges = (input: WatchDocsOptions) => {
 
   const normalizePath = (value: string) => value.replaceAll('\\', '/')
 
-  const isConfigChange = (filePath: string) => normalizePath(filePath) === 'config.json'
+  const isConfigChange = (filePath: string) =>
+    normalizePath(filePath) === 'config.json'
 
   const isContentChange = (filePath: string) => {
     const normalizedPath = normalizePath(filePath)
 
     if (/\.(md|mdx)$/i.test(normalizedPath)) {
+      return true
+    }
+
+    if (/\.astro$/i.test(normalizedPath)) {
       return true
     }
 
@@ -57,7 +59,9 @@ export const watchDocsChanges = (input: WatchDocsOptions) => {
       await input.onConfigChange?.()
     } catch (error) {
       const message = error instanceof Error ? error.message : String(error)
-      console.error(`[stropress] Failed to restart after config changes: ${message}`)
+      console.error(
+        `[stropress] Failed to restart after config changes: ${message}`
+      )
     }
   }
 

@@ -21,3 +21,11 @@ export const isSupportedDocFile = (fileName: string, filePath: string) => {
 
   return fileName === 'index.astro' && isHomepageAstroFile(filePath)
 }
+
+export const isSyncableDocsFile = (fileName: string, filePath: string) => {
+  if (isSupportedDocFile(fileName, filePath)) {
+    return true
+  }
+
+  return /\.astro$/i.test(fileName)
+}

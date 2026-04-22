@@ -12,7 +12,7 @@
     },
     "cli": {
       "name": "stropress",
-      "version": "0.0.5",
+      "version": "0.0.6",
       "bin": {
         "stropress": "dist/index.js",
       },
@@ -31,7 +31,7 @@
     },
     "packages/ui": {
       "name": "@stropress/ui",
-      "version": "0.0.5",
+      "version": "0.0.6",
       "dependencies": {
         "@astrojs/mdx": "5.0.3",
         "@lucide/astro": "^1.8.0",
@@ -886,6 +886,8 @@
     "which-pm-runs": ["which-pm-runs@1.1.0", "https://registry.npmmirror.com/which-pm-runs/-/which-pm-runs-1.1.0.tgz", {}, "sha512-n1brCuqClxfFfq/Rb0ICg9giSZqCS+pLtccdag6C2HyufBrh3fBOiy9nb6ggRMvWOVH5GrdJskj5iGTZNxd7SA=="],
 
     "xxhash-wasm": ["xxhash-wasm@1.1.0", "https://registry.npmmirror.com/xxhash-wasm/-/xxhash-wasm-1.1.0.tgz", {}, "sha512-147y/6YNh+tlp6nd/2pWq38i9h6mz/EuQ6njIrmW8D1BS5nCqs0P6DG+m6zTGnNz5I+uhZ0SHxBs9BsPrwcKDA=="],
+
+    "yaml": ["yaml@2.8.3", "", { "bin": { "yaml": "bin.mjs" } }, "sha512-AvbaCLOO2Otw/lW5bmh9d/WEdcDFdQp2Z2ZUH3pX9U2ihyUY0nvLv7J6TrWowklRGPYbB/IuIMfYgxaCPg5Bpg=="],
 
     "yargs-parser": ["yargs-parser@22.0.0", "https://registry.npmmirror.com/yargs-parser/-/yargs-parser-22.0.0.tgz", {}, "sha512-rwu/ClNdSMpkSrUb+d6BRsSkLUq1fmfsY6TOpYzTwvwkg1/NRG85KBy3kq++A8LKQwX6lsu+aWad+2khvuXrqw=="],
 

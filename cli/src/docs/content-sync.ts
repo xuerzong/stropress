@@ -1,6 +1,6 @@
 import fs from 'fs-extra'
 import path from 'node:path'
-import { isSupportedDocFile } from './file-classifier'
+import { isSyncableDocsFile } from './file-classifier'
 
 export const copyDocsRecursive = async (
   sourceDir: string,
@@ -22,7 +22,7 @@ export const copyDocsRecursive = async (
       continue
     }
 
-    if (isSupportedDocFile(entry.name, sourcePath)) {
+    if (isSyncableDocsFile(entry.name, sourcePath)) {
       await fs.ensureDir(path.dirname(targetPath))
       await fs.copyFile(sourcePath, targetPath)
     }
