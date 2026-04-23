@@ -56,7 +56,7 @@ const run = async (mode: 'dev' | 'build', options: RunOptions) => {
     )
   }
 
-  await syncDocsContent(docsDir, themeContentDir, themePublicDir)
+  await syncDocsContent(docsDir, themeContentDir, cwd, themePublicDir)
 
   if (mode === 'dev') {
     const requestedPort = resolveRequestedPort(options.port ?? process.env.PORT)
@@ -131,6 +131,7 @@ const run = async (mode: 'dev' | 'build', options: RunOptions) => {
 
     const stopWatching = watchDocsChanges({
       sourceDir: docsDir,
+      projectDir: cwd,
       targetDir: themeContentDir,
       publicDir: themePublicDir,
       onConfigChange: restartDevServer,

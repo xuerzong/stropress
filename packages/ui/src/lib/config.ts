@@ -181,8 +181,7 @@ export const getResolvedSiteConfig = (pathname: string): ResolvedSiteConfig => {
     siteConfig.site?.description ||
     'Documentation site'
   const resolvedUrl = localeConfig.site?.url || siteConfig.site?.url
-  const resolvedFavicon =
-    localeConfig.site?.favicon || siteConfig.site?.favicon || '/favicon.svg'
+  const resolvedFavicon = localeConfig.site?.favicon || siteConfig.site?.favicon
 
   const localeLinks = localeEntries.map(([key, config]) => ({
     key,

@@ -30,17 +30,10 @@ export const copyDocsRecursive = async (
 }
 
 export const copyPublicAssets = async (
-  sourceDir: string,
+  projectDir: string,
   publicDir: string
 ) => {
-  const bundledPublicDir = path.resolve(publicDir, '../..')
-  const sourcePublicDir = path.join(sourceDir, 'public')
-
-  if (await fs.pathExists(path.join(bundledPublicDir, 'public'))) {
-    await fs.copy(path.join(bundledPublicDir, 'public'), publicDir, {
-      overwrite: true,
-    })
-  }
+  const sourcePublicDir = path.join(projectDir, 'public')
 
   if (!(await fs.pathExists(sourcePublicDir))) {
     return
@@ -52,10 +45,11 @@ export const copyPublicAssets = async (
 export const syncDocsContent = async (
   sourceDir: string,
   targetDir: string,
+  projectDir: string,
   publicDir: string
 ) => {
   await fs.emptyDir(targetDir)
   await fs.emptyDir(publicDir)
   await copyDocsRecursive(sourceDir, targetDir)
-  await copyPublicAssets(sourceDir, publicDir)
+  await copyPublicAssets(projectDir, publicDir)
 }
