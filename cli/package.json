@@ -2,6 +2,16 @@
   "name": "stropress",
   "version": "0.0.6",
   "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./runtime": {
+      "types": "./dist/runtime.d.ts",
+      "import": "./dist/runtime.js"
+    }
+  },
   "files": [
     "dist"
   ],
@@ -10,7 +20,7 @@
   },
   "scripts": {
     "clean": "rm -rf dist",
-    "build:js": "bun build src/index.ts --target=node --format=esm --packages=external --outfile dist/index.js",
+    "build:js": "bun build src/index.ts src/runtime.ts --target=node --format=esm --packages=external --outdir dist",
     "build:types": "tsc -p tsconfig.json --emitDeclarationOnly --declaration --declarationDir dist",
     "build": "bun run clean && bun run build:js && bun run build:types",
     "dev": "bun src/index.ts dev",
