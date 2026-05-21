@@ -107,80 +107,22 @@ const hasFooter = Boolean(
     }
     <script>
       import { setupCodeCopyButtons } from '../scripts/code-copy'
+      import { setupSidebarDrawer } from '../scripts/sidebar-drawer'
 
       setupCodeCopyButtons()
 
       let sidebarCleanup: (() => void) | null = null
 
-      const setupSidebarDrawer = () => {
+      const mountSidebarDrawer = () => {
         if (typeof sidebarCleanup === 'function') {
           sidebarCleanup()
-          sidebarCleanup = null
         }
 
-        const drawer = document.querySelector<HTMLElement>(
-          '[data-sidebar-drawer]'
-        )
-        const backdrop = document.querySelector<HTMLElement>(
-          '[data-sidebar-backdrop]'
-        )
-        const toggle = document.querySelector<HTMLElement>(
-          '[data-sidebar-toggle]'
-        )
-
-        if (!drawer || !backdrop || !toggle) {
-          return
-        }
-
-        const linkElements = Array.from(
-          drawer.querySelectorAll<HTMLAnchorElement>('a')
-        )
-
-        const setOpen = (open: boolean) => {
-          drawer.dataset.state = open ? 'open' : 'closed'
-          backdrop.dataset.state = open ? 'open' : 'closed'
-          toggle.setAttribute('aria-expanded', open ? 'true' : 'false')
-          document.body.style.overflow = open ? 'hidden' : ''
-        }
-
-        const close = () => setOpen(false)
-        const onToggle = () => setOpen(drawer.dataset.state !== 'open')
-
-        toggle.addEventListener('click', onToggle)
-        backdrop.addEventListener('click', close)
-        linkElements.forEach((element: HTMLAnchorElement) =>
-          element.addEventListener('click', close)
-        )
-
-        const onKeydown = (event: KeyboardEvent) => {
-          if (event.key === 'Escape') {
-            close()
-          }
-        }
-
-        const onResize = () => {
-          if (window.innerWidth > 900) {
-            close()
-          }
-        }
-
-        document.addEventListener('keydown', onKeydown)
-        window.addEventListener('resize', onResize)
-
-        sidebarCleanup = () => {
-          toggle.removeEventListener('click', onToggle)
-          backdrop.removeEventListener('click', close)
-          linkElements.forEach((element: HTMLAnchorElement) =>
-            element.removeEventListener('click', close)
-          )
-          document.removeEventListener('keydown', onKeydown)
-          window.removeEventListener('resize', onResize)
-          document.body.style.overflow = ''
-        }
+        sidebarCleanup = setupSidebarDrawer()
       }
 
-      setupSidebarDrawer()
-      document.addEventListener('astro:page-load', setupSidebarDrawer)
+      mountSidebarDrawer()
+      document.addEventListener('astro:page-load', mountSidebarDrawer)
     </script>
   </body>
 </html>
