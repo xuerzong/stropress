@@ -4,7 +4,7 @@ import { program } from 'commander'
 import fs from 'fs-extra'
 import path from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'
-import { readSiteConfig } from './config/loader'
+import { readSiteConfig, resolveSiteConfigPath } from './config/loader'
 import type { SiteConfig } from './config/schema'
 import { watchDocsChanges } from './docs/change-watcher'
 import { syncDocsContent } from './docs/content-sync'
@@ -24,7 +24,6 @@ const currentDir = path.dirname(currentFilePath)
 const run = async (mode: 'dev' | 'build', options: RunOptions) => {
   const cwd = process.cwd()
   const docsDir = path.resolve(cwd, options.dir || 'docs')
-  const configPath = path.join(docsDir, 'config.json')
   const themeDir = await resolveThemeDir(currentDir)
   const themeContentDir = path.join(themeDir, 'src/content/docs')
   const themePublicDir = path.join(themeDir, '.stropress/public')
@@ -69,6 +68,7 @@ const run = async (mode: 'dev' | 'build', options: RunOptions) => {
     let pendingRestart = false
 
     const startDevServer = async () => {
+      const configPath = await resolveSiteConfigPath(docsDir)
       const config = await readSiteConfig(configPath)
       const astroConfig = await loadAstroConfig(config)
 
@@ -107,7 +107,7 @@ const run = async (mode: 'dev' | 'build', options: RunOptions) => {
       restarting = true
       try {
         console.log(
-          '[stropress] Detected config.json changes. Restarting dev server...'
+          '[stropress] Detected config changes. Restarting dev server...'
         )
         if (devServer) {
           devServerPort = devServer.address.port
@@ -149,6 +149,7 @@ const run = async (mode: 'dev' | 'build', options: RunOptions) => {
     return
   }
 
+  const configPath = await resolveSiteConfigPath(docsDir)
   const config = await readSiteConfig(configPath)
   const astroConfig = await loadAstroConfig(config)
 
@@ -169,7 +170,7 @@ const registerCommand = (name: 'dev' | 'build') => {
     .command(name)
     .option(
       '--dir <dir>',
-      'Directory containing docs content and config.json',
+      'Directory containing docs content and config.ts',
       'docs'
     )
 

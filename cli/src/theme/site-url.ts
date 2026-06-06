@@ -15,7 +15,7 @@ export const resolveSiteUrl = (config: SiteUrlConfig) => {
     return new URL(configuredUrl).toString()
   } catch {
     throw new Error(
-      `Invalid site.url in config.json: ${configuredUrl}. Expected a full URL such as https://docs.example.com`
+      `Invalid site.url in config.ts: ${configuredUrl}. Expected a full URL such as https://docs.example.com`
     )
   }
 }

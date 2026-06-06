@@ -29,6 +29,19 @@ export interface FooterConfig {
   copyright?: string
 }
 
+export interface MarkdownConfig {
+  codeTheme?:
+    | string
+    | {
+        light: string
+        dark: string
+      }
+}
+
+export interface SearchConfig {
+  provider?: 'local'
+}
+
 export interface SidebarGroup {
   label: string
   icon?: string
@@ -65,6 +78,8 @@ export interface SiteConfig {
   navbar?: NavItem[]
   sidebar?: SidebarGroup[]
   footer?: FooterConfig
+  markdown?: MarkdownConfig
+  search?: SearchConfig
   locales?: Record<string, LocaleConfig>
 }
 

@@ -44,7 +44,7 @@ npx stropress build --dir docs
 
 ```text
 docs/
-  config.json
+  config.ts
   index.md
   guide/
     getting-started.md

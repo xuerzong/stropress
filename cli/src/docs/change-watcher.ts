@@ -1,5 +1,6 @@
 import { existsSync, watch } from 'node:fs'
 import path from 'node:path'
+import { isSiteConfigChange } from '../config/loader'
 import { isHomepageAstroFile, isRootCustomStyleFile } from './file-classifier'
 import { syncDocsContent } from './content-sync'
 
@@ -19,9 +20,6 @@ export const watchDocsChanges = (input: WatchDocsOptions) => {
   let pendingRestart = false
 
   const normalizePath = (value: string) => value.replaceAll('\\', '/')
-
-  const isConfigChange = (filePath: string) =>
-    normalizePath(filePath) === 'config.json'
 
   const isContentChange = (filePath: string) => {
     const normalizedPath = normalizePath(filePath)
@@ -130,7 +128,7 @@ export const watchDocsChanges = (input: WatchDocsOptions) => {
       return
     }
 
-    if (isConfigChange(changedPath)) {
+    if (isSiteConfigChange(changedPath)) {
       queueConfigRestart()
       return
     }

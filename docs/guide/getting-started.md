@@ -48,7 +48,7 @@ The generated site is written to the build output directory as a static site.
 
 ```text
 docs/
-	config.json
+	config.ts
 	index.md
 	guide/
 		getting-started.md

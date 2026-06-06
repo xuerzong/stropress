@@ -1,0 +1,183 @@
+import { defineConfig } from '../cli/src/runtime'
+
+export default defineConfig({
+  site: {
+    url: 'https://stropress.xuco.me',
+    title: 'Stropress Docs',
+    description: 'Documentation site powered by stropress',
+  },
+  home: {
+    title: 'Stropress',
+    tagline: 'Lightning Fast Documentation Sites with Astro',
+    description: 'Lightning, SEO-friendly, Easy',
+    actions: [
+      {
+        text: 'Get Started',
+        link: '/guide/getting-started',
+        theme: 'brand',
+      },
+      {
+        text: 'Configuration',
+        link: '/guide/configuration',
+        theme: 'alt',
+      },
+    ],
+    features: [
+      {
+        icon: 'Rocket',
+        title: 'Astro Native',
+        details:
+          'Use Astro and MDX to render a fast static docs site without building a custom markdown pipeline.',
+      },
+      {
+        icon: 'Terminal',
+        title: 'CLI Driven',
+        details:
+          'Run stropress dev or stropress build against any docs directory by passing --dir.',
+      },
+      {
+        icon: 'SlidersHorizontal',
+        title: 'Config First',
+        details:
+          'Navbar, sidebar, homepage hero, CTA buttons, and features are all defined in config.ts.',
+      },
+    ],
+  },
+  markdown: {
+    codeTheme: {
+      light: 'vitesse-light',
+      dark: 'vitesse-dark',
+    },
+  },
+  socialLinks: [
+    {
+      icon: 'Github',
+      label: 'GitHub',
+      link: 'https://github.com/xuerzong/stropress',
+    },
+  ],
+  footer: {
+    message: 'Released under the MIT License.',
+    copyright: 'Copyright © 2026 Xu Cong',
+  },
+  nav: [
+    {
+      label: 'Guide',
+      link: '/guide/getting-started',
+    },
+    {
+      label: 'Configuration',
+      link: '/guide/configuration',
+    },
+  ],
+  sidebar: [
+    {
+      label: 'Guide',
+      items: [
+        {
+          label: 'Getting Started',
+          link: '/guide/getting-started',
+        },
+        {
+          label: 'Configuration',
+          link: '/guide/configuration',
+        },
+        {
+          label: 'Search',
+          link: '/guide/search',
+        },
+      ],
+    },
+  ],
+  locales: {
+    '/': {
+      label: 'English',
+      lang: 'en-US',
+    },
+    '/zh/': {
+      label: '简体中文',
+      lang: 'zh-CN',
+      site: {
+        title: 'Stropress 文档',
+        description: '使用 Stropress 构建文档站点',
+      },
+      home: {
+        title: 'Stropress',
+        tagline: '基于 Astro 的轻量文档站点',
+        description: '轻量、SEO 友好、简单易用。',
+        actions: [
+          {
+            text: '快速开始',
+            link: '/zh/guide/getting-started',
+            theme: 'brand',
+          },
+          {
+            text: '配置参考',
+            link: '/zh/guide/configuration',
+            theme: 'alt',
+          },
+        ],
+        features: [
+          {
+            icon: 'Rocket',
+            title: 'Astro 原生',
+            details:
+              '使用 Astro 和 MDX 构建高性能静态文档站，无需自己搭建 Markdown 渲染流水线。',
+          },
+          {
+            icon: 'Terminal',
+            title: 'CLI 驱动',
+            details:
+              '通过 --dir 指定任意目录，运行 stropress dev 或 stropress build 即可完成开发与构建。',
+          },
+          {
+            icon: 'SlidersHorizontal',
+            title: '配置优先',
+            details:
+              '导航栏、侧边栏、首页主视觉、CTA 按钮与特性卡片，均通过 config.ts 统一配置。',
+          },
+        ],
+      },
+      socialLinks: [
+        {
+          icon: 'Github',
+          label: 'GitHub',
+          link: 'https://github.com/xuerzong/stropress',
+        },
+      ],
+      footer: {
+        message: '基于 MIT License 发布。',
+        copyright: 'Copyright © 2026 Xu Cong',
+      },
+      nav: [
+        {
+          label: '指南',
+          link: '/zh/guide/getting-started',
+        },
+        {
+          label: '配置',
+          link: '/zh/guide/configuration',
+        },
+      ],
+      sidebar: [
+        {
+          label: '指南',
+          items: [
+            {
+              label: '快速开始',
+              link: '/zh/guide/getting-started',
+            },
+            {
+              label: '配置',
+              link: '/zh/guide/configuration',
+            },
+            {
+              label: '搜索',
+              link: '/zh/guide/search',
+            },
+          ],
+        },
+      ],
+    },
+  },
+})

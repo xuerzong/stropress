@@ -5,7 +5,15 @@ description: Configure navbar and sidebar
 
 # Configuration
 
-Use `docs/config.json` to define the navigation structure.
+Use `docs/config.ts` to define the navigation structure.
+
+```ts
+import { defineConfig } from 'stropress/runtime'
+
+export default defineConfig({
+  // your config
+})
+```
 
 - `navbar`: top navigation items
 - `nav`: primary header links shown next to social links
@@ -16,9 +24,9 @@ Use `docs/config.json` to define the navigation structure.
 
 ## Footer
 
-Use `footer` in `docs/config.json` to render footer text under the page content.
+Use `footer` in `docs/config.ts` to render footer text under the page content.
 
-```json
+```ts
 {
   "footer": {
     "message": "Released under the MIT License.",
@@ -31,9 +39,9 @@ You can also override `footer` inside `locales[localeKey]` for locale-specific c
 
 ## Site URL
 
-Set `site.url` in `docs/config.json` to control canonical URLs and OG image URLs in generated HTML.
+Set `site.url` in `docs/config.ts` to control canonical URLs and OG image URLs in generated HTML.
 
-```json
+```ts
 {
   "site": {
     "url": "https://docs.example.com",
@@ -49,9 +57,9 @@ If `site.url` is omitted, Stropress falls back to `http://localhost:4321` for lo
 
 Default search uses local MiniSearch indexing from your markdown content.
 
-You can keep the default behavior or set it explicitly in `docs/config.json`:
+You can keep the default behavior or set it explicitly in `docs/config.ts`:
 
-```json
+```ts
 {
   "search": {
     "provider": "local"
@@ -61,11 +69,11 @@ You can keep the default behavior or set it explicitly in `docs/config.json`:
 
 ## Code Block Theme
 
-Configure code block highlighting theme via `markdown.codeTheme` in `docs/config.json`.
+Configure code block highlighting theme via `markdown.codeTheme` in `docs/config.ts`.
 
 Use a single theme:
 
-```json
+```ts
 {
   "markdown": {
     "codeTheme": "github-dark"
@@ -75,7 +83,7 @@ Use a single theme:
 
 Or define separate light/dark themes:
 
-```json
+```ts
 {
   "markdown": {
     "codeTheme": {
@@ -90,7 +98,7 @@ See the full built-in theme list in Shiki: https://shiki.style/themes
 
 Example with One Dark + Catppuccin:
 
-```json
+```ts
 {
   "markdown": {
     "codeTheme": {
@@ -107,9 +115,9 @@ If a theme name is invalid for your current version, build/dev will report a the
 
 Stropress supports locale blocks inspired by VitePress.
 
-Define `locales` in `docs/config.json`, using path prefixes as keys:
+Define `locales` in `docs/config.ts`, using path prefixes as keys:
 
-```json
+```ts
 {
   "locales": {
     "/": {
@@ -154,11 +162,11 @@ Recommendations:
 
 ## Custom Homepage
 
-If JSON-based `home` configuration is too limiting, you can add Astro homepage files next to `config.json`:
+If `defineConfig`-based `home` configuration is too limiting, you can add Astro homepage files next to `config.ts`:
 
 ```text
 docs/
-  config.json
+  config.ts
   index.astro
   zh/
     index.astro

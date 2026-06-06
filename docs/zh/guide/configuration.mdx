@@ -5,7 +5,15 @@ description: 配置导航、侧边栏和双语
 
 # 配置
 
-使用 `docs/config.json` 配置站点信息与导航结构。
+使用 `docs/config.ts` 配置站点信息与导航结构。
+
+```ts
+import { defineConfig } from 'stropress/runtime'
+
+export default defineConfig({
+  // 你的配置
+})
+```
 
 - `navbar`：顶部导航
 - `nav`：显示在社交链接旁边的主导航
@@ -17,9 +25,9 @@ description: 配置导航、侧边栏和双语
 
 ## 页脚
 
-你可以在 `docs/config.json` 里通过 `footer` 配置页面底部内容。
+你可以在 `docs/config.ts` 里通过 `footer` 配置页面底部内容。
 
-```json
+```ts
 {
   "footer": {
     "message": "基于 MIT License 发布。",
@@ -34,7 +42,7 @@ description: 配置导航、侧边栏和双语
 
 默认搜索使用内置 MiniSearch，无需额外依赖。
 
-```json
+```ts
 {
   "search": {
     "provider": "local"
@@ -44,11 +52,11 @@ description: 配置导航、侧边栏和双语
 
 ## 代码块主题
 
-你可以在 `docs/config.json` 中通过 `markdown.codeTheme` 配置代码块高亮主题。
+你可以在 `docs/config.ts` 中通过 `markdown.codeTheme` 配置代码块高亮主题。
 
 使用单一主题：
 
-```json
+```ts
 {
   "markdown": {
     "codeTheme": "github-dark"
@@ -58,7 +66,7 @@ description: 配置导航、侧边栏和双语
 
 或分别配置亮色/暗色主题：
 
-```json
+```ts
 {
   "markdown": {
     "codeTheme": {
@@ -73,7 +81,7 @@ description: 配置导航、侧边栏和双语
 
 One Dark + Catppuccin 示例：
 
-```json
+```ts
 {
   "markdown": {
     "codeTheme": {
@@ -90,7 +98,7 @@ One Dark + Catppuccin 示例：
 
 推荐将中文文档放在 `docs/zh/...` 目录下，并在 `locales` 中配置 `/zh/`：
 
-```json
+```ts
 {
   "locales": {
     "/": {
@@ -107,11 +115,11 @@ One Dark + Catppuccin 示例：
 
 ## 自定义首页
 
-如果 `config.json` 里的 `home` 配置不够灵活，可以直接在 `config.json` 同目录放置 Astro 首页文件：
+如果 `config.ts` 里的 `home` 配置不够灵活，可以直接在 `config.ts` 同目录放置 Astro 首页文件：
 
 ```text
 docs/
-  config.json
+  config.ts
   index.astro
   zh/
     index.astro

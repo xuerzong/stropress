@@ -1,15 +1,17 @@
 import fs from 'fs-extra'
 import path from 'node:path'
+import { SITE_CONFIG_CANDIDATES } from '../config/loader'
 import { isSupportedDocFile } from './file-classifier'
 
 export const collectDocSources = async (
   currentDir: string
 ): Promise<string[]> => {
+  const configCandidates = new Set<string>(SITE_CONFIG_CANDIDATES)
   const entries = await fs.readdir(currentDir, { withFileTypes: true })
   const files: string[] = []
 
   for (const entry of entries) {
-    if (entry.name === 'config.json') {
+    if (configCandidates.has(entry.name)) {
       continue
     }
 
