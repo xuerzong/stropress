@@ -79,6 +79,7 @@ export const writeAstroRuntimeConfig = async (input: WriteAstroConfigInput) => {
 
   const content = `import { defineConfig } from "astro/config";
 import mdx from "@astrojs/mdx";
+import remarkGfm from "remark-gfm";
 import remarkGithubAlerts from "remark-github-alerts";
 
 export default defineConfig({
@@ -88,11 +89,11 @@ export default defineConfig({
     enabled: false
   },
   markdown: {
-    remarkPlugins: [remarkGithubAlerts]${shikiConfig}
+    remarkPlugins: [remarkGfm, remarkGithubAlerts]${shikiConfig}
   },
   integrations: [
     mdx({
-      remarkPlugins: [remarkGithubAlerts]
+      remarkPlugins: [remarkGfm, remarkGithubAlerts]
     })
   ],
   site: ${JSON.stringify(siteUrl)}${i18nConfig},

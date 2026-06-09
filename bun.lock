@@ -22,6 +22,7 @@
         "commander": "^14.0.0",
         "fs-extra": "^11.3.0",
         "jiti": "^2.4.2",
+        "remark-gfm": "^4.0.1",
       },
       "devDependencies": {
         "@types/fs-extra": "^11.0.4",
@@ -39,6 +40,7 @@
         "copy-to-clipboard": "^3.3.3",
         "minisearch": "^7.2.0",
         "postcss-nesting": "^14.0.0",
+        "remark-gfm": "^4.0.1",
         "remark-github-alerts": "^0.1.1",
       },
       "peerDependencies": {
