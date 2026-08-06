@@ -28,15 +28,15 @@
   },
   "dependencies": {
     "@stropress/ui": "^0.0.6",
-    "astro": "6.4.4",
-    "commander": "^14.0.0",
-    "fs-extra": "^11.3.0",
-    "jiti": "^2.4.2",
+    "astro": "7.1.6",
+    "commander": "^15.0.0",
+    "fs-extra": "^11.4.0",
+    "jiti": "^2.7.0",
     "remark-gfm": "^4.0.1"
   },
   "devDependencies": {
     "@types/fs-extra": "^11.0.4",
-    "@types/node": "^24.5.2",
-    "typescript": "^5.8.3"
+    "@types/node": "^26.1.2",
+    "typescript": "^7.0.2"
   }
 }

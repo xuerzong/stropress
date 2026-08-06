@@ -9,16 +9,16 @@
     "tsconfig.json"
   ],
   "dependencies": {
-    "@astrojs/mdx": "5.0.3",
-    "@lucide/astro": "^1.8.0",
+    "@astrojs/mdx": "7.0.5",
+    "@lucide/astro": "^1.28.0",
     "@resvg/resvg-js": "^2.6.2",
-    "copy-to-clipboard": "^3.3.3",
+    "copy-to-clipboard": "^4.0.2",
     "minisearch": "^7.2.0",
-    "postcss-nesting": "^14.0.0",
+    "postcss-nesting": "^14.0.1",
     "remark-gfm": "^4.0.1",
     "remark-github-alerts": "^0.1.1"
   },
   "peerDependencies": {
-    "astro": "6.4.4"
+    "astro": "7.1.6"
   }
 }
