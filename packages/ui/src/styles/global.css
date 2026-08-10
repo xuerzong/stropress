@@ -23,6 +23,8 @@
     Courier, monospace;
 
   --border-radius: 0.5rem;
+  --header-height: 4.5rem;
+  --sidebar-width: 16rem;
 }
 
 :root[data-theme='dark'] {

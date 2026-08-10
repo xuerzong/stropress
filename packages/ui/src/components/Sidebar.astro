@@ -1,19 +1,19 @@
 ---
-import Icon from "./Icon.astro";
-import { getResolvedSiteConfig } from "../lib/config";
+import Icon from './Icon.astro'
+import { getResolvedSiteConfig } from '../lib/config'
 
-const groups = getResolvedSiteConfig(Astro.url.pathname).sidebar;
-const pathname = Astro.url.pathname;
+const groups = getResolvedSiteConfig(Astro.url.pathname).sidebar
+const pathname = Astro.url.pathname
 
 const normalizePath = (input: string) => {
-  if (!input || input === "/") {
-    return "/";
+  if (!input || input === '/') {
+    return '/'
   }
 
-  return input.endsWith("/") ? input.slice(0, -1) : input;
-};
+  return input.endsWith('/') ? input.slice(0, -1) : input
+}
 
-const currentPath = normalizePath(pathname);
+const currentPath = normalizePath(pathname)
 ---
 
 <div class="sidebar">
@@ -29,8 +29,8 @@ const currentPath = normalizePath(pathname);
                 class="sidebar-link"
                 data-state={
                   currentPath === normalizePath(item.link)
-                    ? "active"
-                    : "inactive"
+                    ? 'active'
+                    : 'inactive'
                 }
               >
                 <span>{item.label}</span>
@@ -45,8 +45,7 @@ const currentPath = normalizePath(pathname);
 
 <style is:global>
   .sidebar {
-    position: sticky;
-    top: 5.5rem;
+    padding: 1rem 0;
   }
 
   .sidebar-link-group {
@@ -83,7 +82,7 @@ const currentPath = normalizePath(pathname);
     border-radius: 0.25rem;
     padding: 0.45rem 0.75rem;
 
-    &[data-state="active"],
+    &[data-state='active'],
     &:hover {
       background: rgba(var(--accent-color) / 1);
       color: rgba(var(--foreground-color) / 1);
