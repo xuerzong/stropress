@@ -42,10 +42,10 @@
     width: 1.75rem;
     height: 1.75rem;
     padding: 0;
-    border: 1px solid rgba(var(--primary-foreground-color) / 0.2);
-    background: rgba(var(--primary-color) / 0.84);
-    color: rgb(var(--primary-foreground-color));
-    border-radius: 0.4rem;
+    border: 1px solid rgba(var(--border-color) / 1);
+    border-radius: var(--border-radius);
+    background: rgba(var(--background-color) / 1);
+    color: rgba(var(--foreground-color) / 1);
     cursor: pointer;
     transition:
       background-color 0.2s ease,
@@ -54,14 +54,13 @@
   }
 
   .code-copy-button:hover {
-    border-color: rgb(var(--primary-foreground-color) / 0.38);
-    background: rgba(var(--primary-color) / 0.68);
+    background: rgba(var(--primary-color) / 0.2);
   }
 
   .code-copy-button.is-copied {
-    border-color: rgb(var(--color-alert-tip) / 0.9);
+    border-color: rgb(var(--color-alert-tip));
     color: rgb(var(--color-alert-tip));
-    background: rgba(var(--color-alert-tip) / 0.14);
+    background: rgba(var(--color-alert-tip) / 0.2);
   }
 
   .contains-task-list {
