@@ -9,7 +9,7 @@
     "tsconfig.json"
   ],
   "dependencies": {
-    "@astrojs/mdx": "7.0.5",
+    "@astrojs/mdx": "7.0.7",
     "@lucide/astro": "^1.28.0",
     "@resvg/resvg-js": "^2.6.2",
     "copy-to-clipboard": "^4.0.2",
