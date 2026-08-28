@@ -28,7 +28,7 @@
   },
   "dependencies": {
     "@stropress/ui": "^0.0.6",
-    "astro": "7.1.6",
+    "astro": "7.2.6",
     "commander": "^15.0.0",
     "fs-extra": "^11.4.0",
     "jiti": "^2.7.0",
