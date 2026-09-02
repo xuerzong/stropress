@@ -57,9 +57,9 @@ const hasFooter = Boolean(
       favicon={resolvedConfig.siteFavicon}
       ogType={sidebar ? 'article' : 'website'}
     />
-    {customGlobalStyle && <style is:global set:html={customGlobalStyle} />}
   </head>
   <body>
+    {customGlobalStyle && <style is:global set:html={customGlobalStyle} />}
     <Header showSidebarToggle={sidebar} />
     <div class:list={['wrapper', !sidebar && 'wrapper-without-sidebar']}>
       {

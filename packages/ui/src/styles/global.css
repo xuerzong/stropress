@@ -4,7 +4,7 @@
   --foreground-color: 17 17 17;
   --primary-color: 10 10 10;
   --primary-foreground-color: 255 255 255;
-  --secondary-color: rgba(255, 255, 255, 0.9);
+  --secondary-color: 255 255 255;
   --muted-color: 102 102 102;
   --accent-color: 242 242 242;
   --border-color: 224 224 224;
@@ -29,11 +29,11 @@
 
 :root[data-theme='dark'] {
   color-scheme: dark;
-  --background-color: 11 14 18;
+  --background-color: 0 0 0;
   --foreground-color: 233 236 239;
   --primary-color: 244 244 245;
   --primary-foreground-color: 15 18 22;
-  --secondary-color: rgba(20, 24, 30, 0.86);
+  --secondary-color: 20 24 30 0.86;
   --muted-color: 153 162 176;
   --accent-color: 28 34 42;
   --border-color: 52 62 75;
@@ -48,6 +48,7 @@
 
 * {
   box-sizing: border-box;
+  line-height: 1.5;
 }
 
 html,

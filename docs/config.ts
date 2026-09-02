@@ -45,8 +45,8 @@ export default defineConfig({
   },
   markdown: {
     codeTheme: {
-      light: 'vitesse-light',
-      dark: 'vitesse-dark',
+      light: 'github-light',
+      dark: 'github-dark-dimmed',
     },
   },
   socialLinks: [
