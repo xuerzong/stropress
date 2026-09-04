@@ -1,4 +1,14 @@
+import {
+  DEFAULT_CONFIG_EXTENSIONS,
+  DEFAULT_CONFIG_NAME,
+} from '@stropress/shared'
+
 const normalizePath = (filePath: string) => filePath.replaceAll('\\', '/')
+
+export const isSiteConfigFile = (fileName: string) =>
+  DEFAULT_CONFIG_EXTENSIONS.some(
+    (ext) => fileName === `${DEFAULT_CONFIG_NAME}${ext}`
+  )
 
 export const isHomepageAstroFile = (filePath: string) => {
   const normalizedPath = normalizePath(filePath)

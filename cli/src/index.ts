@@ -4,7 +4,7 @@ import { program } from 'commander'
 import fs from 'fs-extra'
 import path from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'
-import { readSiteConfig, resolveSiteConfigPath } from './config/loader'
+import { loadSiteConfig } from './config/loader'
 import type { SiteConfig } from './config/schema'
 import { watchDocsChanges } from './docs/change-watcher'
 import { syncDocsContent } from './docs/content-sync'
@@ -68,8 +68,7 @@ const run = async (mode: 'dev' | 'build', options: RunOptions) => {
     let pendingRestart = false
 
     const startDevServer = async () => {
-      const configPath = await resolveSiteConfigPath(docsDir)
-      const config = await readSiteConfig(configPath)
+      const config = await loadSiteConfig(docsDir)
       const astroConfig = await loadAstroConfig(config)
 
       devServer = await dev({
@@ -149,8 +148,7 @@ const run = async (mode: 'dev' | 'build', options: RunOptions) => {
     return
   }
 
-  const configPath = await resolveSiteConfigPath(docsDir)
-  const config = await readSiteConfig(configPath)
+  const config = await loadSiteConfig(docsDir)
   const astroConfig = await loadAstroConfig(config)
 
   await build({

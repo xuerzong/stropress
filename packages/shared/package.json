@@ -1,0 +1,24 @@
+{
+  "name": "@stropress/shared",
+  "version": "0.0.6",
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "clean": "rm -rf dist",
+    "build:js": "bun build src/index.ts --target=node --format=esm --packages=external --outdir dist",
+    "build:types": "tsc -p tsconfig.json --emitDeclarationOnly --declaration --declarationDir dist",
+    "build": "bun run clean && bun run build:js && bun run build:types"
+  },
+  "devDependencies": {
+    "typescript": "^7.0.2"
+  }
+}

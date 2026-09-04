@@ -1,30 +1,17 @@
-import fs from 'fs-extra'
+import fs from 'node:fs'
 import path from 'node:path'
 import { createJiti } from 'jiti'
 import type { SiteConfig } from './schema'
+import {
+  DEFAULT_CONFIG_NAME,
+  DEFAULT_CONFIG_EXTENSIONS,
+} from '@stropress/shared'
+import { isPlainObject } from 'is-plain-object'
 
-export const SITE_CONFIG_CANDIDATES = [
-  'config.ts',
-  'config.js',
-  'config.mjs',
-  'config.cjs',
-  'config.json',
-] as const
-
-export const resolveSiteConfigPath = async (docsDir: string) => {
-  for (const fileName of SITE_CONFIG_CANDIDATES) {
-    const candidatePath = path.join(docsDir, fileName)
-    if (await fs.pathExists(candidatePath)) {
-      return candidatePath
-    }
-  }
-
-  return null
-}
-
-export const isSiteConfigChange = (filePath: string) => {
-  const normalizedPath = filePath.replaceAll('\\', '/')
-  return SITE_CONFIG_CANDIDATES.some((name) => normalizedPath === name)
+export const resolveSiteConfigPath = (basePath: string) => {
+  return DEFAULT_CONFIG_EXTENSIONS.map((ext) => `${basePath}${ext}`).find(
+    fs.existsSync
+  )
 }
 
 export const readSiteConfig = async (
@@ -35,8 +22,14 @@ export const readSiteConfig = async (
   }
 
   if (configPath.endsWith('.json')) {
-    const rawConfig = await fs.readJson(configPath)
-    return ensureObjectConfig(rawConfig, configPath)
+    const content = fs.readFileSync(configPath, 'utf-8')
+    try {
+      const rawConfig = await JSON.parse(content)
+      return isPlainObject(rawConfig) ? rawConfig : {}
+    } catch (e) {
+      console.error(e)
+    }
+    return {}
   }
 
   const jiti = createJiti(import.meta.url, {
@@ -49,19 +42,16 @@ export const readSiteConfig = async (
       ? loaded.default
       : loaded
 
-  return ensureObjectConfig(candidate, configPath)
+  return isPlainObject(candidate) ? candidate : {}
 }
 
-const ensureObjectConfig = (value: unknown, configPath: string): SiteConfig => {
-  if (!value) {
+export const loadSiteConfig = async (basePath: string) => {
+  const configPath = resolveSiteConfigPath(
+    path.join(basePath, DEFAULT_CONFIG_NAME)
+  )
+  if (!configPath) {
     return {}
   }
-
-  if (typeof value === 'object' && !Array.isArray(value)) {
-    return value as SiteConfig
-  }
-
-  throw new Error(
-    `Invalid config at ${configPath}. Expected default export to be an object from defineConfig().`
-  )
+  const config = await readSiteConfig(configPath)
+  return config
 }

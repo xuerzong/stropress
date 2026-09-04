@@ -1,7 +1,10 @@
 import { existsSync, watch } from 'node:fs'
 import path from 'node:path'
-import { isSiteConfigChange } from '../config/loader'
-import { isHomepageAstroFile, isRootCustomStyleFile } from './file-classifier'
+import {
+  isHomepageAstroFile,
+  isRootCustomStyleFile,
+  isSiteConfigFile,
+} from './file-classifier'
 import { syncDocsContent } from './content-sync'
 
 interface WatchDocsOptions {
@@ -128,7 +131,7 @@ export const watchDocsChanges = (input: WatchDocsOptions) => {
       return
     }
 
-    if (isSiteConfigChange(changedPath)) {
+    if (isSiteConfigFile(normalizePath(changedPath))) {
       queueConfigRestart()
       return
     }
