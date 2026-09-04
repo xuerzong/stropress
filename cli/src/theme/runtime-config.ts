@@ -59,6 +59,38 @@ const getI18nConfig = (config: SiteConfig) => {
   return `,\n  i18n: {\n    locales: ${JSON.stringify(localeIds)},\n    defaultLocale: ${JSON.stringify(defaultLocale)},\n    routing: {\n      prefixDefaultLocale: false\n    }\n  }`
 }
 
+const PLUGIN_INTEGRATIONS: Record<string, { module: string; factory: string }> =
+  {}
+
+const getResolvedPluginRefs = (config: SiteConfig) => {
+  const plugins = config.plugins ?? []
+  const imports: string[] = []
+  const entries: string[] = []
+
+  for (const plugin of plugins) {
+    const ref = PLUGIN_INTEGRATIONS[plugin.name]
+    if (!ref) {
+      console.warn(`[stropress] Unsupported plugin "${plugin.name}", skipped.`)
+      continue
+    }
+
+    imports.push(`import { ${ref.factory} } from "${ref.module}";`)
+    entries.push(`    ${ref.factory}(${JSON.stringify(plugin.options ?? {})})`)
+  }
+
+  return { imports, entries }
+}
+
+const getPluginImportBlock = (config: SiteConfig) => {
+  const { imports } = getResolvedPluginRefs(config)
+  return imports.length ? `${imports.join('\n')}\n` : ''
+}
+
+const getPluginIntegrationBlock = (config: SiteConfig) => {
+  const { entries } = getResolvedPluginRefs(config)
+  return entries.length ? `,\n${entries.join(',\n')}` : ''
+}
+
 export const writeAstroRuntimeConfig = async (input: WriteAstroConfigInput) => {
   await fs.remove(path.join(input.themeDir, '.daoke'))
   const runtimeDir = path.join(input.themeDir, '.stropress')
@@ -74,6 +106,8 @@ export const writeAstroRuntimeConfig = async (input: WriteAstroConfigInput) => {
       : codeTheme
         ? `,\n    shikiConfig: {\n      themes: ${JSON.stringify(codeTheme)},\n      defaultColor: false\n    }`
         : ''
+  const pluginImportBlock = getPluginImportBlock(input.config)
+  const pluginIntegrationBlock = getPluginIntegrationBlock(input.config)
 
   await fs.ensureDir(runtimeDir)
 
@@ -81,7 +115,7 @@ export const writeAstroRuntimeConfig = async (input: WriteAstroConfigInput) => {
 import mdx from "@astrojs/mdx";
 import remarkGfm from "remark-gfm";
 import remarkGithubAlerts from "remark-github-alerts";
-
+${pluginImportBlock}
 export default defineConfig({
   outDir: ${JSON.stringify(path.join(input.cwd, 'dist'))},
   publicDir: ${JSON.stringify(runtimePublicDir)},
@@ -94,7 +128,7 @@ export default defineConfig({
   integrations: [
     mdx({
       remarkPlugins: [remarkGfm, remarkGithubAlerts]
-    })
+    })${pluginIntegrationBlock}
   ],
   site: ${JSON.stringify(siteUrl)}${i18nConfig},
   vite: {

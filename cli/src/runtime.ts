@@ -7,9 +7,9 @@ export {
   siteTitle,
 } from '@stropress/ui/src/lib/config'
 
-import type { SiteConfig } from '@stropress/ui/src/lib/config'
+export { defineConfig } from './runtime-helpers'
 
-export const defineConfig = <T extends SiteConfig>(config: T) => config
+export { definePlugin, type StropressPlugin } from '@stropress/shared'
 
 export type {
   FooterConfig,

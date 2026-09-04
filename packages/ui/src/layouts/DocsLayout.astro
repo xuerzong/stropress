@@ -33,10 +33,6 @@ const pageTitle = title
   ? `${title} | ${resolvedConfig.siteTitle}`
   : resolvedConfig.siteTitle
 const pageDescription = description || resolvedConfig.siteDescription
-const ogImagePath =
-  Astro.url.pathname === '/'
-    ? '/og/index.png'
-    : `/og${Astro.url.pathname.endsWith('/') ? Astro.url.pathname.slice(0, -1) : Astro.url.pathname}.png`
 const tocItems = tocHeadings.filter(
   (heading) => heading.depth >= 2 && heading.depth <= 3
 )
@@ -53,7 +49,6 @@ const hasFooter = Boolean(
       title={pageTitle}
       description={pageDescription}
       lang={resolvedConfig.localeLang}
-      image={ogImagePath}
       favicon={resolvedConfig.siteFavicon}
       ogType={sidebar ? 'article' : 'website'}
     />

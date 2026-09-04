@@ -1,3 +1,5 @@
+import { isPluginEnabled, type StropressPlugin } from '@stropress/shared'
+
 export interface NavItem {
   label: string
   link: string
@@ -80,6 +82,7 @@ export interface SiteConfig {
   footer?: FooterConfig
   markdown?: MarkdownConfig
   search?: SearchConfig
+  plugins?: StropressPlugin[]
   locales?: Record<string, LocaleConfig>
 }
 
@@ -114,6 +117,9 @@ export const siteTitle = siteConfig.site?.title || 'Stropress Docs'
 export const siteDescription =
   siteConfig.site?.description || 'Documentation site'
 export const homeConfig = siteConfig.home || {}
+
+export const isConfigPluginEnabled = (name: string) =>
+  isPluginEnabled(siteConfig.plugins, name)
 
 const normalizeLocaleKey = (key: string) => {
   const value = key.trim()
